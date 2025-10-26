@@ -125,15 +125,24 @@ export const ExamDetailPage: React.FC = () => {
               </div>
               <div className="bg-green-50 p-4 rounded-lg">
                 <p className="text-sm text-gray-600">Doğru</p>
-                <p className="text-2xl font-bold text-green-600">{overall_result.total_correct}</p>
+                <p className="text-2xl font-bold text-green-600">
+                  %{((overall_result.total_correct / overall_result.total_questions) * 100).toFixed(2)}
+                </p>
+                <p className="text-xs text-gray-500 mt-1">({overall_result.total_correct}/{overall_result.total_questions})</p>
               </div>
               <div className="bg-red-50 p-4 rounded-lg">
                 <p className="text-sm text-gray-600">Yanlış</p>
-                <p className="text-2xl font-bold text-red-600">{overall_result.total_wrong}</p>
+                <p className="text-2xl font-bold text-red-600">
+                  %{((overall_result.total_wrong / overall_result.total_questions) * 100).toFixed(2)}
+                </p>
+                <p className="text-xs text-gray-500 mt-1">({overall_result.total_wrong}/{overall_result.total_questions})</p>
               </div>
               <div className="bg-gray-50 p-4 rounded-lg">
                 <p className="text-sm text-gray-600">Boş</p>
-                <p className="text-2xl font-bold text-gray-600">{overall_result.total_blank}</p>
+                <p className="text-2xl font-bold text-gray-600">
+                  %{((overall_result.total_blank / overall_result.total_questions) * 100).toFixed(2)}
+                </p>
+                <p className="text-xs text-gray-500 mt-1">({overall_result.total_blank}/{overall_result.total_questions})</p>
               </div>
             </div>
             <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -178,16 +187,28 @@ export const ExamDetailPage: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {subject_results.map((subject) => (
-                    <tr key={subject.id} className="border-t">
-                      <td className="px-4 py-3 font-medium">{subject.subject_name}</td>
-                      <td className="px-4 py-3 text-center text-green-600">{subject.correct}</td>
-                      <td className="px-4 py-3 text-center text-red-600">{subject.wrong}</td>
-                      <td className="px-4 py-3 text-center text-gray-600">{subject.blank}</td>
-                      <td className="px-4 py-3 text-center font-bold">{subject.net_score.toFixed(2)}</td>
-                      <td className="px-4 py-3 text-center">{subject.net_percentage.toFixed(1)}%</td>
-                    </tr>
-                  ))}
+                  {subject_results.map((subject) => {
+                    const total = subject.correct + subject.wrong + subject.blank;
+                    return (
+                      <tr key={subject.id} className="border-t">
+                        <td className="px-4 py-3 font-medium">{subject.subject_name}</td>
+                        <td className="px-4 py-3 text-center text-green-600">
+                          %{((subject.correct / total) * 100).toFixed(2)}
+                          <span className="text-xs text-gray-500 block">({subject.correct}/{total})</span>
+                        </td>
+                        <td className="px-4 py-3 text-center text-red-600">
+                          %{((subject.wrong / total) * 100).toFixed(2)}
+                          <span className="text-xs text-gray-500 block">({subject.wrong}/{total})</span>
+                        </td>
+                        <td className="px-4 py-3 text-center text-gray-600">
+                          %{((subject.blank / total) * 100).toFixed(2)}
+                          <span className="text-xs text-gray-500 block">({subject.blank}/{total})</span>
+                        </td>
+                        <td className="px-4 py-3 text-center font-bold">{subject.net_score.toFixed(2)}</td>
+                        <td className="px-4 py-3 text-center">{subject.net_percentage.toFixed(1)}%</td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>

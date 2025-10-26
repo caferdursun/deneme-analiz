@@ -92,7 +92,7 @@ class AnalyticsService:
         if student_id:
             query = query.filter(Exam.student_id == student_id)
 
-        exams = query.order_by(Exam.exam_date.desc()).all()
+        exams = query.order_by(Exam.exam_date).all()  # ASC order for chronological graphs
 
         if not exams:
             return AnalyticsOverview(
@@ -116,8 +116,11 @@ class AnalyticsService:
 
         # Sort subjects by performance
         sorted_subjects = sorted(all_subjects, key=lambda x: x.average_percentage, reverse=True)
-        top_subjects = sorted_subjects[:3]
-        weak_subjects = sorted_subjects[-3:]
+
+        # Return all subjects in top_subjects (for table display)
+        # Keep weak_subjects with bottom 3 for weak subjects chart
+        top_subjects = sorted_subjects  # All subjects, sorted by performance
+        weak_subjects = sorted_subjects[-3:] if len(sorted_subjects) >= 3 else sorted_subjects
 
         return AnalyticsOverview(
             stats=stats,
@@ -314,11 +317,13 @@ class AnalyticsService:
         total_wrong = sum(r.wrong for r in results)
         total_blank = sum(r.blank for r in results)
 
-        # Simple trend detection
+        # Simple trend detection using percentages (normalized)
         trend = "stable"
-        if len(nets) >= 3:
-            recent_avg = sum(nets[:3]) / 3
-            older_avg = sum(nets[-3:]) / 3
+        if len(percentages) >= 3:
+            # Use first 3 (most recent if chronological) vs last 3 (oldest)
+            recent_avg = sum(percentages[:3]) / 3
+            older_avg = sum(percentages[-3:]) / 3
+            # 10% improvement threshold
             if recent_avg > older_avg * 1.1:
                 trend = "improving"
             elif recent_avg < older_avg * 0.9:
@@ -388,15 +393,25 @@ class AnalyticsService:
         exams: List[Exam],
         subject_name: Optional[str] = None
     ) -> List[LearningOutcomeStats]:
-        """Get learning outcome statistics"""
+        """Get learning outcome statistics
+
+        If subject_name is provided, includes outcomes where:
+        - lo.subject_name == subject_name (exact match), OR
+        - subject_name appears in lo.subject_name (e.g., "Matematik.09", "KURS 11-12. SINIF MATEMATİK")
+        """
 
         # Group by outcome
         outcome_data = {}
 
         for exam in exams:
             for lo in exam.learning_outcomes:
-                if subject_name and lo.subject_name != subject_name:
-                    continue
+                # Match if:
+                # 1. No filter specified, OR
+                # 2. Exact match, OR
+                # 3. Subject name appears in learning outcome subject name
+                if subject_name:
+                    if lo.subject_name != subject_name and subject_name not in lo.subject_name:
+                        continue
 
                 key = (lo.subject_name, lo.category, lo.subcategory, lo.outcome_description)
 

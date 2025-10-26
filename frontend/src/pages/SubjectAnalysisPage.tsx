@@ -71,10 +71,17 @@ export const SubjectAnalysisPage: React.FC = () => {
     return `Sınav ${index + 1}`;
   };
 
-  const formattedTrends = trends.map((trend, index) => ({
-    ...trend,
-    short_name: formatExamName(trend.exam_name, index),
-  }));
+  const formattedTrends = trends.map((trend, index) => {
+    const total = trend.correct + trend.wrong + trend.blank;
+    return {
+      ...trend,
+      short_name: formatExamName(trend.exam_name, index),
+      // Convert to percentages (2 decimal places)
+      correct_pct: total > 0 ? ((trend.correct / total) * 100).toFixed(2) : 0,
+      wrong_pct: total > 0 ? ((trend.wrong / total) * 100).toFixed(2) : 0,
+      blank_pct: total > 0 ? ((trend.blank / total) * 100).toFixed(2) : 0,
+    };
+  });
 
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4">
@@ -124,7 +131,11 @@ export const SubjectAnalysisPage: React.FC = () => {
             </span>
             <div className="text-sm text-gray-600">
               <p>Toplam Soru: {performance.total_questions}</p>
-              <p>Doğru: {performance.total_correct} | Yanlış: {performance.total_wrong} | Boş: {performance.total_blank}</p>
+              <p>
+                Doğru: %{((performance.total_correct / performance.total_questions) * 100).toFixed(2)} ({performance.total_correct}/{performance.total_questions}) |
+                Yanlış: %{((performance.total_wrong / performance.total_questions) * 100).toFixed(2)} ({performance.total_wrong}/{performance.total_questions}) |
+                Boş: %{((performance.total_blank / performance.total_questions) * 100).toFixed(2)} ({performance.total_blank}/{performance.total_questions})
+              </p>
             </div>
           </div>
         </div>
@@ -132,12 +143,12 @@ export const SubjectAnalysisPage: React.FC = () => {
         {/* Net Score Trend Chart */}
         {formattedTrends.length > 0 && (
           <div className="bg-white rounded-lg shadow p-6 mb-8">
-            <h2 className="text-xl font-bold mb-4">Net Skor Gelişimi</h2>
+            <h2 className="text-xl font-bold mb-4">Başarı Oranı Gelişimi (%)</h2>
             <ResponsiveContainer width="100%" height={300}>
               <LineChart data={formattedTrends}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="short_name" height={60} tick={{ fontSize: 12 }} />
-                <YAxis />
+                <YAxis domain={[0, 100]} />
                 <Tooltip
                   content={({ active, payload }) => {
                     if (active && payload && payload.length) {
@@ -145,8 +156,8 @@ export const SubjectAnalysisPage: React.FC = () => {
                       return (
                         <div className="bg-white p-3 border border-gray-300 rounded shadow-lg">
                           <p className="text-sm font-medium mb-1">{data.exam_name}</p>
-                          <p className="text-sm text-blue-600">Net Skor: {data.net_score}</p>
-                          <p className="text-sm text-gray-600">Net %: {data.net_percentage.toFixed(1)}%</p>
+                          <p className="text-sm text-blue-600">Başarı: %{data.net_percentage.toFixed(2)}</p>
+                          <p className="text-sm text-gray-500">Net: {data.net_score}</p>
                         </div>
                       );
                     }
@@ -154,7 +165,7 @@ export const SubjectAnalysisPage: React.FC = () => {
                   }}
                 />
                 <Legend />
-                <Line type="monotone" dataKey="net_score" stroke="#3b82f6" name="Net Skor" strokeWidth={2} />
+                <Line type="monotone" dataKey="net_percentage" stroke="#3b82f6" name="Başarı %" strokeWidth={2} />
               </LineChart>
             </ResponsiveContainer>
           </div>
@@ -173,12 +184,13 @@ export const SubjectAnalysisPage: React.FC = () => {
                   content={({ active, payload }) => {
                     if (active && payload && payload.length) {
                       const data = payload[0].payload;
+                      const total = data.correct + data.wrong + data.blank;
                       return (
                         <div className="bg-white p-3 border border-gray-300 rounded shadow-lg">
                           <p className="text-sm font-medium mb-1">{data.exam_name}</p>
-                          <p className="text-sm text-green-600">Doğru: {data.correct}</p>
-                          <p className="text-sm text-red-600">Yanlış: {data.wrong}</p>
-                          <p className="text-sm text-gray-600">Boş: {data.blank}</p>
+                          <p className="text-sm text-green-600">Doğru: %{data.correct_pct} ({data.correct}/{total})</p>
+                          <p className="text-sm text-red-600">Yanlış: %{data.wrong_pct} ({data.wrong}/{total})</p>
+                          <p className="text-sm text-gray-600">Boş: %{data.blank_pct} ({data.blank}/{total})</p>
                         </div>
                       );
                     }
@@ -186,9 +198,9 @@ export const SubjectAnalysisPage: React.FC = () => {
                   }}
                 />
                 <Legend />
-                <Bar dataKey="correct" fill="#10b981" name="Doğru" />
-                <Bar dataKey="wrong" fill="#ef4444" name="Yanlış" />
-                <Bar dataKey="blank" fill="#9ca3af" name="Boş" />
+                <Bar dataKey="correct_pct" fill="#10b981" name="Doğru %" />
+                <Bar dataKey="wrong_pct" fill="#ef4444" name="Yanlış %" />
+                <Bar dataKey="blank_pct" fill="#9ca3af" name="Boş %" />
               </BarChart>
             </ResponsiveContainer>
           </div>

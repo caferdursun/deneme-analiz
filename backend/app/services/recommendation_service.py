@@ -11,6 +11,7 @@ import os
 from app.models import Recommendation, Exam, ExamResult, SubjectResult, LearningOutcome, Student
 from app.services.analytics_service import AnalyticsService
 from app.core.config import settings
+from app.utils.program_subjects import get_program_subjects
 
 
 class RecommendationService:
@@ -142,15 +143,45 @@ class RecommendationService:
         """
         patterns = []
 
+        # Get student program to filter relevant subjects
+        student = self.db.query(Student).filter(Student.id == student_id).first()
+        program = student.program if student else "MF"
+        relevant_subjects = get_program_subjects(program)
+
         # Get overview data
         overview = self.analytics_service.get_overview(student_id=student_id)
 
         if overview.stats.total_exams == 0:
             return patterns
 
-        # Pattern 1: Weak subjects (average < 50%)
-        weak_subjects = [s for s in overview.weak_subjects if s.average_percentage < 50]
+        # Pattern 1: Weak subjects (average < 60%) + Bottom 3 MF subjects (union set)
+        # Filter by program and threshold
+        weak_subjects = [s for s in overview.top_subjects
+                        if s.average_percentage < 60 and s.subject_name in relevant_subjects]
+
+        # Also ensure bottom 3 MF subjects are included (union set approach)
+        # Get all MF subjects sorted by performance (ascending, worst first)
+        all_mf_subjects = [s for s in overview.top_subjects if s.subject_name in relevant_subjects]
+        all_mf_subjects_sorted = sorted(all_mf_subjects, key=lambda s: s.average_percentage)
+        bottom_3_mf = all_mf_subjects_sorted[:3] if len(all_mf_subjects_sorted) >= 3 else all_mf_subjects_sorted
+
+        # Create union: subjects < 60% OR in bottom 3 MF
+        subjects_for_patterns = []
+        subjects_seen = set()
+
+        # Add weak subjects (< 60%)
         for subject in weak_subjects:
+            subjects_for_patterns.append(subject)
+            subjects_seen.add(subject.subject_name)
+
+        # Add bottom 3 MF if not already included
+        for subject in bottom_3_mf:
+            if subject.subject_name not in subjects_seen:
+                subjects_for_patterns.append(subject)
+                subjects_seen.add(subject.subject_name)
+
+        # Create patterns for all subjects in union set
+        for subject in subjects_for_patterns:
             patterns.append({
                 "type": "weak_subject",
                 "subject_name": subject.subject_name,
@@ -163,9 +194,9 @@ class RecommendationService:
                 }
             })
 
-        # Pattern 2: Declining trends
+        # Pattern 2: Declining trends - Filter by program
         for subject in [*overview.top_subjects, *overview.weak_subjects]:
-            if subject.improvement_trend == "declining":
+            if subject.improvement_trend == "declining" and subject.subject_name in relevant_subjects:
                 patterns.append({
                     "type": "declining_trend",
                     "subject_name": subject.subject_name,
@@ -177,10 +208,10 @@ class RecommendationService:
                     }
                 })
 
-        # Pattern 3: High blank rate (> 30% blank questions)
+        # Pattern 3: High blank rate (> 30% blank questions) - Filter by program
         for subject in [*overview.top_subjects, *overview.weak_subjects]:
             blank_rate = (subject.total_blank / subject.total_questions * 100) if subject.total_questions > 0 else 0
-            if blank_rate > 30:
+            if blank_rate > 30 and subject.subject_name in relevant_subjects:
                 patterns.append({
                     "type": "high_blank_rate",
                     "subject_name": subject.subject_name,
@@ -213,12 +244,14 @@ class RecommendationService:
         # Focus on weak and medium outcomes (need improvement)
         priority_outcomes = weak_outcomes + medium_outcomes
 
-        # Group by subject
+        # Group by subject - Filter by program
         outcomes_by_subject = {}
         for outcome in priority_outcomes:
-            if outcome.subject_name not in outcomes_by_subject:
-                outcomes_by_subject[outcome.subject_name] = []
-            outcomes_by_subject[outcome.subject_name].append(outcome)
+            # Only include outcomes for relevant subjects (MF program)
+            if outcome.subject_name in relevant_subjects:
+                if outcome.subject_name not in outcomes_by_subject:
+                    outcomes_by_subject[outcome.subject_name] = []
+                outcomes_by_subject[outcome.subject_name].append(outcome)
 
         # Get actual LearningOutcome objects for IDs
         outcome_query = self.db.query(LearningOutcome).join(Exam).filter(

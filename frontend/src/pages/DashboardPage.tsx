@@ -65,6 +65,14 @@ export const DashboardPage: React.FC = () => {
 
   const { stats, score_trends, top_subjects, weak_subjects } = analytics;
 
+  // MF program subjects (Matematik-Fen)
+  const MF_SUBJECTS = ['Türkçe', 'Matematik', 'Geometri', 'Fizik', 'Kimya', 'Biyoloji'];
+
+  // Filter subjects for MF program
+  const mfSubjects = top_subjects.filter(subject => MF_SUBJECTS.includes(subject.subject_name));
+  const topMfSubjects = mfSubjects.slice(0, 3); // Top 3 MF subjects
+  const weakMfSubjects = mfSubjects.slice(-3).reverse(); // Bottom 3 MF subjects
+
   // Shorten exam names for better display
   const formatExamName = (name: string, index: number) => {
     // Extract date if exists
@@ -217,12 +225,12 @@ export const DashboardPage: React.FC = () => {
         {/* Score Trend Chart */}
         {formattedScoreTrends.length > 0 && (
           <div className="bg-white rounded-lg shadow p-6 mb-8">
-            <h2 className="text-xl font-bold mb-4">Net Skor Gelişimi</h2>
+            <h2 className="text-xl font-bold mb-4">Başarı Oranı Gelişimi (%)</h2>
             <ResponsiveContainer width="100%" height={300}>
               <LineChart data={formattedScoreTrends}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="short_name" height={60} tick={{ fontSize: 12 }} />
-                <YAxis />
+                <YAxis domain={[0, 100]} />
                 <Tooltip
                   content={({ active, payload }) => {
                     if (active && payload && payload.length) {
@@ -230,7 +238,8 @@ export const DashboardPage: React.FC = () => {
                       return (
                         <div className="bg-white p-3 border border-gray-300 rounded shadow-lg">
                           <p className="text-sm font-medium mb-1">{data.exam_name}</p>
-                          <p className="text-sm text-blue-600">Net Skor: {data.net_score}</p>
+                          <p className="text-sm text-blue-600">Başarı: %{data.net_percentage.toFixed(2)}</p>
+                          <p className="text-sm text-gray-500">Net: {data.net_score}</p>
                         </div>
                       );
                     }
@@ -238,7 +247,7 @@ export const DashboardPage: React.FC = () => {
                   }}
                 />
                 <Legend />
-                <Line type="monotone" dataKey="net_score" stroke="#3b82f6" name="Net Skor" strokeWidth={2} />
+                <Line type="monotone" dataKey="net_percentage" stroke="#3b82f6" name="Başarı %" strokeWidth={2} />
               </LineChart>
             </ResponsiveContainer>
           </div>
@@ -246,12 +255,12 @@ export const DashboardPage: React.FC = () => {
 
         {/* Subject Performance */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          {/* Top Subjects */}
-          {top_subjects.length > 0 && (
+          {/* Top Subjects - Show top 3 MF subjects for chart */}
+          {topMfSubjects.length > 0 && (
             <div className="bg-white rounded-lg shadow p-6">
-              <h2 className="text-xl font-bold mb-4 text-green-600">En İyi Dersler</h2>
+              <h2 className="text-xl font-bold mb-4 text-green-600">En İyi 3 Ders (MF)</h2>
               <ResponsiveContainer width="100%" height={250}>
-                <BarChart data={top_subjects}>
+                <BarChart data={topMfSubjects}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="subject_name" />
                   <YAxis />
@@ -262,12 +271,12 @@ export const DashboardPage: React.FC = () => {
             </div>
           )}
 
-          {/* Weak Subjects */}
-          {weak_subjects.length > 0 && (
+          {/* Weak Subjects - Show bottom 3 MF subjects */}
+          {weakMfSubjects.length > 0 && (
             <div className="bg-white rounded-lg shadow p-6">
-              <h2 className="text-xl font-bold mb-4 text-red-600">Gelişmesi Gereken Dersler</h2>
+              <h2 className="text-xl font-bold mb-4 text-red-600">Gelişmesi Gereken 3 Ders (MF)</h2>
               <ResponsiveContainer width="100%" height={250}>
-                <BarChart data={weak_subjects}>
+                <BarChart data={weakMfSubjects}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="subject_name" />
                   <YAxis />
@@ -279,9 +288,9 @@ export const DashboardPage: React.FC = () => {
           )}
         </div>
 
-        {/* Subject Details Table */}
+        {/* Subject Details Table - All Subjects */}
         <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-xl font-bold mb-4">Ders Detayları</h2>
+          <h2 className="text-xl font-bold mb-4">Tüm Dersler ({top_subjects.length})</h2>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead className="bg-gray-50">
@@ -289,17 +298,23 @@ export const DashboardPage: React.FC = () => {
                   <th className="px-4 py-2 text-left">Ders</th>
                   <th className="px-4 py-2 text-center">Sınav Sayısı</th>
                   <th className="px-4 py-2 text-center">Ort. Net</th>
+                  <th className="px-4 py-2 text-center">Ort. %</th>
                   <th className="px-4 py-2 text-center">En İyi</th>
                   <th className="px-4 py-2 text-center">Trend</th>
                 </tr>
               </thead>
               <tbody>
-                {[...top_subjects, ...weak_subjects].map((subject) => {
+                {top_subjects.map((subject) => {
                   const hasRecommendation = recommendations.some(r => r.subject_name === subject.subject_name);
+                  const isMfSubject = MF_SUBJECTS.includes(subject.subject_name);
                   return (
                     <tr
                       key={subject.subject_name}
-                      className="border-t hover:bg-gray-50 cursor-pointer"
+                      className={`border-t cursor-pointer ${
+                        isMfSubject
+                          ? 'bg-blue-50 hover:bg-blue-100'
+                          : 'hover:bg-gray-50'
+                      }`}
                       onClick={() => navigate(`/subjects/${encodeURIComponent(subject.subject_name)}`)}
                     >
                       <td className="px-4 py-3">
@@ -314,6 +329,7 @@ export const DashboardPage: React.FC = () => {
                       </td>
                       <td className="px-4 py-3 text-center">{subject.total_exams}</td>
                       <td className="px-4 py-3 text-center">{subject.average_net.toFixed(2)}</td>
+                      <td className="px-4 py-3 text-center">{subject.average_percentage.toFixed(1)}%</td>
                       <td className="px-4 py-3 text-center">{subject.best_net.toFixed(2)}</td>
                       <td className="px-4 py-3 text-center">
                         <span className={`px-2 py-1 rounded text-xs ${
