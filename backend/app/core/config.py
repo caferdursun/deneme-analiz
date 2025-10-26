@@ -2,7 +2,7 @@
 Application configuration management
 """
 from pydantic_settings import BaseSettings
-from typing import List
+from typing import List, Optional
 
 
 class Settings(BaseSettings):
@@ -25,15 +25,23 @@ class Settings(BaseSettings):
     # Security
     SECRET_KEY: str = "change-this-in-production"
 
-    # CORS
-    CORS_ORIGINS: List[str] = ["http://localhost:3000", "http://localhost:5173"]
+    # CORS - Can be overridden in .env as comma-separated string
+    CORS_ORIGINS_STR: Optional[str] = None
 
     # File Storage
     PDF_STORAGE_PATH: str = "./data"
 
+    @property
+    def CORS_ORIGINS(self) -> List[str]:
+        """Parse CORS origins from string or return defaults"""
+        if self.CORS_ORIGINS_STR:
+            return [origin.strip() for origin in self.CORS_ORIGINS_STR.split(",")]
+        return ["http://localhost:3000", "http://localhost:5173"]
+
     class Config:
-        env_file = ".env"
+        env_file = "../.env"  # .env is in parent directory
         case_sensitive = True
+        extra = "ignore"  # Ignore extra fields from .env
 
 
 settings = Settings()
