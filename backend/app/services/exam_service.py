@@ -97,11 +97,16 @@ class ExamService:
         local_data = local_parser.parse_pdf(pdf_path)
         logger.info(f"Local parsing completed")
 
-        # Analyze PDF with Claude
-        logger.info(f"Starting Claude AI analysis: {pdf_path}")
+        # Analyze PDF with Claude (5-stage extraction to avoid token limits)
+        logger.info(f"Starting Claude AI analysis (5-stage): {pdf_path}")
         claude = self._get_claude_client()
-        extracted_data = claude.analyze_exam_pdf(pdf_path)
-        logger.info(f"Claude analysis completed")
+        logger.info(f"  Stage 1/5: Extracting basic data...")
+        logger.info(f"  Stage 2/5: Extracting learning outcomes (Part 1)...")
+        logger.info(f"  Stage 3/5: Extracting learning outcomes (Part 2)...")
+        logger.info(f"  Stage 4/5: Extracting questions (Part 1)...")
+        logger.info(f"  Stage 5/5: Extracting questions (Part 2)...")
+        extracted_data = claude.analyze_exam_pdf_staged(pdf_path)
+        logger.info(f"Claude analysis completed (all 5 stages)")
 
         # Validate Claude output against local parsing
         logger.info(f"Starting validation")

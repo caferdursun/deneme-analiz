@@ -129,8 +129,9 @@ export const learningOutcomesAPI = {
 
   // Perform cleanup with approved merge groups
   cleanupOutcomes: async (mergeGroups: any[], mergedBy: string = 'user'): Promise<any> => {
-    const response = await apiClient.post('/learning-outcomes/cleanup', mergeGroups, {
-      params: { merged_by: mergedBy }
+    const response = await apiClient.post('/learning-outcomes/cleanup', {
+      merge_groups: mergeGroups,
+      merged_by: mergedBy
     });
     return response.data;
   },

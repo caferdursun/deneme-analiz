@@ -8,6 +8,8 @@ export const UploadPage: React.FC = () => {
   const [uploading, setUploading] = useState(false);
   const [result, setResult] = useState<ExamUploadResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [progress, setProgress] = useState(0);
+  const [currentStage, setCurrentStage] = useState('');
   const navigate = useNavigate();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -27,15 +29,44 @@ export const UploadPage: React.FC = () => {
     setUploading(true);
     setError(null);
     setResult(null);
+    setProgress(0);
+
+    // Simulate progress stages (5 stages, ~30 seconds each = ~150 seconds total)
+    const stages = [
+      { stage: 1, text: 'Temel veriler çıkartılıyor...', progress: 20, delay: 5000 },
+      { stage: 2, text: 'Kazanımlar analiz ediliyor (1/2)...', progress: 40, delay: 30000 },
+      { stage: 3, text: 'Kazanımlar analiz ediliyor (2/2)...', progress: 60, delay: 30000 },
+      { stage: 4, text: 'Sorular işleniyor (1/2)...', progress: 80, delay: 30000 },
+      { stage: 5, text: 'Sorular işleniyor (2/2)...', progress: 95, delay: 30000 },
+    ];
+
+    let currentStageIndex = 0;
+    const progressInterval = setInterval(() => {
+      if (currentStageIndex < stages.length) {
+        const stage = stages[currentStageIndex];
+        setCurrentStage(stage.text);
+        setProgress(stage.progress);
+        currentStageIndex++;
+      }
+    }, 30000); // Update every 30 seconds
+
+    // Set initial stage immediately
+    setCurrentStage(stages[0].text);
+    setProgress(5);
 
     try {
       const response = await examAPI.uploadExam(file);
+      clearInterval(progressInterval);
+      setProgress(100);
+      setCurrentStage('Tamamlandı!');
       setResult(response);
+
       // Redirect to validation review page after 2 seconds
       setTimeout(() => {
         navigate(`/exams/${response.exam_id}/validate`);
       }, 2000);
     } catch (err: any) {
+      clearInterval(progressInterval);
       setError(err.response?.data?.detail || 'Dosya yüklenirken bir hata oluştu');
     } finally {
       setUploading(false);
@@ -88,10 +119,47 @@ export const UploadPage: React.FC = () => {
           </button>
 
           {uploading && (
-            <div className="mt-4 p-4 bg-blue-50 rounded-md">
-              <p className="text-blue-700 text-sm">
-                Sınav PDF'i analiz ediliyor... Bu işlem birkaç dakika sürebilir.
-              </p>
+            <div className="mt-6 space-y-4">
+              {/* Progress Bar */}
+              <div>
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-sm font-medium text-gray-700">{currentStage}</span>
+                  <span className="text-sm font-medium text-gray-700">{progress}%</span>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                  <div
+                    className="bg-blue-600 h-3 rounded-full transition-all duration-500 ease-out"
+                    style={{ width: `${progress}%` }}
+                  />
+                </div>
+              </div>
+
+              {/* Stage Info */}
+              <div className="p-4 bg-blue-50 rounded-md border border-blue-200">
+                <p className="text-blue-900 text-sm font-medium mb-2">
+                  📊 Claude AI ile 5 Aşamalı Analiz
+                </p>
+                <ul className="text-blue-700 text-xs space-y-1">
+                  <li className={progress >= 20 ? 'line-through opacity-60' : ''}>
+                    ✓ Aşama 1: Temel veriler (öğrenci, sınav, genel sonuçlar)
+                  </li>
+                  <li className={progress >= 40 ? 'line-through opacity-60' : progress >= 20 ? 'font-semibold' : ''}>
+                    ⏳ Aşama 2: Kazanımlar - İlk yarı
+                  </li>
+                  <li className={progress >= 60 ? 'line-through opacity-60' : progress >= 40 ? 'font-semibold' : ''}>
+                    ⏳ Aşama 3: Kazanımlar - İkinci yarı
+                  </li>
+                  <li className={progress >= 80 ? 'line-through opacity-60' : progress >= 60 ? 'font-semibold' : ''}>
+                    ⏳ Aşama 4: Sorular - İlk yarı
+                  </li>
+                  <li className={progress >= 95 ? 'line-through opacity-60' : progress >= 80 ? 'font-semibold' : ''}>
+                    ⏳ Aşama 5: Sorular - İkinci yarı
+                  </li>
+                </ul>
+                <p className="text-blue-600 text-xs mt-3">
+                  ⏱️ Tahmini süre: ~2.5 dakika | Lütfen bekleyin...
+                </p>
+              </div>
             </div>
           )}
 
