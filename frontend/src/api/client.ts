@@ -118,3 +118,34 @@ export const recommendationsAPI = {
     return response.data;
   },
 };
+
+export const learningOutcomesAPI = {
+  // Analyze learning outcomes for similarity
+  analyzeOutcomes: async (studentId?: string): Promise<any> => {
+    const params = studentId ? { student_id: studentId } : {};
+    const response = await apiClient.get('/learning-outcomes/analyze', { params });
+    return response.data;
+  },
+
+  // Perform cleanup with approved merge groups
+  cleanupOutcomes: async (mergeGroups: any[], mergedBy: string = 'user'): Promise<any> => {
+    const response = await apiClient.post('/learning-outcomes/cleanup', mergeGroups, {
+      params: { merged_by: mergedBy }
+    });
+    return response.data;
+  },
+
+  // Undo a merge operation
+  undoMerge: async (mergeGroupId: string, undoneBy: string = 'user'): Promise<any> => {
+    const response = await apiClient.post(`/learning-outcomes/undo/${mergeGroupId}`, { undone_by: undoneBy });
+    return response.data;
+  },
+
+  // Get merge history
+  getMergeHistory: async (limit: number = 50, includeUndone: boolean = false): Promise<any> => {
+    const response = await apiClient.get('/learning-outcomes/merge-history', {
+      params: { limit, include_undone: includeUndone }
+    });
+    return response.data;
+  },
+};

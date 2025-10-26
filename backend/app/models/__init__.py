@@ -8,6 +8,7 @@ from app.models.subject_result import SubjectResult
 from app.models.learning_outcome import LearningOutcome
 from app.models.question import Question
 from app.models.recommendation import Recommendation
+from app.models.outcome_merge_history import OutcomeMergeHistory
 
 __all__ = [
     "Student",
@@ -17,4 +18,5 @@ __all__ = [
     "LearningOutcome",
     "Question",
     "Recommendation",
+    "OutcomeMergeHistory",
 ]

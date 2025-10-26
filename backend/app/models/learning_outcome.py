@@ -35,6 +35,10 @@ class LearningOutcome(Base):
     class_percentage = Column(Numeric(5, 2))
     school_percentage = Column(Numeric(5, 2))
 
+    # Merge tracking (soft delete)
+    merged_into_id = Column(String(36), ForeignKey("learning_outcomes.id"), nullable=True, index=True)
+    is_merged = Column(Integer, default=0)  # 0 = active, 1 = merged into another outcome
+
     created_at = Column(DateTime, default=datetime.utcnow)
 
     # Relationships

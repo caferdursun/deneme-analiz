@@ -101,21 +101,29 @@ export const LearningOutcomesPage: React.FC = () => {
             <h1 className="text-3xl font-bold text-gray-900">Kazanımlar (Öğrenme Çıktıları)</h1>
           </div>
 
-          {/* Subject Filter */}
-          <div className="flex items-center gap-2">
-            <label className="text-sm text-gray-600">Ders:</label>
-            <select
-              value={selectedSubject}
-              onChange={(e) => setSelectedSubject(e.target.value)}
-              className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          {/* Subject Filter & Actions */}
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => navigate('/learning-outcomes/cleanup')}
+              className="bg-purple-600 text-white py-2 px-4 rounded-md hover:bg-purple-700 transition-colors text-sm font-medium"
             >
-              <option value="all">Tümü</option>
-              {availableSubjects.map((subject) => (
-                <option key={subject} value={subject}>
-                  {subject}
-                </option>
-              ))}
-            </select>
+              🧹 Kazanımları Temizle
+            </button>
+            <div className="flex items-center gap-2">
+              <label className="text-sm text-gray-600">Ders:</label>
+              <select
+                value={selectedSubject}
+                onChange={(e) => setSelectedSubject(e.target.value)}
+                className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="all">Tümü</option>
+                {availableSubjects.map((subject) => (
+                  <option key={subject} value={subject}>
+                    {subject}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
         </div>
 

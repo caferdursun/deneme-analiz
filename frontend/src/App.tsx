@@ -7,6 +7,7 @@ import { SubjectAnalysisPage } from './pages/SubjectAnalysisPage';
 import { LearningOutcomesPage } from './pages/LearningOutcomesPage';
 import { RecommendationsPage } from './pages/RecommendationsPage';
 import { ValidationReviewPage } from './pages/ValidationReviewPage';
+import { CleanupWizardPage } from './pages/CleanupWizardPage';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="/upload" element={<UploadPage />} />
         <Route path="/subjects/:subjectName" element={<SubjectAnalysisPage />} />
         <Route path="/learning-outcomes" element={<LearningOutcomesPage />} />
+        <Route path="/learning-outcomes/cleanup" element={<CleanupWizardPage />} />
         <Route path="/recommendations" element={<RecommendationsPage />} />
       </Routes>
     </Router>
