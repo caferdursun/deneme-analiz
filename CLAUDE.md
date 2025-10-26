@@ -111,7 +111,7 @@ npm test
 
 The system uses Claude API for PDF analysis:
 - Endpoint: `POST /api/analyze-pdf`
-- Model: Claude 3.5 Sonnet (or latest)
+- Model: claude-sonnet-4-5-20250929
 - Input: PDF file upload
 - Output: Structured JSON with all exam data
 
