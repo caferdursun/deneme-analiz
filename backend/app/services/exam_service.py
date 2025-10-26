@@ -84,11 +84,13 @@ class ExamService:
 
     def process_exam_pdf(self, pdf_path: str) -> Dict[str, Any]:
         """
-        Process exam PDF and store all data with validation
+        Process exam PDF and store temporary data for validation review
 
         Returns:
             Dictionary with exam_id and validation_report
         """
+        import json
+
         # Parse PDF locally for validation
         logger.info(f"Starting local PDF parsing: {pdf_path}")
         local_parser = LocalPDFParser()
@@ -119,7 +121,7 @@ class ExamService:
         # Get or create student
         student = self.get_or_create_student(extracted_data["student"])
 
-        # Create exam record
+        # Create exam record with temporary data for review
         exam_data = extracted_data["exam"]
         exam_date_str = exam_data["exam_date"]
         if isinstance(exam_date_str, str):
@@ -135,86 +137,23 @@ class ExamService:
             exam_number=exam_data.get("exam_number"),
             pdf_path=pdf_path,
             processed_at=datetime.utcnow(),
+            # Store temporary data for validation review
+            status="pending_confirmation",
+            claude_data=json.dumps(extracted_data, ensure_ascii=False, indent=2),
+            local_data=json.dumps(local_data, ensure_ascii=False, indent=2),
+            validation_report=json.dumps(validation_report, ensure_ascii=False, indent=2),
         )
         self.db.add(exam)
-        self.db.flush()  # Get exam.id without committing
 
-        # Create overall exam result
-        overall = extracted_data["overall_result"]
-        exam_result = ExamResult(
-            exam_id=exam.id,
-            total_questions=overall["total_questions"],
-            total_correct=overall["total_correct"],
-            total_wrong=overall["total_wrong"],
-            total_blank=overall["total_blank"],
-            net_score=overall["net_score"],
-            net_percentage=overall["net_percentage"],
-            class_rank=overall.get("class_rank"),
-            class_total=overall.get("class_total"),
-            school_rank=overall.get("school_rank"),
-            school_total=overall.get("school_total"),
-            class_avg=overall.get("class_avg"),
-            school_avg=overall.get("school_avg"),
-        )
-        self.db.add(exam_result)
-
-        # Create subject results
-        for subject_data in extracted_data["subjects"]:
-            subject_result = SubjectResult(
-                exam_id=exam.id,
-                subject_name=subject_data["subject_name"],
-                total_questions=subject_data["total_questions"],
-                correct=subject_data["correct"],
-                wrong=subject_data["wrong"],
-                blank=subject_data["blank"],
-                net_score=subject_data["net_score"],
-                net_percentage=subject_data["net_percentage"],
-                class_rank=subject_data.get("class_rank"),
-                class_avg=subject_data.get("class_avg"),
-                school_rank=subject_data.get("school_rank"),
-                school_avg=subject_data.get("school_avg"),
-            )
-            self.db.add(subject_result)
-
-        # Create learning outcomes
-        for outcome_data in extracted_data.get("learning_outcomes", []):
-            learning_outcome = LearningOutcome(
-                exam_id=exam.id,
-                subject_name=outcome_data["subject_name"],
-                category=outcome_data.get("category"),
-                subcategory=outcome_data.get("subcategory"),
-                outcome_description=outcome_data.get("outcome_description"),
-                total_questions=outcome_data["total_questions"],
-                acquired=outcome_data["acquired"],
-                lost=outcome_data["lost"],
-                success_rate=outcome_data.get("success_rate"),
-                student_percentage=outcome_data.get("student_percentage"),
-                class_percentage=outcome_data.get("class_percentage"),
-                school_percentage=outcome_data.get("school_percentage"),
-            )
-            self.db.add(learning_outcome)
-
-        # Create questions
-        for question_data in extracted_data.get("questions", []):
-            question = Question(
-                exam_id=exam.id,
-                subject_name=question_data["subject_name"],
-                question_number=question_data["question_number"],
-                correct_answer=question_data["correct_answer"],
-                student_answer=question_data.get("student_answer"),
-                is_correct=question_data["is_correct"],
-                is_blank=question_data["is_blank"],
-            )
-            self.db.add(question)
-
-        # Commit all changes
+        # Commit only the exam record (no related data yet)
         self.db.commit()
         self.db.refresh(exam)
+
+        logger.info(f"Exam created with pending_confirmation status: {exam.id}")
 
         return {
             "exam_id": exam.id,
             "validation_report": validation_report,
-            "local_data": local_data  # Include for debugging if needed
         }
 
     def get_all_exams(self, student_id: Optional[str] = None) -> List[Exam]:

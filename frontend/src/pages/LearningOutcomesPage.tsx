@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { analyticsAPI } from '../api/client';
-import type { SubjectAnalytics } from '../types';
+import type { LearningOutcomeStats } from '../types';
 
 export const LearningOutcomesPage: React.FC = () => {
-  const [allOutcomes, setAllOutcomes] = useState<any[]>([]);
-  const [filteredOutcomes, setFilteredOutcomes] = useState<any[]>([]);
+  const [allOutcomes, setAllOutcomes] = useState<LearningOutcomeStats[]>([]);
+  const [filteredOutcomes, setFilteredOutcomes] = useState<LearningOutcomeStats[]>([]);
   const [selectedSubject, setSelectedSubject] = useState<string>('all');
   const [availableSubjects, setAvailableSubjects] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
@@ -29,27 +29,15 @@ export const LearningOutcomesPage: React.FC = () => {
       setLoading(true);
       setError(null);
 
-      // Get overview to get all subjects
-      const overview = await analyticsAPI.getOverview();
-      const subjects = [...new Set([...overview.top_subjects, ...overview.weak_subjects].map(s => s.subject_name))];
+      // Load all learning outcomes directly from the new endpoint
+      const outcomes = await analyticsAPI.getAllLearningOutcomes();
+
+      // Extract unique subjects
+      const subjects = [...new Set(outcomes.map(o => o.subject_name))];
       setAvailableSubjects(subjects);
 
-      // Load learning outcomes for all subjects
-      const allOutcomesData: any[] = [];
-      for (const subject of subjects) {
-        try {
-          const subjectData: SubjectAnalytics = await analyticsAPI.getSubjectAnalytics(subject);
-          allOutcomesData.push(...subjectData.learning_outcomes.map(lo => ({
-            ...lo,
-            subject_name: subject
-          })));
-        } catch (err) {
-          console.error(`Error loading outcomes for ${subject}:`, err);
-        }
-      }
-
-      setAllOutcomes(allOutcomesData);
-      setFilteredOutcomes(allOutcomesData);
+      setAllOutcomes(outcomes);
+      setFilteredOutcomes(outcomes);
     } catch (err: any) {
       setError(err.response?.data?.detail || 'Kazanımlar yüklenirken hata oluştu');
     } finally {

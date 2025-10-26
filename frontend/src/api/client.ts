@@ -3,7 +3,12 @@ import type {
   ExamListResponse,
   ExamDetail,
   ExamUploadResponse,
+  ExamConfirmResponse,
   AnalyticsOverview,
+  SubjectAnalytics,
+  LearningOutcomeStats,
+  RecommendationsListResponse,
+  RecommendationRefreshResponse,
 } from '../types';
 
 // Use relative URL to work with Vite proxy
@@ -51,6 +56,22 @@ export const examAPI = {
   deleteExam: async (examId: string): Promise<void> => {
     await apiClient.delete(`/exams/${examId}`);
   },
+
+  // Confirm exam with chosen data source
+  confirmExam: async (examId: string, dataSource: 'claude' | 'local'): Promise<ExamConfirmResponse> => {
+    const response = await apiClient.post<ExamConfirmResponse>(
+      `/exams/${examId}/confirm`,
+      { data_source: dataSource }
+    );
+    return response.data;
+  },
+
+  // Get pending exams count
+  getPendingCount: async (studentId?: string): Promise<{ pending_count: number; student_id?: string }> => {
+    const params = studentId ? { student_id: studentId } : {};
+    const response = await apiClient.get<{ pending_count: number; student_id?: string }>('/exams/stats/pending-count', { params });
+    return response.data;
+  },
 };
 
 export const analyticsAPI = {
@@ -65,6 +86,35 @@ export const analyticsAPI = {
   getSubjectAnalytics: async (subjectName: string, studentId?: string): Promise<SubjectAnalytics> => {
     const params = studentId ? { student_id: studentId } : {};
     const response = await apiClient.get<SubjectAnalytics>(`/analytics/subjects/${encodeURIComponent(subjectName)}`, { params });
+    return response.data;
+  },
+
+  // Get all learning outcomes
+  getAllLearningOutcomes: async (studentId?: string): Promise<LearningOutcomeStats[]> => {
+    const params = studentId ? { student_id: studentId } : {};
+    const response = await apiClient.get<LearningOutcomeStats[]>('/analytics/learning-outcomes', { params });
+    return response.data;
+  },
+};
+
+export const recommendationsAPI = {
+  // Get active recommendations
+  getRecommendations: async (studentId?: string): Promise<RecommendationsListResponse> => {
+    const params = studentId ? { student_id: studentId } : {};
+    const response = await apiClient.get<RecommendationsListResponse>('/recommendations', { params });
+    return response.data;
+  },
+
+  // Refresh recommendations
+  refreshRecommendations: async (studentId?: string): Promise<RecommendationRefreshResponse> => {
+    const params = studentId ? { student_id: studentId } : {};
+    const response = await apiClient.post<RecommendationRefreshResponse>('/recommendations/refresh', null, { params });
+    return response.data;
+  },
+
+  // Mark recommendation as complete
+  markAsComplete: async (recommendationId: string): Promise<{ message: string; id: string }> => {
+    const response = await apiClient.post<{ message: string; id: string }>(`/recommendations/${recommendationId}/complete`);
     return response.data;
   },
 };

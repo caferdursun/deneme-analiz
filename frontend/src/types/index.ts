@@ -17,6 +17,11 @@ export interface Exam {
   uploaded_at: string;
   processed_at: string | null;
   created_at: string;
+  status?: string;
+  claude_data?: string;
+  local_data?: string;
+  validation_report?: string;
+  confirmed_at?: string | null;
 }
 
 export interface ExamResult {
@@ -113,6 +118,13 @@ export interface ExamUploadResponse {
   validation_report: ValidationReport | null;
 }
 
+export interface ExamConfirmResponse {
+  message: string;
+  exam_id: string;
+  data_source: string;
+  status: string;
+}
+
 // Analytics types
 export interface OverviewStats {
   total_exams: number;
@@ -184,4 +196,32 @@ export interface SubjectAnalytics {
   performance: SubjectPerformance;
   trends: SubjectTrend[];
   learning_outcomes: LearningOutcomeStats[];
+}
+
+// Recommendation types
+export interface Recommendation {
+  id: string;
+  student_id: string;
+  priority: number;
+  subject_name: string | null;
+  topic: string | null;
+  issue_type: string;
+  description: string;
+  action_items: string[];
+  rationale: string | null;
+  impact_score: number | null;
+  is_active: boolean;
+  generated_at: string;
+  created_at: string;
+}
+
+export interface RecommendationsListResponse {
+  recommendations: Recommendation[];
+  total: number;
+}
+
+export interface RecommendationRefreshResponse {
+  message: string;
+  count: number;
+  recommendations: Recommendation[];
 }

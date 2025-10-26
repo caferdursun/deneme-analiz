@@ -36,6 +36,11 @@ class ExamResponse(ExamBase):
     uploaded_at: datetime
     processed_at: Optional[datetime] = None
     created_at: datetime
+    status: Optional[str] = None
+    claude_data: Optional[str] = None
+    local_data: Optional[str] = None
+    validation_report: Optional[str] = None
+    confirmed_at: Optional[datetime] = None
 
     class Config:
         from_attributes = True

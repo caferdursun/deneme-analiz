@@ -501,212 +501,520 @@ Currently, the validation report appears briefly and then disappears. The system
 
 ---
 
-## Phase 7: Learning Outcomes Data Management
+## Phase 7: AI-Powered Learning Outcomes Cleanup
 **Duration**: 1-2 Days
 **Status**: Not Started
 **Priority**: Medium
 
 ### Objectives
-- Export learning outcomes data to Excel for manual review and editing
-- Import cleaned/merged learning outcomes data back to database
-- Provide tools to identify and merge similar learning outcomes
-- Enable data cleanup as exam count grows
+- Automatically identify and merge similar learning outcomes using Claude AI
+- Provide intelligent grouping and standardization of outcome descriptions
+- Enable one-click cleanup with user review and approval
+- Maintain data integrity with audit trail and undo functionality
 
 ### Problem Statement
 As exams are added to the system, learning outcomes from different sources may have:
 - Slightly different names for the same outcome (e.g., "Deyimler" vs "Deyim Bilgisi")
-- Different categorizations but same content
+- Different categorizations but same content (e.g., "Söz Sanatları" vs "Sözcük Anlamı")
 - Inconsistent subject naming (e.g., "Matematik.09" vs "Matematik.10")
 - Duplicate or near-duplicate entries
+- Inconsistent Turkish spelling and formatting
 
-Users need a way to export, clean, merge similar outcomes, and re-import the data.
+**Current Approach Problem**: Manual Excel export/import is tedious and error-prone.
+
+**Solution**: Use Claude AI to intelligently analyze all learning outcomes, detect semantic similarity, and suggest smart merges through an intuitive UI.
 
 ### Tasks
 
-#### 7.1 Backend - Excel Export
-- [ ] Install openpyxl or xlsxwriter library
-- [ ] Create export service for learning outcomes
-- [ ] Design Excel format with multiple sheets:
-  - **Sheet 1: Learning Outcomes** - All learning outcome records with columns:
-    - ID, Exam ID, Exam Name, Subject Name, Category, Subcategory
-    - Outcome Description, Total Questions, Acquired, Lost
-    - Success Rate, Student %, Class %, School %
-    - Created At
-  - **Sheet 2: Exams** - Related exam information for reference
-  - **Sheet 3: Metadata** - Export timestamp, record count, filters applied
-- [ ] Implement GET /api/learning-outcomes/export endpoint
-  - Accept optional filters (subject, date range, exam_id)
-  - Generate Excel file with proper formatting
-  - Return file download response
-- [ ] Add cell formatting:
-  - Headers in bold
-  - Freeze first row
-  - Auto-width columns
-  - Color-code success rates (red < 50%, yellow 50-80%, green > 80%)
-- [ ] Include formulas for calculated fields
+#### 7.1 Backend - Claude-Based Similarity Analysis Service
+- [ ] Create `LearningOutcomeCleanupService` class
+- [ ] Implement outcome aggregation method:
+  - [ ] Fetch all learning outcomes from database
+  - [ ] Group by subject for better context
+  - [ ] Format data for Claude API (JSON structure)
+  - [ ] Include: outcome description, category, subcategory, exam counts
+- [ ] Create Claude AI analysis prompt:
+  - [ ] Design prompt to detect semantic similarity
+  - [ ] Ask Claude to group similar outcomes
+  - [ ] Request standardized names for each group
+  - [ ] Request confidence scores (0-100%) for each group
+  - [ ] Handle Turkish language nuances
+- [ ] Implement batch processing for large datasets:
+  - [ ] Process outcomes in chunks (e.g., 100-200 per request)
+  - [ ] Subject-by-subject analysis for better accuracy
+  - [ ] Combine results from multiple requests
+- [ ] Parse Claude's response:
+  - [ ] Extract suggested groups
+  - [ ] Extract confidence scores
+  - [ ] Extract standardized outcome names
+  - [ ] Validate response structure
+- [ ] Add caching mechanism:
+  - [ ] Cache Claude's analysis results
+  - [ ] Invalidate cache when new exams added
+  - [ ] Store analysis timestamp
 
-#### 7.2 Backend - Excel Import
-- [ ] Create import service for learning outcomes
-- [ ] Implement POST /api/learning-outcomes/import endpoint
-  - Accept Excel file upload
-  - Validate file structure and data
-  - Parse Excel sheets
-  - Map columns to database fields
-- [ ] Implement validation rules:
-  - Check required fields
-  - Validate data types
-  - Verify foreign key relationships (exam_id exists)
-  - Check for duplicate IDs
-- [ ] Create import preview/dry-run mode:
-  - Show what will be changed
-  - Display warnings and errors
-  - Allow user to review before committing
-- [ ] Implement merge strategies:
-  - **Replace**: Delete existing, insert new data
-  - **Update**: Update existing records by ID
-  - **Append**: Add new records, keep existing
-  - **Merge**: Intelligently combine similar outcomes
-- [ ] Add transaction support (rollback on error)
-- [ ] Generate import report:
-  - Records processed
-  - Records added/updated/deleted
-  - Errors and warnings
-  - Summary statistics
-
-#### 7.3 Backend - Similarity Detection
-- [ ] Create similarity detection algorithm
-- [ ] Implement fuzzy matching for outcome descriptions
-  - Use Levenshtein distance or similar
-  - Calculate similarity scores (0-100%)
-- [ ] Group similar outcomes:
-  - By subject name (normalized)
-  - By category + subcategory
-  - By outcome description similarity
-- [ ] Create GET /api/learning-outcomes/similar endpoint
-  - Return groups of similar outcomes
-  - Include similarity scores
-  - Suggest merge candidates
-- [ ] Implement merge preview:
-  - Show which records will be combined
-  - Display aggregated statistics
-  - Allow user to select primary record
-
-#### 7.4 Backend - Merge Operations
-- [ ] Create POST /api/learning-outcomes/merge endpoint
+#### 7.2 Backend - Smart Merge API
+- [ ] Create GET /api/learning-outcomes/analyze endpoint:
+  - [ ] Trigger Claude AI analysis
+  - [ ] Return similarity groups with confidence scores
+  - [ ] Include preview of what will be merged
+  - [ ] Calculate potential impact (how many records affected)
+- [ ] Create POST /api/learning-outcomes/cleanup endpoint:
+  - [ ] Accept approved merge groups from frontend
+  - [ ] Validate merge operations
+  - [ ] Perform merge in database transaction
+  - [ ] Handle merge conflicts gracefully
 - [ ] Implement merge logic:
-  - Accept array of outcome IDs to merge
-  - Accept target outcome (primary record)
-  - Aggregate statistics (sum questions, acquired, appearances)
-  - Recalculate success rates
-  - Update or delete merged records
-- [ ] Handle exam relationships:
-  - Maintain links to source exams
-  - Don't lose data provenance
-- [ ] Add merge history tracking:
-  - Create audit log table
-  - Record what was merged and when
-  - Allow undo if needed
+  - [ ] Select one outcome as "primary" (keeps ID, best description)
+  - [ ] Aggregate statistics from all merged outcomes
+  - [ ] Sum: total_questions, acquired, lost, total_appearances
+  - [ ] Recalculate: average_success_rate across all merged records
+  - [ ] Update all related exam_learning_outcome records
+  - [ ] Soft delete merged outcomes (mark as merged_into_id)
+- [ ] Handle data integrity:
+  - [ ] Maintain links to source exams (don't lose provenance)
+  - [ ] Update foreign key references
+  - [ ] Validate no circular merge references
+  - [ ] Use database transactions (all-or-nothing)
 
-#### 7.5 Frontend - Export UI
-- [ ] Add "Export" button on Learning Outcomes page
-- [ ] Create export dialog:
-  - Select filters (subject, date range)
-  - Choose format options
-  - Preview record count
-- [ ] Implement file download handling
-- [ ] Show success notification with file info
-- [ ] Add loading state during export
+#### 7.3 Backend - Audit Trail & Undo
+- [ ] Create `outcome_merge_history` table:
+  - [ ] Fields: id, merged_at, merged_by, merge_group_id
+  - [ ] original_outcome_id, target_outcome_id
+  - [ ] original_data (JSON snapshot), confidence_score
+- [ ] Implement audit logging:
+  - [ ] Record every merge operation with full context
+  - [ ] Store "before" state of all affected records
+  - [ ] Timestamp and track who initiated merge
+- [ ] Create POST /api/learning-outcomes/undo endpoint:
+  - [ ] Accept merge_group_id
+  - [ ] Restore original records from audit log
+  - [ ] Reverse all changes in transaction
+  - [ ] Validate undo is possible (no conflicting changes)
+- [ ] Add GET /api/learning-outcomes/merge-history endpoint:
+  - [ ] Show recent merge operations
+  - [ ] Display what was merged and when
+  - [ ] Allow filtering by date, subject, user
 
-#### 7.6 Frontend - Import UI
-- [ ] Add "Import" button on Learning Outcomes page
-- [ ] Create import dialog/page:
-  - File upload area
-  - Drag-and-drop support
-  - File validation (Excel only)
-- [ ] Implement import preview:
-  - Display parsed data in table
-  - Show validation errors/warnings
-  - Highlight changes (additions, updates, deletions)
-- [ ] Add merge strategy selector
-  - Radio buttons for replace/update/append/merge
-  - Explain each option
-- [ ] Implement confirmation step:
-  - Summary of changes
-  - "Confirm Import" button
-  - Show import progress
-- [ ] Display import results:
-  - Success/error counts
-  - Detailed log
-  - Link to updated data
+#### 7.4 Frontend - AI Cleanup Interface
+- [ ] Add "Clean Up Outcomes" button on Learning Outcomes page
+- [ ] Create cleanup wizard/page:
+  - [ ] Step 1: Analyze - Click "Analyze with AI" button
+    - Show loading state with progress
+    - Display "Analyzing X outcomes..." message
+  - [ ] Step 2: Review - Show Claude's suggested groups
+    - Card-based layout for each similarity group
+    - Display confidence score badge (90%+ green, 80-90% yellow)
+    - Show all outcomes in group with details
+    - Highlight what will change (before/after preview)
+  - [ ] Step 3: Select - User reviews and approves/rejects
+    - Checkbox to select which groups to merge
+    - "Select All High Confidence" quick action
+    - Ability to edit standardized name
+    - Preview aggregated statistics
+  - [ ] Step 4: Confirm - Final confirmation before merge
+    - Summary: "X groups, Y outcomes will be merged"
+    - Estimated impact on analytics
+    - "Confirm Cleanup" button
+  - [ ] Step 5: Results - Show merge results
+    - Success/failure counts
+    - Link to view merge history
+    - Option to undo if needed
+- [ ] Create similarity group card component:
+  - [ ] Expandable card showing group details
+  - [ ] Confidence score indicator
+  - [ ] List all outcomes with exam counts
+  - [ ] Show suggested standardized name (editable)
+  - [ ] Preview merged statistics
+  - [ ] Accept/Reject buttons
+- [ ] Implement smart UI features:
+  - [ ] Color-code by confidence (green > 90%, yellow 80-90%, red < 80%)
+  - [ ] Show impact metrics (how many exams affected)
+  - [ ] Tooltip explanations for why grouped
+  - [ ] "Why these?" button showing Claude's reasoning
+- [ ] Add safety features:
+  - [ ] Warning for low-confidence merges
+  - [ ] Require confirmation for bulk operations
+  - [ ] Show "This cannot be auto-undone" warning if needed
 
-#### 7.7 Frontend - Similarity & Merge UI
-- [ ] Create "Find Similar" page/dialog
-- [ ] Display similarity groups:
-  - Expandable cards for each group
-  - Show all outcomes in group
-  - Display similarity scores
-  - Highlight differences
-- [ ] Implement merge interface:
-  - Checkbox selection of outcomes to merge
-  - Select primary outcome (keeps this data)
-  - Preview merged result
-  - Show aggregated statistics
-- [ ] Add batch merge functionality:
-  - Auto-suggest high-confidence merges (>90% similarity)
-  - Allow user to review and approve
-  - One-click bulk merge
-- [ ] Show merge confirmation:
-  - "Are you sure?" dialog
-  - Display what will change
-  - Undo option
-
-#### 7.8 Excel Format Specification
-- [ ] Document Excel structure in code comments
-- [ ] Create example/template Excel file
-- [ ] Include README sheet in exported files:
-  - Instructions for editing
-  - Column descriptions
-  - Import guidelines
-- [ ] Add data validation in Excel:
-  - Dropdown lists for subject names
-  - Number ranges for percentages
-  - Date formats
+#### 7.5 Frontend - Merge History & Undo Interface
+- [ ] Create "Merge History" page/section
+- [ ] Display recent merge operations in timeline:
+  - [ ] Show date, time, and who performed merge
+  - [ ] Display what was merged (group details)
+  - [ ] Show confidence scores
+  - [ ] Badge for "Can Undo" vs "Permanent"
+- [ ] Implement undo functionality:
+  - [ ] "Undo" button on recent merges
+  - [ ] Confirmation dialog explaining what will be restored
+  - [ ] Show loading state during undo
+  - [ ] Success message with link to restored outcomes
+- [ ] Add filtering and search:
+  - [ ] Filter by date range
+  - [ ] Filter by subject
+  - [ ] Search by outcome name
+  - [ ] Show/hide undone operations
 
 ### Deliverables
-- ✅ Excel export functionality with complete data
-- ✅ Excel import with validation and preview
-- ✅ Similarity detection algorithm
-- ✅ Merge interface for combining similar outcomes
-- ✅ Complete audit trail of changes
+- ✅ Claude AI-powered similarity detection
+- ✅ Intelligent grouping and standardization
+- ✅ Interactive merge review interface
+- ✅ One-click cleanup with user approval
+- ✅ Complete audit trail with undo functionality
+- ✅ Merge history and analytics
 
 ### Success Criteria
-- User can export all learning outcomes to Excel
-- Excel file is well-formatted and includes all relationships
-- User can edit Excel file and re-import successfully
-- Validation catches errors before committing changes
-- Similar outcomes are accurately detected (>80% accuracy)
-- User can merge similar outcomes without losing data
-- All changes are tracked and reversible
+- Claude accurately identifies similar outcomes (>90% precision)
+- Semantic similarity detected across Turkish language variations
+- User-friendly interface requiring minimal technical knowledge
+- High-confidence merges (>90%) can be batch-approved
+- All merges are reversible within 30 days
+- No data loss during merge operations
+- Analytics automatically update after merges
+- Process takes < 2 minutes for 500 outcomes
+
+### Cost Estimation
+- **Analysis**: ~$0.10-0.30 per 100 outcomes (depends on complexity)
+- **Typical usage**: $0.50-1.50 per cleanup session (for 500 outcomes)
+- **Frequency**: Once per month or after 10+ exams added
+- **Annual cost**: ~$10-20 (very reasonable for the value)
 
 ### Example Workflow
-1. User clicks "Export" on Learning Outcomes page
-2. System generates Excel file with all outcomes data
-3. User downloads and opens in Excel
-4. User manually edits/merges similar entries
-5. User saves Excel file
-6. User clicks "Import" and uploads edited file
-7. System validates and shows preview of changes
-8. User reviews and confirms import
-9. Data is updated in database
-10. User sees updated learning outcomes list
+**Scenario**: After uploading 10 exams, user notices duplicate learning outcomes
 
-### Alternative Workflow (Auto-Merge)
-1. User clicks "Find Similar Outcomes"
-2. System analyzes all outcomes and groups similar ones
-3. User reviews suggested merges
-4. User approves/rejects each merge suggestion
-5. System combines approved outcomes
-6. User sees cleaned-up learning outcomes list
+**Step-by-Step:**
+1. User goes to Learning Outcomes page
+2. Clicks "Clean Up Outcomes" button in top-right
+3. System shows: "Found 247 learning outcomes. Analyze for duplicates?"
+4. User clicks "Analyze with AI"
+5. Loading state: "Analyzing outcomes with Claude AI... 30 seconds"
+6. **Results Screen** appears:
+   ```
+   ✅ Analysis Complete!
+   Found 8 similarity groups (23 outcomes can be merged)
+
+   📊 Groups by confidence:
+   - High confidence (>90%): 5 groups, 15 outcomes
+   - Medium confidence (80-90%): 3 groups, 8 outcomes
+
+   [Select All High Confidence] [Review All] [Cancel]
+   ```
+
+7. User clicks "Review All", sees groups:
+   ```
+   ┌─────────────────────────────────────────────────┐
+   │ Group 1: Deyimler (Confidence: 95%) ✓          │
+   │ Suggested name: "Deyimler ve Atasözleri"       │
+   │                                                  │
+   │ Will merge:                                     │
+   │  • Deyimler ve Atasözleri (3 exams, 12 qs)     │
+   │  • Deyim Bilgisi (2 exams, 8 qs)               │
+   │  • Deyimler (1 exam, 4 qs)                     │
+   │                                                  │
+   │ After merge: 24 total questions, 6 exams       │
+   │ [✓ Approve] [✗ Skip] [Edit Name]               │
+   └─────────────────────────────────────────────────┘
+   ```
+
+8. User approves high-confidence groups, skips uncertain ones
+9. Clicks "Confirm Cleanup"
+10. Confirmation dialog: "Merge 5 groups (15 outcomes)? This can be undone within 30 days."
+11. User confirms
+12. **Results**: "✅ Successfully merged 15 outcomes into 5. Analytics updated."
+13. Link to "View Merge History" for undo option
+
+### Alternative: Automated Mode (Future Enhancement)
+```
+Settings → Auto-cleanup preferences:
+☑ Automatically merge high-confidence duplicates (>95%)
+☐ Weekly cleanup schedule
+☐ Notify me before auto-merging
+```
+
+---
+
+## Phase 8: Topic-Focused Recommendations from Learning Outcomes
+**Duration**: 2-3 Days
+**Status**: Not Started
+**Priority**: High
+
+### Objectives
+- Enhance recommendations with topic-level granularity from learning outcomes
+- Generate detailed, actionable study plans based on weak learning outcomes
+- Link recommendations to specific topics and subtopics
+- Provide resource suggestions for each weak learning outcome
+
+### Problem Statement
+Current recommendations (Phase 4) focus on subject-level weaknesses and general patterns. However, learning outcomes data contains rich topic-level information (categories, subcategories, outcome descriptions) that can be leveraged to create more targeted, actionable study recommendations.
+
+For example, instead of "Improve Türkçe performance", we can say:
+- "Focus on 'Deyimler ve Atasözleri' - Success rate: 35%"
+- "Practice 'Cümle Bilgisi - Fiil Çatısı' questions - 8 questions lost in last 3 exams"
+- "Review 'Sözcük Türleri - İsim ve Sıfat' concepts - Consistent difficulty pattern"
+
+### Tasks
+
+#### 8.1 Backend - Learning Outcome Analysis Service
+- [ ] Create learning outcome analysis service
+- [ ] Implement weak outcome identification algorithm:
+  - [ ] Calculate average success rate per learning outcome across all exams
+  - [ ] Identify outcomes with < 50% success rate (critical)
+  - [ ] Identify outcomes with 50-70% success rate (needs improvement)
+  - [ ] Detect consistently weak outcomes (low success in 3+ exams)
+  - [ ] Find declining outcomes (success rate dropping over time)
+  - [ ] Identify high-impact outcomes (appears frequently, high question count)
+- [ ] Create outcome clustering:
+  - [ ] Group by subject → category → subcategory
+  - [ ] Calculate aggregate statistics per cluster
+  - [ ] Identify patterns across related outcomes
+- [ ] Implement outcome prioritization scoring:
+  - [ ] Weight by frequency (how often it appears)
+  - [ ] Weight by question count (how many questions)
+  - [ ] Weight by recent performance (recent exams more important)
+  - [ ] Weight by improvement potential (current success rate gap)
+  - [ ] Calculate final priority score (0-100)
+
+#### 8.2 Backend - Topic-Based Recommendation Generation
+- [ ] Extend recommendation service to use learning outcomes
+- [ ] Create new recommendation issue type: `weak_learning_outcome`
+- [ ] Implement outcome-to-recommendation mapping:
+  - [ ] For each weak outcome, generate specific recommendation
+  - [ ] Extract topic from category/subcategory/description
+  - [ ] Calculate impact score based on potential improvement
+  - [ ] Generate detailed action items for each outcome
+- [ ] Integrate with Claude API for rich recommendations:
+  - [ ] Send learning outcome data (description, success rate, question count)
+  - [ ] Request specific study strategies for that topic
+  - [ ] Request resource recommendations (video, exercises, books)
+  - [ ] Request prerequisite topics to review first
+  - [ ] Request practice question suggestions
+- [ ] Link recommendations to source learning outcomes:
+  - [ ] Add `learning_outcome_ids` field to recommendations table
+  - [ ] Store relationships for traceability
+  - [ ] Enable filtering recommendations by outcome
+
+#### 8.3 Backend - Enhanced Recommendation API
+- [ ] Extend GET /api/recommendations endpoint:
+  - [ ] Add `?include_outcomes=true` parameter
+  - [ ] Return related learning outcome details with each recommendation
+  - [ ] Include outcome statistics (success rate, appearances, trends)
+- [ ] Create GET /api/recommendations/by-topic endpoint:
+  - [ ] Group recommendations by subject → category → subcategory
+  - [ ] Return hierarchical structure for topic tree view
+  - [ ] Include aggregated statistics per topic
+- [ ] Create GET /api/learning-outcomes/{id}/recommendations endpoint:
+  - [ ] Get all recommendations related to specific learning outcome
+  - [ ] Show historical recommendations for that outcome
+  - [ ] Display progress over time
+
+#### 8.4 Frontend - Enhanced Recommendations Page
+- [ ] Update RecommendationsPage to show learning outcome details
+- [ ] Add topic hierarchy display:
+  - [ ] Show subject name
+  - [ ] Show category (if available)
+  - [ ] Show subcategory (if available)
+  - [ ] Show full outcome description
+- [ ] Display outcome-specific metrics on each recommendation card:
+  - [ ] Success rate badge with color coding
+  - [ ] Number of appearances across exams
+  - [ ] Trend indicator (improving/stable/declining)
+  - [ ] Total questions and lost questions count
+- [ ] Add expandable "Details" section for each recommendation:
+  - [ ] Study resources (videos, articles, book chapters)
+  - [ ] Practice question suggestions
+  - [ ] Prerequisite topics to review
+  - [ ] Related outcomes that might help
+- [ ] Implement topic-based filtering:
+  - [ ] Filter by subject
+  - [ ] Filter by category
+  - [ ] Filter by outcome success rate range
+  - [ ] Filter by priority level
+
+#### 8.5 Frontend - Topic Tree View
+- [ ] Create new view mode: "Topic Tree"
+- [ ] Build hierarchical tree structure:
+  - [ ] Root level: Subjects
+  - [ ] Second level: Categories
+  - [ ] Third level: Subcategories
+  - [ ] Leaf level: Specific outcomes
+- [ ] Add visual indicators:
+  - [ ] Color-code nodes by success rate (red/yellow/green)
+  - [ ] Show recommendation count badge on nodes
+  - [ ] Display priority indicator for high-priority items
+- [ ] Make tree interactive:
+  - [ ] Expand/collapse nodes
+  - [ ] Click node to view related recommendations
+  - [ ] Click outcome to view detailed stats
+- [ ] Add search/filter:
+  - [ ] Search by topic name
+  - [ ] Filter by success rate threshold
+  - [ ] Show only topics with active recommendations
+
+#### 8.6 Frontend - Study Plan Generator
+- [ ] Create "Generate Study Plan" feature
+- [ ] Build study plan wizard:
+  - [ ] Step 1: Select time frame (1 week, 2 weeks, 1 month)
+  - [ ] Step 2: Select topics to focus (from weak outcomes)
+  - [ ] Step 3: Set daily study time
+  - [ ] Step 4: Choose study style (intensive, balanced, light)
+- [ ] Generate personalized study schedule:
+  - [ ] Prioritize topics by impact score
+  - [ ] Distribute topics across available time
+  - [ ] Balance subjects (don't overload one subject)
+  - [ ] Include review sessions for previously studied topics
+  - [ ] Add practice test suggestions
+- [ ] Display study plan:
+  - [ ] Calendar view with daily tasks
+  - [ ] Topic-by-topic breakdown
+  - [ ] Progress tracking checkboxes
+  - [ ] Estimated completion time per task
+- [ ] Allow plan customization:
+  - [ ] Drag-and-drop to reschedule
+  - [ ] Add/remove topics
+  - [ ] Adjust time allocations
+  - [ ] Save and export plan
+
+#### 8.7 Frontend - Learning Outcome Integration
+- [ ] Update Learning Outcomes page:
+  - [ ] Add "View Recommendations" button on weak outcomes
+  - [ ] Show recommendation badge on outcomes with active recommendations
+  - [ ] Add quick action: "Generate Recommendation" for specific outcome
+- [ ] Update Subject Analysis page:
+  - [ ] Show weak learning outcomes section
+  - [ ] Display topic-specific recommendations inline
+  - [ ] Link to detailed recommendations page
+- [ ] Update Dashboard:
+  - [ ] Show "Top 3 Topic Focus Areas" (weak outcomes)
+  - [ ] Display topic-specific quick tips
+  - [ ] Add "Study Plan" widget with next recommended topics
+
+#### 8.8 Backend - Resource Database (Optional Enhancement)
+- [ ] Create resource database table:
+  - [ ] Resource ID, title, type (video/article/book/exercise)
+  - [ ] URL or reference
+  - [ ] Subject, category, subcategory mapping
+  - [ ] Tags (difficulty level, language, source)
+- [ ] Seed with common resources:
+  - [ ] Popular YouTube channels for TYT subjects
+  - [ ] Online practice platforms (Khan Academy, etc.)
+  - [ ] Recommended textbooks
+  - [ ] PDF worksheets
+- [ ] Implement GET /api/resources/search endpoint:
+  - [ ] Search by topic/category
+  - [ ] Filter by resource type
+  - [ ] Sort by relevance/rating
+- [ ] Link resources to recommendations:
+  - [ ] Auto-suggest resources based on topic
+  - [ ] Allow manual resource assignment
+  - [ ] Track resource usage and effectiveness
+
+#### 8.9 AI-Enhanced Topic Recommendations
+- [ ] Enhance Claude API prompts for topic-specific advice:
+  - [ ] Include learning outcome description
+  - [ ] Include historical performance data
+  - [ ] Include related outcomes for context
+  - [ ] Request specific study techniques for that topic
+  - [ ] Request common pitfalls and mistakes to avoid
+- [ ] Generate topic-specific study guides:
+  - [ ] Key concepts summary
+  - [ ] Common question patterns
+  - [ ] Step-by-step solution strategies
+  - [ ] Practice problems with solutions
+- [ ] Create adaptive recommendations:
+  - [ ] Adjust difficulty based on current performance
+  - [ ] Suggest next topics based on mastery
+  - [ ] Provide encouragement and motivation
+
+### Deliverables
+- ✅ Learning outcome-based analysis engine
+- ✅ Topic-specific, granular recommendations
+- ✅ Hierarchical topic tree view
+- ✅ Study plan generator
+- ✅ Resource recommendation system
+- ✅ Enhanced recommendations with actionable details
+- ✅ Integration across all relevant pages
+
+### Success Criteria
+- Recommendations are topic-specific, not just subject-level
+- Each weak learning outcome has at least one actionable recommendation
+- Recommendations include specific resources and study strategies
+- Users can generate a personalized study plan
+- Topic tree view clearly shows problem areas
+- Integration with existing pages is seamless
+- AI-generated advice is relevant and helpful
+- System can track progress on topic-level recommendations
+
+### Example Enhanced Recommendation
+
+**Before (Phase 4):**
+```
+Priority: High
+Subject: Türkçe
+Issue: Weak subject performance (45% average)
+Description: Türkçe dersinde genel performansınız düşük.
+Action Items:
+  - Türkçe konu anlatımlarını izleyin
+  - Daha fazla soru çözün
+  - Haftada 2 deneme sınavı yapın
+```
+
+**After (Phase 8):**
+```
+Priority: High
+Subject: Türkçe
+Topic: Söz Sanatları → Deyimler ve Atasözleri
+Learning Outcome: "Metinde geçen deyim ve atasözlerinin anlamını çıkarabilme"
+Success Rate: 35% (7/20 questions across 3 exams)
+Trend: Declining ↓
+
+Description: Son 3 sınavda deyimler ve atasözleri konusunda zorluk yaşıyorsunuz.
+20 sorudan sadece 7'sini doğru cevapladınız. Bu konu TYT'de sıklıkla çıkmaktadır.
+
+Action Items:
+  ✓ 100 Temel Deyim listesini ezberleyin (Kaynak: PDF İndir)
+  ✓ Her gün 5 yeni atasözü öğrenin ve cümlede kullanın
+  ✓ Deyimlerin gerçek ve mecaz anlamlarını ayırt etme pratiği yapın
+  ✓ Son 10 AYT/TYT'den deyim sorularını çözün (Kaynak: soru bankası)
+
+Study Resources:
+  📺 Video: "TYT Türkçe - Deyimler Konu Anlatımı" (YouTube - 15dk)
+  📄 PDF: "En Çok Çıkan 200 Deyim ve Atasözü Listesi"
+  ✏️ Practice: "Deyimler Quiz" (50 soru - online platform)
+
+Prerequisite Topics:
+  - Sözcük anlamı ve bağlam ilişkisi
+  - Mecaz anlamlar
+
+Related Weak Outcomes:
+  - "Atasözlerini anlamlarıyla eşleştirme" (42% success)
+  - "İkilemeler" (48% success)
+
+Estimated Study Time: 3-4 hours spread over 1 week
+Impact Score: 8.5/10 (High frequency + Clear improvement path)
+```
+
+### Example Study Plan Output
+```
+📅 1 Haftalık Kişisel Çalışma Planı
+
+Pazartesi (2 saat):
+  09:00-10:00: Türkçe - Deyimler ve Atasözleri (Video + Not)
+  19:00-20:00: Matematik - İkinci Dereceden Denklemler (Soru Çözümü)
+
+Salı (2 saat):
+  09:00-10:00: Türkçe - Deyimler Pratik (50 soru)
+  19:00-20:00: Fizik - Hareket (Konu Tekrarı)
+
+... (continues for week)
+
+📊 Kapsanan Konular:
+  ✓ Türkçe - Deyimler ve Atasözleri (4 saat)
+  ✓ Matematik - İkinci Dereceden Denklemler (3 saat)
+  ✓ Fizik - Hareket (2 saat)
+  ✓ Biyoloji - Hücre Bölünmesi (3 saat)
+
+🎯 Hedef: 4 zayıf kazanımda %20 artış
+```
 
 ---
 

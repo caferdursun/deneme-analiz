@@ -31,9 +31,10 @@ export const UploadPage: React.FC = () => {
     try {
       const response = await examAPI.uploadExam(file);
       setResult(response);
+      // Redirect to validation review page after 2 seconds
       setTimeout(() => {
-        navigate('/exams');
-      }, 3000);
+        navigate(`/exams/${response.exam_id}/validate`);
+      }, 2000);
     } catch (err: any) {
       setError(err.response?.data?.detail || 'Dosya yüklenirken bir hata oluştu');
     } finally {
@@ -128,7 +129,7 @@ export const UploadPage: React.FC = () => {
               )}
 
               <p className="text-green-600 text-xs mt-2">
-                Sınav listesine yönlendiriliyorsunuz...
+                Doğrulama sayfasına yönlendiriliyorsunuz...
               </p>
             </div>
           )}

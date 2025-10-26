@@ -26,6 +26,9 @@ PyPDF2==3.0.1
 python-jose[cryptography]==3.3.0
 passlib[bcrypt]==1.7.4
 
+# Scheduled Tasks
+APScheduler==3.10.4
+
 # Testing
 pytest==7.4.4
 pytest-asyncio==0.23.3

@@ -26,6 +26,64 @@ class AnalyticsService:
     def __init__(self, db: Session):
         self.db = db
 
+    def get_all_learning_outcomes(self, student_id: Optional[str] = None) -> List[LearningOutcomeStats]:
+        """Get all learning outcomes aggregated across exams"""
+
+        # Build query
+        query = self.db.query(LearningOutcome)
+
+        if student_id:
+            query = query.join(Exam).filter(Exam.student_id == student_id)
+
+        learning_outcomes = query.all()
+
+        # Group by unique outcome identifier (subject_name, category, subcategory, outcome_description)
+        grouped_outcomes = {}
+
+        for lo in learning_outcomes:
+            key = (
+                lo.subject_name,
+                lo.category or "",
+                lo.subcategory or "",
+                lo.outcome_description or ""
+            )
+
+            if key not in grouped_outcomes:
+                grouped_outcomes[key] = {
+                    "subject_name": lo.subject_name,
+                    "category": lo.category,
+                    "subcategory": lo.subcategory,
+                    "outcome_description": lo.outcome_description,
+                    "total_questions": 0,
+                    "total_acquired": 0,
+                    "total_appearances": 0,
+                }
+
+            grouped_outcomes[key]["total_questions"] += lo.total_questions
+            grouped_outcomes[key]["total_acquired"] += lo.acquired
+            grouped_outcomes[key]["total_appearances"] += 1
+
+        # Convert to LearningOutcomeStats objects
+        result = []
+        for data in grouped_outcomes.values():
+            success_rate = (
+                (data["total_acquired"] / data["total_questions"]) * 100
+                if data["total_questions"] > 0 else 0.0
+            )
+
+            result.append(LearningOutcomeStats(
+                subject_name=data["subject_name"],
+                category=data["category"],
+                subcategory=data["subcategory"],
+                outcome_description=data["outcome_description"],
+                total_questions=data["total_questions"],
+                total_acquired=data["total_acquired"],
+                average_success_rate=success_rate,
+                total_appearances=data["total_appearances"]
+            ))
+
+        return result
+
     def get_overview(self, student_id: Optional[str] = None) -> AnalyticsOverview:
         """Get complete analytics overview"""
 
