@@ -404,6 +404,103 @@
 
 ---
 
+## Phase 6: Validation Report Enhancement
+**Duration**: 1-2 Days
+**Status**: Not Started
+**Priority**: Medium
+
+### Objectives
+- Allow user to review and choose between Claude API and local parser results
+- Persist validation report for user review
+- Enable manual data source selection before database commit
+
+### Problem Statement
+Currently, the validation report appears briefly and then disappears. The system automatically merges or chooses data from Claude API and local parser, but the user has no control over which data source to trust and save to the database.
+
+### Tasks
+
+#### 6.1 Backend Changes
+- [ ] Modify upload endpoint to return validation report without auto-saving
+- [ ] Create new endpoint: POST /api/exams/{exam_id}/confirm
+  - Accept data_source parameter ("claude" or "local")
+  - Save chosen data to database
+  - Mark exam as confirmed
+- [ ] Add exam status field (pending_confirmation, confirmed)
+- [ ] Store both Claude and local parser results temporarily
+- [ ] Add cleanup job for unconfirmed exams after 24 hours
+
+#### 6.2 Frontend - Validation Review Page
+- [ ] Create ValidationReviewPage component
+- [ ] Display side-by-side comparison:
+  - Left column: Claude API results
+  - Right column: Local parser results
+- [ ] Highlight differences between two sources
+  - Use color coding (green = match, red = mismatch)
+  - Show field-by-field comparison
+- [ ] Add comparison statistics
+  - Overall accuracy match percentage
+  - Number of discrepancies
+  - Critical vs. non-critical differences
+- [ ] Implement data source selection
+  - Radio buttons: "Use Claude API" / "Use Local Parser"
+  - Or field-by-field selection for fine-grained control
+- [ ] Add confirmation flow
+  - "Confirm and Save" button
+  - Show summary before final save
+  - Redirect to exam detail page after save
+
+#### 6.3 UI/UX Improvements
+- [ ] Add visual diff highlighting
+  - Red for Claude-only values
+  - Blue for local parser-only values
+  - Green for matching values
+- [ ] Add tooltips explaining differences
+- [ ] Show validation report summary
+  - Total errors/warnings/info
+  - Quick stats comparison
+- [ ] Add "Review Later" option
+  - Save as pending_confirmation status
+  - Add to review queue
+- [ ] Implement keyboard shortcuts
+  - 'C' for Claude, 'L' for Local, 'Enter' to confirm
+
+#### 6.4 Data Management
+- [ ] Create pending exams list
+  - Show all exams awaiting confirmation
+  - Filter by date, status
+  - Quick action buttons
+- [ ] Add notification system
+  - Alert user of pending reviews
+  - Show count badge on navigation
+- [ ] Implement auto-cleanup
+  - Delete unconfirmed exams after 24h
+  - Send reminder before deletion
+
+### Deliverables
+- ✅ Persistent validation reports
+- ✅ Manual data source selection UI
+- ✅ Side-by-side comparison view
+- ✅ Pending exams management
+
+### Success Criteria
+- User can review validation report at their own pace
+- Clear visual indication of data differences
+- Can choose data source before database commit
+- No data loss during review process
+- Intuitive and fast workflow
+
+### Example Workflow
+1. User uploads PDF
+2. System processes with both Claude API and local parser
+3. User redirected to validation review page
+4. User sees side-by-side comparison with highlighted differences
+5. User selects preferred data source (or field-by-field)
+6. User confirms and saves
+7. Data committed to database
+8. User redirected to exam detail page
+
+---
+
 ## Future Roadmap (Post-MVP)
 
 ### Short-term (1-2 months)
