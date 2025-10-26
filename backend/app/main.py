@@ -46,9 +46,9 @@ async def health_check():
 
 
 # Import and include routers
-from app.api.routes import exams
+from app.api.routes import exams, analytics
 
 app.include_router(exams.router, prefix=f"{settings.API_V1_PREFIX}/exams", tags=["exams"])
-# app.include_router(analytics.router, prefix=f"{settings.API_V1_PREFIX}/analytics", tags=["analytics"])
+app.include_router(analytics.router, prefix=f"{settings.API_V1_PREFIX}/analytics", tags=["analytics"])
 # app.include_router(recommendations.router, prefix=f"{settings.API_V1_PREFIX}/recommendations", tags=["recommendations"])
 # app.include_router(student.router, prefix=f"{settings.API_V1_PREFIX}/student", tags=["student"])
