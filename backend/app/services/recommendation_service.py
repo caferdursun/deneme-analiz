@@ -10,6 +10,7 @@ import os
 
 from app.models import Recommendation, Exam, ExamResult, SubjectResult, LearningOutcome, Student
 from app.services.analytics_service import AnalyticsService
+from app.core.config import settings
 
 
 class RecommendationService:
@@ -387,7 +388,7 @@ class RecommendationService:
 
         # Call Claude API
         try:
-            client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
+            client = anthropic.Anthropic(api_key=settings.ANTHROPIC_API_KEY)
 
             prompt = f"""Sen bir üniversite sınavı hazırlık danışmanısın. Aşağıdaki öğrenci performans verilerine dayanarak spesifik, uygulanabilir çalışma önerileri oluştur.
 
@@ -426,7 +427,7 @@ Lütfen her sorun için şu formatta öneriler oluştur. ÖNEMLİ: Zayıf kazan�
 SADECE JSON ARRAY DÖNDÜR, BAŞKA HİÇBİR ŞEY EKLEME."""
 
             message = client.messages.create(
-                model="claude-3-5-sonnet-20241022",
+                model="claude-3-haiku-20240307",
                 max_tokens=4000,
                 messages=[
                     {"role": "user", "content": prompt}
