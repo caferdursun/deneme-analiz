@@ -501,6 +501,215 @@ Currently, the validation report appears briefly and then disappears. The system
 
 ---
 
+## Phase 7: Learning Outcomes Data Management
+**Duration**: 1-2 Days
+**Status**: Not Started
+**Priority**: Medium
+
+### Objectives
+- Export learning outcomes data to Excel for manual review and editing
+- Import cleaned/merged learning outcomes data back to database
+- Provide tools to identify and merge similar learning outcomes
+- Enable data cleanup as exam count grows
+
+### Problem Statement
+As exams are added to the system, learning outcomes from different sources may have:
+- Slightly different names for the same outcome (e.g., "Deyimler" vs "Deyim Bilgisi")
+- Different categorizations but same content
+- Inconsistent subject naming (e.g., "Matematik.09" vs "Matematik.10")
+- Duplicate or near-duplicate entries
+
+Users need a way to export, clean, merge similar outcomes, and re-import the data.
+
+### Tasks
+
+#### 7.1 Backend - Excel Export
+- [ ] Install openpyxl or xlsxwriter library
+- [ ] Create export service for learning outcomes
+- [ ] Design Excel format with multiple sheets:
+  - **Sheet 1: Learning Outcomes** - All learning outcome records with columns:
+    - ID, Exam ID, Exam Name, Subject Name, Category, Subcategory
+    - Outcome Description, Total Questions, Acquired, Lost
+    - Success Rate, Student %, Class %, School %
+    - Created At
+  - **Sheet 2: Exams** - Related exam information for reference
+  - **Sheet 3: Metadata** - Export timestamp, record count, filters applied
+- [ ] Implement GET /api/learning-outcomes/export endpoint
+  - Accept optional filters (subject, date range, exam_id)
+  - Generate Excel file with proper formatting
+  - Return file download response
+- [ ] Add cell formatting:
+  - Headers in bold
+  - Freeze first row
+  - Auto-width columns
+  - Color-code success rates (red < 50%, yellow 50-80%, green > 80%)
+- [ ] Include formulas for calculated fields
+
+#### 7.2 Backend - Excel Import
+- [ ] Create import service for learning outcomes
+- [ ] Implement POST /api/learning-outcomes/import endpoint
+  - Accept Excel file upload
+  - Validate file structure and data
+  - Parse Excel sheets
+  - Map columns to database fields
+- [ ] Implement validation rules:
+  - Check required fields
+  - Validate data types
+  - Verify foreign key relationships (exam_id exists)
+  - Check for duplicate IDs
+- [ ] Create import preview/dry-run mode:
+  - Show what will be changed
+  - Display warnings and errors
+  - Allow user to review before committing
+- [ ] Implement merge strategies:
+  - **Replace**: Delete existing, insert new data
+  - **Update**: Update existing records by ID
+  - **Append**: Add new records, keep existing
+  - **Merge**: Intelligently combine similar outcomes
+- [ ] Add transaction support (rollback on error)
+- [ ] Generate import report:
+  - Records processed
+  - Records added/updated/deleted
+  - Errors and warnings
+  - Summary statistics
+
+#### 7.3 Backend - Similarity Detection
+- [ ] Create similarity detection algorithm
+- [ ] Implement fuzzy matching for outcome descriptions
+  - Use Levenshtein distance or similar
+  - Calculate similarity scores (0-100%)
+- [ ] Group similar outcomes:
+  - By subject name (normalized)
+  - By category + subcategory
+  - By outcome description similarity
+- [ ] Create GET /api/learning-outcomes/similar endpoint
+  - Return groups of similar outcomes
+  - Include similarity scores
+  - Suggest merge candidates
+- [ ] Implement merge preview:
+  - Show which records will be combined
+  - Display aggregated statistics
+  - Allow user to select primary record
+
+#### 7.4 Backend - Merge Operations
+- [ ] Create POST /api/learning-outcomes/merge endpoint
+- [ ] Implement merge logic:
+  - Accept array of outcome IDs to merge
+  - Accept target outcome (primary record)
+  - Aggregate statistics (sum questions, acquired, appearances)
+  - Recalculate success rates
+  - Update or delete merged records
+- [ ] Handle exam relationships:
+  - Maintain links to source exams
+  - Don't lose data provenance
+- [ ] Add merge history tracking:
+  - Create audit log table
+  - Record what was merged and when
+  - Allow undo if needed
+
+#### 7.5 Frontend - Export UI
+- [ ] Add "Export" button on Learning Outcomes page
+- [ ] Create export dialog:
+  - Select filters (subject, date range)
+  - Choose format options
+  - Preview record count
+- [ ] Implement file download handling
+- [ ] Show success notification with file info
+- [ ] Add loading state during export
+
+#### 7.6 Frontend - Import UI
+- [ ] Add "Import" button on Learning Outcomes page
+- [ ] Create import dialog/page:
+  - File upload area
+  - Drag-and-drop support
+  - File validation (Excel only)
+- [ ] Implement import preview:
+  - Display parsed data in table
+  - Show validation errors/warnings
+  - Highlight changes (additions, updates, deletions)
+- [ ] Add merge strategy selector
+  - Radio buttons for replace/update/append/merge
+  - Explain each option
+- [ ] Implement confirmation step:
+  - Summary of changes
+  - "Confirm Import" button
+  - Show import progress
+- [ ] Display import results:
+  - Success/error counts
+  - Detailed log
+  - Link to updated data
+
+#### 7.7 Frontend - Similarity & Merge UI
+- [ ] Create "Find Similar" page/dialog
+- [ ] Display similarity groups:
+  - Expandable cards for each group
+  - Show all outcomes in group
+  - Display similarity scores
+  - Highlight differences
+- [ ] Implement merge interface:
+  - Checkbox selection of outcomes to merge
+  - Select primary outcome (keeps this data)
+  - Preview merged result
+  - Show aggregated statistics
+- [ ] Add batch merge functionality:
+  - Auto-suggest high-confidence merges (>90% similarity)
+  - Allow user to review and approve
+  - One-click bulk merge
+- [ ] Show merge confirmation:
+  - "Are you sure?" dialog
+  - Display what will change
+  - Undo option
+
+#### 7.8 Excel Format Specification
+- [ ] Document Excel structure in code comments
+- [ ] Create example/template Excel file
+- [ ] Include README sheet in exported files:
+  - Instructions for editing
+  - Column descriptions
+  - Import guidelines
+- [ ] Add data validation in Excel:
+  - Dropdown lists for subject names
+  - Number ranges for percentages
+  - Date formats
+
+### Deliverables
+- ✅ Excel export functionality with complete data
+- ✅ Excel import with validation and preview
+- ✅ Similarity detection algorithm
+- ✅ Merge interface for combining similar outcomes
+- ✅ Complete audit trail of changes
+
+### Success Criteria
+- User can export all learning outcomes to Excel
+- Excel file is well-formatted and includes all relationships
+- User can edit Excel file and re-import successfully
+- Validation catches errors before committing changes
+- Similar outcomes are accurately detected (>80% accuracy)
+- User can merge similar outcomes without losing data
+- All changes are tracked and reversible
+
+### Example Workflow
+1. User clicks "Export" on Learning Outcomes page
+2. System generates Excel file with all outcomes data
+3. User downloads and opens in Excel
+4. User manually edits/merges similar entries
+5. User saves Excel file
+6. User clicks "Import" and uploads edited file
+7. System validates and shows preview of changes
+8. User reviews and confirms import
+9. Data is updated in database
+10. User sees updated learning outcomes list
+
+### Alternative Workflow (Auto-Merge)
+1. User clicks "Find Similar Outcomes"
+2. System analyzes all outcomes and groups similar ones
+3. User reviews suggested merges
+4. User approves/rejects each merge suggestion
+5. System combines approved outcomes
+6. User sees cleaned-up learning outcomes list
+
+---
+
 ## Future Roadmap (Post-MVP)
 
 ### Short-term (1-2 months)
