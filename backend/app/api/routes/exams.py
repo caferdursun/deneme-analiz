@@ -56,13 +56,26 @@ async def upload_exam_pdf(
         # Save to permanent storage
         pdf_path = exam_service.save_pdf_file(open(tmp_path, "rb"), file.filename)
 
-        # Process exam PDF
-        exam_id = exam_service.process_exam_pdf(pdf_path)
+        # Process exam PDF (now returns dict with exam_id and validation_report)
+        result = exam_service.process_exam_pdf(pdf_path)
+
+        # Extract validation status
+        validation_status = result["validation_report"]["status"]
+        validation_summary = result["validation_report"]["summary"]
+
+        # Build response message
+        if validation_status == "passed":
+            message = "Exam PDF processed successfully. Validation passed."
+        elif validation_status == "warning":
+            message = f"Exam PDF processed with warnings. {validation_summary}"
+        else:
+            message = f"Exam PDF processed with errors. {validation_summary}"
 
         return ExamUploadResponse(
-            exam_id=exam_id,
-            message="Exam PDF processed successfully",
-            status="success"
+            exam_id=result["exam_id"],
+            message=message,
+            status="success",
+            validation_report=result["validation_report"]
         )
 
     except ValueError as e:

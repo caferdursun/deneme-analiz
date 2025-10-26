@@ -2,7 +2,7 @@
 Pydantic schemas for exam-related endpoints
 """
 from datetime import date, datetime
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 from pydantic import BaseModel, Field
 
 
@@ -128,6 +128,7 @@ class ExamUploadResponse(BaseModel):
     exam_id: str
     message: str
     status: str
+    validation_report: Optional[Dict[str, Any]] = None
 
 
 # Exam list response

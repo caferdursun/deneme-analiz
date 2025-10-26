@@ -17,7 +17,12 @@ from app.models import (
     Question,
 )
 from app.utils.claude_client import ClaudeClient
+from app.utils.local_pdf_parser import LocalPDFParser
+from app.services.validation_service import ValidationService
 from app.core.config import settings
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class ExamService:
@@ -77,16 +82,39 @@ class ExamService:
 
         return str(file_path)
 
-    def process_exam_pdf(self, pdf_path: str) -> str:
+    def process_exam_pdf(self, pdf_path: str) -> Dict[str, Any]:
         """
-        Process exam PDF and store all data
+        Process exam PDF and store all data with validation
 
         Returns:
-            exam_id
+            Dictionary with exam_id and validation_report
         """
+        # Parse PDF locally for validation
+        logger.info(f"Starting local PDF parsing: {pdf_path}")
+        local_parser = LocalPDFParser()
+        local_data = local_parser.parse_pdf(pdf_path)
+        logger.info(f"Local parsing completed")
+
         # Analyze PDF with Claude
+        logger.info(f"Starting Claude AI analysis: {pdf_path}")
         claude = self._get_claude_client()
         extracted_data = claude.analyze_exam_pdf(pdf_path)
+        logger.info(f"Claude analysis completed")
+
+        # Validate Claude output against local parsing
+        logger.info(f"Starting validation")
+        validator = ValidationService(tolerance=0.1)
+        validation_report = validator.validate(extracted_data, local_data)
+        logger.info(f"Validation completed: {validation_report['status']}")
+
+        # Log validation issues
+        if validation_report['errors'] > 0:
+            logger.error(f"Validation errors found: {validation_report['errors']}")
+            for issue in validation_report['issues']:
+                if issue['severity'] == 'error':
+                    logger.error(f"  {issue['field']}: Claude={issue['claude_value']}, Local={issue['local_value']}")
+        elif validation_report['warnings'] > 0:
+            logger.warning(f"Validation warnings found: {validation_report['warnings']}")
 
         # Get or create student
         student = self.get_or_create_student(extracted_data["student"])
@@ -183,7 +211,11 @@ class ExamService:
         self.db.commit()
         self.db.refresh(exam)
 
-        return exam.id
+        return {
+            "exam_id": exam.id,
+            "validation_report": validation_report,
+            "local_data": local_data  # Include for debugging if needed
+        }
 
     def get_all_exams(self, student_id: Optional[str] = None) -> List[Exam]:
         """Get all exams, optionally filtered by student"""
