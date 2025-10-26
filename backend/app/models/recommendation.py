@@ -34,10 +34,17 @@ class Recommendation(Base):
 
     is_active = Column(Boolean, default=True)
 
+    # New fields for intelligent recommendation tracking
+    learning_outcome_ids = Column(JSON)  # Array of learning outcome IDs this recommendation addresses
+    status = Column(String(20), default='new')  # 'new', 'active', 'updated', 'resolved', 'superseded'
+    last_confirmed_at = Column(DateTime)  # When this recommendation was last confirmed/reaffirmed
+    previous_recommendation_id = Column(String(36), ForeignKey("recommendations.id"))  # Link to previous version
+
     created_at = Column(DateTime, default=datetime.utcnow)
 
     # Relationships
     student = relationship("Student", back_populates="recommendations")
+    previous_recommendation = relationship("Recommendation", remote_side=[id], foreign_keys=[previous_recommendation_id])
 
     def __repr__(self):
         return f"<Recommendation(priority={self.priority}, subject='{self.subject_name}', topic='{self.topic}')>"

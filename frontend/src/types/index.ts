@@ -213,6 +213,20 @@ export interface Recommendation {
   is_active: boolean;
   generated_at: string;
   created_at: string;
+
+  // New tracking fields
+  learning_outcome_ids: string[] | null;  // Links to specific learning outcomes
+  status: string;  // 'new', 'active', 'updated', 'resolved', 'superseded'
+  last_confirmed_at: string | null;  // When this recommendation was last confirmed
+  previous_recommendation_id: string | null;  // Link to previous version
+}
+
+export interface RefreshSummary {
+  new_count: number;  // Brand new recommendations
+  updated_count: number;  // Updated versions of existing recommendations
+  confirmed_count: number;  // Existing recommendations still valid
+  resolved_count: number;  // Issues that are no longer present
+  total_active: number;  // Total active recommendations after refresh
 }
 
 export interface RecommendationsListResponse {
@@ -224,4 +238,5 @@ export interface RecommendationRefreshResponse {
   message: string;
   count: number;
   recommendations: Recommendation[];
+  summary: RefreshSummary;  // Detailed change summary
 }

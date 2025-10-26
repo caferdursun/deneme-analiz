@@ -16,6 +16,7 @@ class RecommendationBase(BaseModel):
     action_items: List[str]
     rationale: Optional[str] = None
     impact_score: Optional[float] = None
+    learning_outcome_ids: Optional[List[str]] = None  # Links to specific learning outcomes
 
 
 class RecommendationCreate(RecommendationBase):
@@ -30,6 +31,11 @@ class RecommendationResponse(RecommendationBase):
     generated_at: datetime
     is_active: bool
     created_at: datetime
+
+    # New tracking fields
+    status: str  # 'new', 'active', 'updated', 'resolved', 'superseded'
+    last_confirmed_at: Optional[datetime] = None
+    previous_recommendation_id: Optional[str] = None
 
     class Config:
         from_attributes = True
@@ -46,8 +52,18 @@ class RecommendationRefreshRequest(BaseModel):
     student_id: Optional[str] = None
 
 
+class RefreshSummary(BaseModel):
+    """Summary of changes during refresh"""
+    new_count: int  # Brand new recommendations
+    updated_count: int  # Updated versions of existing recommendations
+    confirmed_count: int  # Existing recommendations still valid
+    resolved_count: int  # Issues that are no longer present
+    total_active: int  # Total active recommendations after refresh
+
+
 class RecommendationRefreshResponse(BaseModel):
     """Schema for refresh response"""
     message: str
     count: int
     recommendations: List[RecommendationResponse]
+    summary: RefreshSummary  # Detailed change summary

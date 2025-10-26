@@ -11,6 +11,7 @@ from app.schemas.recommendation import (
     RecommendationsListResponse,
     RecommendationResponse,
     RecommendationRefreshResponse,
+    RefreshSummary,
 )
 
 router = APIRouter()
@@ -53,12 +54,14 @@ async def refresh_recommendations(
     db: Session = Depends(get_db),
 ):
     """
-    Regenerate recommendations for a student
+    Intelligently refresh recommendations for a student
 
     - Analyzes latest performance data
     - Detects patterns
-    - Generates new AI-powered recommendations
-    - Replaces old active recommendations
+    - Compares with existing recommendations
+    - Generates new/updated AI-powered recommendations
+    - Keeps valid recommendations, marks resolved ones
+    - Returns summary of changes (new, updated, confirmed, resolved)
     """
     # For MVP, we'll use the first student if not specified
     if not student_id:
@@ -74,12 +77,33 @@ async def refresh_recommendations(
     recommendation_service = RecommendationService(db)
 
     try:
-        recommendations = recommendation_service.generate_recommendations(student_id)
+        result = recommendation_service.generate_recommendations(student_id)
+
+        # Build summary message
+        summary = result["summary"]
+        message_parts = []
+        if summary["new_count"] > 0:
+            message_parts.append(f"{summary['new_count']} yeni")
+        if summary["updated_count"] > 0:
+            message_parts.append(f"{summary['updated_count']} güncellendi")
+        if summary["confirmed_count"] > 0:
+            message_parts.append(f"{summary['confirmed_count']} onaylandı")
+        if summary["resolved_count"] > 0:
+            message_parts.append(f"{summary['resolved_count']} çözüldü")
+
+        message = "Öneriler başarıyla güncellendi: " + ", ".join(message_parts) if message_parts else "Öneri değişikliği yok"
 
         return RecommendationRefreshResponse(
-            message="Recommendations generated successfully",
-            count=len(recommendations),
-            recommendations=recommendations
+            message=message,
+            count=summary["total_active"],
+            recommendations=result["recommendations"],
+            summary=RefreshSummary(
+                new_count=summary["new_count"],
+                updated_count=summary["updated_count"],
+                confirmed_count=summary["confirmed_count"],
+                resolved_count=summary["resolved_count"],
+                total_active=summary["total_active"]
+            )
         )
     except Exception as e:
         raise HTTPException(
