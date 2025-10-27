@@ -99,17 +99,27 @@ class ClaudeCuratorService:
 
 **Görevin:**
 1. Bu konu için 3 adet **YouTube videosu** öner
-2. Bu konu için 3 adet **PDF döküman veya web sitesi** öner
+2. Bu konu için 3 adet **direkt erişilebilir web sayfası veya PDF** öner
 
 **Kriterler:**
 - Kaynaklar **mutlaka Türkçe** olmalı
 - **Lise seviyesine** uygun olmalı (üniversite seviyesi OLMAMALI)
-- YouTube için: Eğitim kanalları (Tonguç Akademi, Khan Academy Türkçe, FenBilimleri.net, Eğitim Vadisi vb.)
-- PDF/Web için: MEB EBA, edu.tr siteleri, güvenilir eğitim platformları
+- YouTube için: Eğitim kanalları (Tonguç Akademi, Khan Academy Türkçe, FenBilimleri.net, Eğitim Vadisi, Fizikle vb.)
+- PDF/Web için:
+  * **SADECE** login gerektirmeyen, **direkt erişilebilir** sayfalar öner
+  * **MEB EBA kullanma** (giriş gerektirir)
+  * **Root sayfaları önerme** (örn: tonguçakademi.com değil, konuya özel sayfa)
+  * Khan Academy Türkçe, Biyoloji Portalı, FenBilimleri.net, AçıkLise gibi açık erişimli siteler
+  * PDF öneri yapıyorsan, doğrudan PDF linkini ver
+  * Her link konuya **özel** olmalı, ana sayfa olmamalı
 - Güncel ve kaliteli içerikler olmalı
 - Her kaynak konuya **doğrudan ilgili** olmalı
 
-**ÖNEMLİ:** Sadece gerçek, var olan kaynakları öner. URL'leri tahmin etme, gerçek kaynakları araştır.
+**ÖNEMLİ:**
+- Sadece gerçek, var olan kaynakları öner
+- URL'leri tahmin etme, bildiğin gerçek kaynakları kullan
+- Login gerektiren siteleri önerme (EBA, Morpa Kampüs vb.)
+- Ana sayfa yerine konuya özel sayfa linkle
 
 **Çıktı Formatı (sadece JSON döndür, başka bir şey yazma):**
 
@@ -207,18 +217,24 @@ class ClaudeCuratorService:
         if learning_outcome_match:
             score += 15.0
 
-        # Source quality (for PDF/web)
+        # Source quality (for PDF/web) - open access, no login required
         source = resource_data.get("source", "").lower()
-        if "eba" in source or "edu.tr" in source or "meb" in source:
+        url = resource_data.get("url", "").lower()
+
+        # Bonus for trusted open education platforms
+        if any(platform in source or platform in url for platform in [
+            "khan academy", "fenbilimleri", "biyoloji portalı",
+            "açıklise", "fizikle", "kimya aşkı"
+        ]):
             score += 10.0
-        elif "gov.tr" in source:
+        elif "edu.tr" in url and "eba" not in url:  # edu.tr but not EBA
             score += 5.0
 
         # YouTube channel reputation
         channel = resource_data.get("channel_name", "").lower()
         reputable_channels = [
             "tonguç", "khan academy", "fenbilimleri",
-            "eğitim vadisi", "eba", "fizikle", "kimya aşkı"
+            "eğitim vadisi", "fizikle", "kimya aşkı", "biyoloji portalı"
         ]
         if any(ch in channel for ch in reputable_channels):
             score += 10.0
