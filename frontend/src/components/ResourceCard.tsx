@@ -1,12 +1,16 @@
+import { useState } from 'react';
 import { Resource } from '../types';
+import ResourceDeleteModal from './ResourceDeleteModal';
 
 interface ResourceCardProps {
   resource: Resource;
   compact?: boolean;
-  onDelete?: (resourceId: string) => void;
+  onDelete?: (resourceId: string, blacklist: boolean) => void;
 }
 
 export default function ResourceCard({ resource, compact = false, onDelete }: ResourceCardProps) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const getTypeIcon = (type: string) => {
     switch (type) {
       case 'youtube':
@@ -42,19 +46,34 @@ export default function ResourceCard({ resource, compact = false, onDelete }: Re
 
   if (resource.type === 'youtube') {
     return (
-      <div className="flex items-start gap-3 p-3 bg-white border border-gray-200 rounded-lg relative group">
-        {/* Delete Button */}
-        {onDelete && (
-          <button
-            onClick={() => onDelete(resource.id)}
-            className="absolute top-2 right-2 p-1.5 bg-red-600 text-white rounded-full opacity-0 group-hover:opacity-100 hover:bg-red-700 transition-opacity"
-            title="Kaynağı sil ve bir daha önerme"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-            </svg>
-          </button>
-        )}
+      <>
+        <ResourceDeleteModal
+          resource={resource}
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onDeleteOnly={() => {
+            onDelete?.(resource.id, false);
+            setIsModalOpen(false);
+          }}
+          onDeleteAndBlacklist={() => {
+            onDelete?.(resource.id, true);
+            setIsModalOpen(false);
+          }}
+        />
+
+        <div className="flex items-start gap-3 p-3 bg-white border border-gray-200 rounded-lg relative group">
+          {/* Delete Button */}
+          {onDelete && (
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="absolute top-2 right-2 p-1.5 bg-red-600 text-white rounded-full opacity-0 group-hover:opacity-100 hover:bg-red-700 transition-opacity"
+              title="Kaynağı sil"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+              </svg>
+            </button>
+          )}
 
         <a
           href={resource.url}
@@ -106,26 +125,42 @@ export default function ResourceCard({ resource, compact = false, onDelete }: Re
             {getTypeLabel(resource.type)}
           </span>
         </div>
-      </a>
-      </div>
+        </a>
+        </div>
+      </>
     );
   }
 
   // PDF or Website
   return (
-    <div className="flex items-start gap-3 p-3 bg-white border border-gray-200 rounded-lg relative group">
-      {/* Delete Button */}
-      {onDelete && (
-        <button
-          onClick={() => onDelete(resource.id)}
-          className="absolute top-2 right-2 p-1.5 bg-red-600 text-white rounded-full opacity-0 group-hover:opacity-100 hover:bg-red-700 transition-opacity z-10"
-          title="Kaynağı sil ve bir daha önerme"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-            <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-          </svg>
-        </button>
-      )}
+    <>
+      <ResourceDeleteModal
+        resource={resource}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onDeleteOnly={() => {
+          onDelete?.(resource.id, false);
+          setIsModalOpen(false);
+        }}
+        onDeleteAndBlacklist={() => {
+          onDelete?.(resource.id, true);
+          setIsModalOpen(false);
+        }}
+      />
+
+      <div className="flex items-start gap-3 p-3 bg-white border border-gray-200 rounded-lg relative group">
+        {/* Delete Button */}
+        {onDelete && (
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="absolute top-2 right-2 p-1.5 bg-red-600 text-white rounded-full opacity-0 group-hover:opacity-100 hover:bg-red-700 transition-opacity z-10"
+            title="Kaynağı sil"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+            </svg>
+          </button>
+        )}
 
       <a
         href={resource.url}
@@ -158,7 +193,8 @@ export default function ResourceCard({ resource, compact = false, onDelete }: Re
           {getTypeLabel(resource.type)}
         </span>
       </div>
-    </a>
-    </div>
+      </a>
+      </div>
+    </>
   );
 }

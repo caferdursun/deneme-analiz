@@ -6,7 +6,7 @@ interface ResourceTabsProps {
   youtubeResources: Resource[];
   pdfResources: Resource[];
   websiteResources: Resource[];
-  onDeleteResource?: (resourceId: string) => void;
+  onDeleteResource?: (resourceId: string, blacklist: boolean) => void;
 }
 
 type TabType = 'youtube' | 'pdf' | 'website';

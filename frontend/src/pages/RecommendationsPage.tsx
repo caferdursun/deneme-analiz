@@ -126,13 +126,9 @@ export const RecommendationsPage: React.FC = () => {
     }
   };
 
-  const handleDeleteResource = async (resourceId: string) => {
-    if (!confirm('Bu kaynağı silmek ve bir daha önermemek istediğinize emin misiniz?')) {
-      return;
-    }
-
+  const handleDeleteResource = async (resourceId: string, blacklist: boolean) => {
     try {
-      await resourceAPI.deleteResource(resourceId);
+      const response = await resourceAPI.deleteResource(resourceId, blacklist);
 
       // Remove from curated resources state
       setCuratedResources(prev => {
@@ -147,7 +143,11 @@ export const RecommendationsPage: React.FC = () => {
         return updated;
       });
 
-      toast.success('✓ Kaynak silindi ve kara listeye eklendi', { duration: 3000 });
+      if (blacklist) {
+        toast.success('✓ Kaynak silindi ve kara listeye eklendi', { duration: 3000 });
+      } else {
+        toast.success('✓ Kaynak silindi', { duration: 3000 });
+      }
     } catch (err: any) {
       const errorMsg = err.response?.data?.detail || 'Kaynak silinirken hata oluştu';
       toast.error(errorMsg);

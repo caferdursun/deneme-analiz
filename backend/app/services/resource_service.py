@@ -465,6 +465,41 @@ class ResourceService:
             print(f"Error blacklisting resource: {e}")
             return False
 
+    def delete_resource_only(self, resource_id: str) -> bool:
+        """
+        Delete a resource without adding to blacklist
+
+        Args:
+            resource_id: ID of the resource to delete
+
+        Returns:
+            True if successful
+        """
+        # Get the resource
+        resource = self.db.query(Resource).filter(
+            Resource.id == resource_id
+        ).first()
+
+        if not resource:
+            return False
+
+        try:
+            # Delete recommendation_resource links
+            self.db.query(RecommendationResource).filter(
+                RecommendationResource.resource_id == resource_id
+            ).delete()
+
+            # Delete the resource
+            self.db.delete(resource)
+
+            self.db.commit()
+            return True
+
+        except Exception as e:
+            self.db.rollback()
+            print(f"Error deleting resource: {e}")
+            return False
+
     def filter_blacklisted_urls(self, resources: List[Dict]) -> List[Dict]:
         """
         Filter out blacklisted URLs from a list of resource data

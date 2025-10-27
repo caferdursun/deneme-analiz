@@ -179,22 +179,28 @@ async def curate_resources(
 @router.delete("/{resource_id}", response_model=dict)
 async def delete_resource(
     resource_id: str,
+    blacklist: bool = Query(True, description="Whether to add to blacklist (default: True)"),
     reason: str = Query(None, description="Optional reason for deleting"),
     db: Session = Depends(get_db),
 ):
     """
-    Delete a resource and add it to blacklist
+    Delete a resource with optional blacklisting
 
     - Removes resource from database
-    - Adds URL to blacklist so it won't be recommended again
+    - Optionally adds URL to blacklist so it won't be recommended again
     - Returns success message
     """
     resource_service = ResourceService(db)
 
-    success = resource_service.delete_and_blacklist_resource(
-        resource_id=resource_id,
-        reason=reason
-    )
+    if blacklist:
+        success = resource_service.delete_and_blacklist_resource(
+            resource_id=resource_id,
+            reason=reason
+        )
+        message = "Resource deleted and blacklisted successfully"
+    else:
+        success = resource_service.delete_resource_only(resource_id)
+        message = "Resource deleted successfully"
 
     if not success:
         raise HTTPException(
@@ -203,6 +209,7 @@ async def delete_resource(
         )
 
     return {
-        "message": "Resource deleted and blacklisted successfully",
-        "resource_id": resource_id
+        "message": message,
+        "resource_id": resource_id,
+        "blacklisted": blacklist
     }

@@ -252,10 +252,13 @@ export const resourceAPI = {
     return response.data;
   },
 
-  // Delete a resource and blacklist it
-  deleteResource: async (resourceId: string, reason?: string): Promise<{ message: string; resource_id: string }> => {
-    const params = reason ? { reason } : {};
-    const response = await apiClient.delete<{ message: string; resource_id: string }>(
+  // Delete a resource with optional blacklisting
+  deleteResource: async (resourceId: string, blacklist: boolean = true, reason?: string): Promise<{ message: string; resource_id: string; blacklisted: boolean }> => {
+    const params: any = { blacklist };
+    if (reason) {
+      params.reason = reason;
+    }
+    const response = await apiClient.delete<{ message: string; resource_id: string; blacklisted: boolean }>(
       `/resources/${resourceId}`,
       { params }
     );
