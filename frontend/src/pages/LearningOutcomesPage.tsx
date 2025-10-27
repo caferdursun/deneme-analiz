@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { analyticsAPI } from '../api/client';
-import type { LearningOutcomeStats } from '../types';
+import { analyticsAPI, recommendationsAPI } from '../api/client';
+import type { LearningOutcomeStats, Recommendation } from '../types';
 
 // Group statistics interface
 interface GroupStats {
@@ -42,6 +42,7 @@ export const LearningOutcomesPage: React.FC = () => {
   const [allOutcomes, setAllOutcomes] = useState<LearningOutcomeStats[]>([]);
   const [groupedData, setGroupedData] = useState<StatusGroup[]>([]);
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
+  const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -55,8 +56,14 @@ export const LearningOutcomesPage: React.FC = () => {
       setLoading(true);
       setError(null);
 
-      const outcomes = await analyticsAPI.getAllLearningOutcomes();
+      // Load outcomes and recommendations in parallel
+      const [outcomes, recsData] = await Promise.all([
+        analyticsAPI.getAllLearningOutcomes(),
+        recommendationsAPI.getRecommendations().catch(() => ({ recommendations: [], total: 0 }))
+      ]);
+
       setAllOutcomes(outcomes);
+      setRecommendations(recsData.recommendations);
 
       // Group data hierarchically
       const grouped = groupOutcomesByStatus(outcomes);
@@ -66,6 +73,21 @@ export const LearningOutcomesPage: React.FC = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  // Get recommendations related to an outcome
+  const getOutcomeRecommendations = (outcome: LearningOutcomeStats): Recommendation[] => {
+    return recommendations.filter(rec => {
+      // Match by subject name and check if recommendation mentions the outcome
+      const subjectMatch = rec.subject_name === outcome.subject_name;
+      const outcomeMatch = outcome.outcome_description &&
+        rec.learning_outcome_description?.toLowerCase().includes(outcome.outcome_description.toLowerCase());
+
+      // Only include active recommendations (not archived)
+      const isActive = rec.status !== 'archived';
+
+      return subjectMatch && isActive && (outcomeMatch || !rec.learning_outcome_description);
+    });
   };
 
   // Calculate group statistics
@@ -467,30 +489,55 @@ export const LearningOutcomesPage: React.FC = () => {
                                                           <th className="px-2 py-1 text-center">Soru</th>
                                                           <th className="px-2 py-1 text-center">Kazanılan</th>
                                                           <th className="px-2 py-1 text-center">Başarı Oranı</th>
+                                                          <th className="px-2 py-1 text-center">Öneriler</th>
+                                                          <th className="px-2 py-1 text-center">İşlem</th>
                                                         </tr>
                                                       </thead>
                                                       <tbody>
-                                                        {subcategoryGroup.outcomes.map((outcome, idx) => (
-                                                          <tr key={idx} className="border-t hover:bg-gray-50">
-                                                            <td className="px-2 py-2 max-w-xs truncate">
-                                                              {outcome.outcome_description || '-'}
-                                                            </td>
-                                                            <td className="px-2 py-2 text-center">{outcome.total_appearances}</td>
-                                                            <td className="px-2 py-2 text-center">{outcome.total_questions}</td>
-                                                            <td className="px-2 py-2 text-center">{outcome.total_acquired}</td>
-                                                            <td className="px-2 py-2 text-center">
-                                                              <div className="flex flex-col items-center gap-1">
-                                                                <span className="font-medium">{outcome.average_success_rate.toFixed(1)}%</span>
-                                                                <div className="w-full bg-gray-200 rounded-full h-1.5">
-                                                                  <div
-                                                                    className={`h-1.5 rounded-full ${getSuccessRateColor(outcome.average_success_rate)}`}
-                                                                    style={{ width: `${outcome.average_success_rate}%` }}
-                                                                  ></div>
+                                                        {subcategoryGroup.outcomes.map((outcome, idx) => {
+                                                          const outcomeRecs = getOutcomeRecommendations(outcome);
+                                                          const isWeak = outcome.average_success_rate < 50;
+
+                                                          return (
+                                                            <tr key={idx} className="border-t hover:bg-gray-50">
+                                                              <td className="px-2 py-2 max-w-xs truncate">
+                                                                {outcome.outcome_description || '-'}
+                                                              </td>
+                                                              <td className="px-2 py-2 text-center">{outcome.total_appearances}</td>
+                                                              <td className="px-2 py-2 text-center">{outcome.total_questions}</td>
+                                                              <td className="px-2 py-2 text-center">{outcome.total_acquired}</td>
+                                                              <td className="px-2 py-2 text-center">
+                                                                <div className="flex flex-col items-center gap-1">
+                                                                  <span className="font-medium">{outcome.average_success_rate.toFixed(1)}%</span>
+                                                                  <div className="w-full bg-gray-200 rounded-full h-1.5">
+                                                                    <div
+                                                                      className={`h-1.5 rounded-full ${getSuccessRateColor(outcome.average_success_rate)}`}
+                                                                      style={{ width: `${outcome.average_success_rate}%` }}
+                                                                    ></div>
+                                                                  </div>
                                                                 </div>
-                                                              </div>
-                                                            </td>
-                                                          </tr>
-                                                        ))}
+                                                              </td>
+                                                              <td className="px-2 py-2 text-center">
+                                                                {outcomeRecs.length > 0 && (
+                                                                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-700 border border-orange-300">
+                                                                    💡 {outcomeRecs.length}
+                                                                  </span>
+                                                                )}
+                                                              </td>
+                                                              <td className="px-2 py-2 text-center">
+                                                                {isWeak && (
+                                                                  <button
+                                                                    onClick={() => navigate('/recommendations')}
+                                                                    className="text-xs px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+                                                                    title="Önerileri görüntüle"
+                                                                  >
+                                                                    Öneriler
+                                                                  </button>
+                                                                )}
+                                                              </td>
+                                                            </tr>
+                                                          );
+                                                        })}
                                                       </tbody>
                                                     </table>
                                                   </div>
