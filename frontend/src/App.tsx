@@ -11,7 +11,6 @@ import { UploadPage } from './pages/UploadPage';
 const ExamListPage = lazy(() => import('./pages/ExamListPage').then(m => ({ default: m.ExamListPage })));
 const ExamDetailPage = lazy(() => import('./pages/ExamDetailPage').then(m => ({ default: m.ExamDetailPage })));
 const SubjectAnalysisPage = lazy(() => import('./pages/SubjectAnalysisPage').then(m => ({ default: m.SubjectAnalysisPage })));
-const LearningOutcomesPage = lazy(() => import('./pages/LearningOutcomesPage').then(m => ({ default: m.LearningOutcomesPage })));
 const RecommendationsPage = lazy(() => import('./pages/RecommendationsPage').then(m => ({ default: m.RecommendationsPage })));
 const ValidationReviewPage = lazy(() => import('./pages/ValidationReviewPage').then(m => ({ default: m.ValidationReviewPage })));
 const CleanupWizardPage = lazy(() => import('./pages/CleanupWizardPage').then(m => ({ default: m.CleanupWizardPage })));
@@ -68,7 +67,6 @@ function App() {
           <Route path="/exams/:examId/validate" element={<ValidationReviewPage />} />
           <Route path="/upload" element={<UploadPage />} />
           <Route path="/subjects/:subjectName" element={<SubjectAnalysisPage />} />
-          <Route path="/learning-outcomes" element={<LearningOutcomesPage />} />
           <Route path="/learning-outcomes/cleanup" element={<CleanupWizardPage />} />
           <Route path="/learning-outcomes/tree" element={<TopicTreePage />} />
           <Route path="/recommendations" element={<RecommendationsPage />} />

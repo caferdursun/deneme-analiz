@@ -109,7 +109,7 @@ export const CleanupWizardPage: React.FC = () => {
         <div className="max-w-3xl mx-auto">
           <div className="flex items-center gap-3 mb-8">
             <button
-              onClick={() => navigate('/learning-outcomes')}
+              onClick={() => navigate('/learning-outcomes/tree')}
               className="text-gray-600 hover:text-gray-900"
             >
               ← Geri
@@ -197,7 +197,7 @@ export const CleanupWizardPage: React.FC = () => {
         <div className="max-w-6xl mx-auto">
           <div className="flex items-center gap-3 mb-8">
             <button
-              onClick={() => navigate('/learning-outcomes')}
+              onClick={() => navigate('/learning-outcomes/tree')}
               className="text-gray-600 hover:text-gray-900"
             >
               ← İptal
@@ -328,7 +328,7 @@ export const CleanupWizardPage: React.FC = () => {
           {/* Action Buttons */}
           <div className="grid grid-cols-2 gap-4 sticky bottom-4">
             <button
-              onClick={() => navigate('/learning-outcomes')}
+              onClick={() => navigate('/learning-outcomes/tree')}
               className="bg-gray-200 text-gray-700 py-3 rounded-lg hover:bg-gray-300 font-medium"
             >
               İptal
@@ -407,7 +407,7 @@ export const CleanupWizardPage: React.FC = () => {
 
             <div className="flex gap-3">
               <button
-                onClick={() => navigate('/learning-outcomes')}
+                onClick={() => navigate('/learning-outcomes/tree')}
                 className="flex-1 bg-gray-200 text-gray-700 py-3 rounded-lg hover:bg-gray-300 font-medium"
               >
                 Kazanımlara Dön
