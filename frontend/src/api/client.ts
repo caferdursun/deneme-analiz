@@ -99,6 +99,13 @@ export const analyticsAPI = {
     const response = await apiClient.get<LearningOutcomeStats[]>('/analytics/learning-outcomes', { params });
     return response.data;
   },
+
+  // Get learning outcomes tree
+  getLearningOutcomesTree: async (studentId?: string): Promise<{ tree: any[] }> => {
+    const params = studentId ? { student_id: studentId } : {};
+    const response = await apiClient.get<{ tree: any[] }>('/analytics/learning-outcomes/tree', { params });
+    return response.data;
+  },
 };
 
 export const recommendationsAPI = {

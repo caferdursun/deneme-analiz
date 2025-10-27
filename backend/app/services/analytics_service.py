@@ -472,3 +472,144 @@ class AnalyticsService:
             ))
 
         return stats
+
+    def get_learning_outcomes_tree(self, student_id: Optional[str] = None) -> Dict:
+        """
+        Get learning outcomes organized in a hierarchical tree structure
+
+        Structure: Subject → Category → Subcategory → Outcome
+        Each node includes aggregated statistics and recommendation counts
+        """
+        from app.models import Recommendation
+
+        # Get all learning outcomes
+        outcomes = self.get_all_learning_outcomes(student_id=student_id)
+
+        # Get recommendations for counting
+        recommendations_query = self.db.query(Recommendation).filter(
+            Recommendation.status.in_(['new', 'updated', 'active'])
+        )
+        if student_id:
+            recommendations_query = recommendations_query.filter(
+                Recommendation.student_id == student_id
+            )
+        recommendations = recommendations_query.all()
+
+        # Build recommendation count map by learning outcome
+        rec_count_map = {}
+        for rec in recommendations:
+            if rec.learning_outcome_ids:
+                for lo_id in rec.learning_outcome_ids:
+                    rec_count_map[lo_id] = rec_count_map.get(lo_id, 0) + 1
+
+        # Build tree structure
+        tree = {}
+
+        for outcome in outcomes:
+            subject = outcome.get('subject_name', 'Unknown')
+            category = outcome.get('category') or 'Uncategorized'
+            subcategory = outcome.get('subcategory') or 'General'
+
+            # Initialize subject if not exists
+            if subject not in tree:
+                tree[subject] = {
+                    'name': subject,
+                    'type': 'subject',
+                    'children': {},
+                    'stats': {
+                        'total_outcomes': 0,
+                        'total_questions': 0,
+                        'total_acquired': 0,
+                        'average_success_rate': 0,
+                        'recommendation_count': 0
+                    }
+                }
+
+            # Initialize category if not exists
+            if category not in tree[subject]['children']:
+                tree[subject]['children'][category] = {
+                    'name': category,
+                    'type': 'category',
+                    'children': {},
+                    'stats': {
+                        'total_outcomes': 0,
+                        'total_questions': 0,
+                        'total_acquired': 0,
+                        'average_success_rate': 0,
+                        'recommendation_count': 0
+                    }
+                }
+
+            # Initialize subcategory if not exists
+            if subcategory not in tree[subject]['children'][category]['children']:
+                tree[subject]['children'][category]['children'][subcategory] = {
+                    'name': subcategory,
+                    'type': 'subcategory',
+                    'children': [],
+                    'stats': {
+                        'total_outcomes': 0,
+                        'total_questions': 0,
+                        'total_acquired': 0,
+                        'average_success_rate': 0,
+                        'recommendation_count': 0
+                    }
+                }
+
+            # Get recommendation count for this outcome
+            outcome_rec_count = rec_count_map.get(outcome.get('id'), 0)
+
+            # Add outcome as leaf node
+            outcome_node = {
+                'id': outcome.get('id'),
+                'name': outcome.get('outcome_description', 'No description'),
+                'type': 'outcome',
+                'stats': {
+                    'total_appearances': outcome.get('total_appearances', 0),
+                    'total_questions': outcome.get('total_questions', 0),
+                    'total_acquired': outcome.get('total_acquired', 0),
+                    'average_success_rate': outcome.get('average_success_rate', 0),
+                    'recommendation_count': outcome_rec_count
+                }
+            }
+
+            tree[subject]['children'][category]['children'][subcategory]['children'].append(outcome_node)
+
+            # Aggregate stats upward
+            for node in [
+                tree[subject]['children'][category]['children'][subcategory],
+                tree[subject]['children'][category],
+                tree[subject]
+            ]:
+                node['stats']['total_outcomes'] += 1
+                node['stats']['total_questions'] += outcome.get('total_questions', 0)
+                node['stats']['total_acquired'] += outcome.get('total_acquired', 0)
+                node['stats']['recommendation_count'] += outcome_rec_count
+
+        # Calculate average success rates for parent nodes
+        def calculate_avg_success(node):
+            if node['stats']['total_questions'] > 0:
+                node['stats']['average_success_rate'] = (
+                    node['stats']['total_acquired'] / node['stats']['total_questions'] * 100
+                )
+
+            if 'children' in node and isinstance(node['children'], dict):
+                for child in node['children'].values():
+                    calculate_avg_success(child)
+            elif 'children' in node and isinstance(node['children'], list):
+                for child in node['children']:
+                    if isinstance(child, dict) and 'children' in child:
+                        calculate_avg_success(child)
+
+        for subject_node in tree.values():
+            calculate_avg_success(subject_node)
+
+        # Convert to list format
+        tree_list = list(tree.values())
+
+        # Convert nested dicts to lists
+        for subject in tree_list:
+            subject['children'] = list(subject['children'].values())
+            for category in subject['children']:
+                category['children'] = list(category['children'].values())
+
+        return {'tree': tree_list}

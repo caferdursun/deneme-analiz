@@ -195,10 +195,10 @@ export const DashboardPage: React.FC = () => {
               )}
             </button>
             <button
-              onClick={() => navigate('/learning-outcomes')}
+              onClick={() => navigate('/learning-outcomes/tree')}
               className="bg-purple-600 text-white py-2 px-3 sm:px-4 rounded-md hover:bg-purple-700 text-xs sm:text-sm font-medium whitespace-nowrap"
             >
-              Kazanımlar
+              🌳 Konu Ağacı
             </button>
             <button
               onClick={() => navigate('/recommendations')}

@@ -96,3 +96,22 @@ async def get_all_learning_outcomes(
     outcomes = analytics_service.get_all_learning_outcomes(student_id=student_id)
 
     return outcomes
+
+
+@router.get("/learning-outcomes/tree")
+async def get_learning_outcomes_tree(
+    student_id: Optional[str] = Query(None),
+    db: Session = Depends(get_db),
+):
+    """
+    Get learning outcomes organized in a hierarchical tree structure
+
+    - Subject → Category → Subcategory → Outcome
+    - Color-coded by success rate
+    - Includes recommendation counts
+    - Aggregated statistics at each level
+    """
+    analytics_service = AnalyticsService(db)
+    tree = analytics_service.get_learning_outcomes_tree(student_id=student_id)
+
+    return tree
