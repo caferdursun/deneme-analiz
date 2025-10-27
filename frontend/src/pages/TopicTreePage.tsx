@@ -28,9 +28,10 @@ export const TopicTreePage: React.FC = () => {
     }
   };
 
-  const handleOutcomeClick = (outcomeId: number) => {
+  const handleOutcomeClick = (outcomeName: string) => {
     // Navigate to recommendations or learning outcomes page with filter
-    navigate(`/recommendations?outcome=${outcomeId}`);
+    // For now, just navigate to recommendations page
+    navigate('/recommendations');
   };
 
   // Filter tree data based on search and filter rate

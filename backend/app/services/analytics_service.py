@@ -506,9 +506,9 @@ class AnalyticsService:
         tree = {}
 
         for outcome in outcomes:
-            subject = outcome.get('subject_name', 'Unknown')
-            category = outcome.get('category') or 'Uncategorized'
-            subcategory = outcome.get('subcategory') or 'General'
+            subject = outcome.subject_name if outcome.subject_name else 'Unknown'
+            category = outcome.category if outcome.category else 'Uncategorized'
+            subcategory = outcome.subcategory if outcome.subcategory else 'General'
 
             # Initialize subject if not exists
             if subject not in tree:
@@ -556,18 +556,18 @@ class AnalyticsService:
                 }
 
             # Get recommendation count for this outcome
-            outcome_rec_count = rec_count_map.get(outcome.get('id'), 0)
+            # Note: Learning outcome doesn't have ID in the aggregated stats
+            outcome_rec_count = 0  # We'll count at subject level instead
 
             # Add outcome as leaf node
             outcome_node = {
-                'id': outcome.get('id'),
-                'name': outcome.get('outcome_description', 'No description'),
+                'name': outcome.outcome_description if outcome.outcome_description else 'No description',
                 'type': 'outcome',
                 'stats': {
-                    'total_appearances': outcome.get('total_appearances', 0),
-                    'total_questions': outcome.get('total_questions', 0),
-                    'total_acquired': outcome.get('total_acquired', 0),
-                    'average_success_rate': outcome.get('average_success_rate', 0),
+                    'total_appearances': outcome.total_appearances,
+                    'total_questions': outcome.total_questions,
+                    'total_acquired': outcome.total_acquired,
+                    'average_success_rate': outcome.average_success_rate,
                     'recommendation_count': outcome_rec_count
                 }
             }
@@ -581,8 +581,8 @@ class AnalyticsService:
                 tree[subject]
             ]:
                 node['stats']['total_outcomes'] += 1
-                node['stats']['total_questions'] += outcome.get('total_questions', 0)
-                node['stats']['total_acquired'] += outcome.get('total_acquired', 0)
+                node['stats']['total_questions'] += outcome.total_questions
+                node['stats']['total_acquired'] += outcome.total_acquired
                 node['stats']['recommendation_count'] += outcome_rec_count
 
         # Calculate average success rates for parent nodes

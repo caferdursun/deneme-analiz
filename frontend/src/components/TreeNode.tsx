@@ -1,7 +1,6 @@
 import { useState } from 'react';
 
 export interface TreeNodeData {
-  id?: number;
   name: string;
   type: 'subject' | 'category' | 'subcategory' | 'outcome';
   children?: TreeNodeData[];
@@ -18,7 +17,7 @@ export interface TreeNodeData {
 interface TreeNodeProps {
   node: TreeNodeData;
   level: number;
-  onOutcomeClick?: (outcomeId: number) => void;
+  onOutcomeClick?: (outcomeName: string) => void;
 }
 
 export const TreeNode: React.FC<TreeNodeProps> = ({ node, level, onOutcomeClick }) => {
@@ -53,8 +52,8 @@ export const TreeNode: React.FC<TreeNodeProps> = ({ node, level, onOutcomeClick 
   const handleClick = () => {
     if (hasChildren) {
       setIsExpanded(!isExpanded);
-    } else if (node.type === 'outcome' && node.id && onOutcomeClick) {
-      onOutcomeClick(node.id);
+    } else if (node.type === 'outcome' && onOutcomeClick) {
+      onOutcomeClick(node.name);
     }
   };
 
