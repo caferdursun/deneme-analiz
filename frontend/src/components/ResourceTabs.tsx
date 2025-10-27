@@ -7,6 +7,7 @@ interface ResourceTabsProps {
   pdfResources: Resource[];
   websiteResources: Resource[];
   onDeleteResource?: (resourceId: string, blacklist: boolean) => void;
+  onTogglePin?: (resourceId: string) => void;
 }
 
 type TabType = 'youtube' | 'pdf' | 'website';
@@ -16,6 +17,7 @@ export default function ResourceTabs({
   pdfResources,
   websiteResources,
   onDeleteResource,
+  onTogglePin,
 }: ResourceTabsProps) {
   const [activeTab, setActiveTab] = useState<TabType>('youtube');
 
@@ -79,7 +81,12 @@ export default function ResourceTabs({
         ) : (
           <div className="space-y-3">
             {activeResources.map((resource) => (
-              <ResourceCard key={resource.id} resource={resource} onDelete={onDeleteResource} />
+              <ResourceCard
+                key={resource.id}
+                resource={resource}
+                onDelete={onDeleteResource}
+                onTogglePin={onTogglePin}
+              />
             ))}
           </div>
         )}

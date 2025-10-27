@@ -146,6 +146,40 @@ export const RecommendationsPage: React.FC = () => {
     }
   };
 
+  const handleTogglePin = async (resourceId: string) => {
+    try {
+      const response = await resourceAPI.togglePin(resourceId);
+
+      // Update pin status in state
+      setCuratedResources(prev => {
+        const updated = { ...prev };
+        Object.keys(updated).forEach(recId => {
+          updated[recId] = {
+            youtube: updated[recId].youtube.map(r =>
+              r.id === resourceId ? { ...r, is_pinned: response.is_pinned } : r
+            ),
+            pdf: updated[recId].pdf.map(r =>
+              r.id === resourceId ? { ...r, is_pinned: response.is_pinned } : r
+            ),
+            website: updated[recId].website.map(r =>
+              r.id === resourceId ? { ...r, is_pinned: response.is_pinned } : r
+            ),
+          };
+        });
+        return updated;
+      });
+
+      if (response.is_pinned) {
+        toast.success('📌 Kaynak sabitlendi', { duration: 2000 });
+      } else {
+        toast.success('✓ Sabitleme kaldırıldı', { duration: 2000 });
+      }
+    } catch (err: any) {
+      const errorMsg = err.response?.data?.detail || 'Pin durumu değiştirilirken hata oluştu';
+      toast.error(errorMsg);
+    }
+  };
+
   const handleDeleteResource = async (resourceId: string, blacklist: boolean) => {
     try {
       const response = await resourceAPI.deleteResource(resourceId, blacklist);
@@ -557,6 +591,7 @@ export const RecommendationsPage: React.FC = () => {
                           pdfResources={curatedResources[rec.id].pdf}
                           websiteResources={curatedResources[rec.id].website}
                           onDeleteResource={handleDeleteResource}
+                          onTogglePin={handleTogglePin}
                         />
                       </div>
                     )}

@@ -269,4 +269,12 @@ export const resourceAPI = {
     );
     return response.data;
   },
+
+  // Toggle pin status of a resource
+  togglePin: async (resourceId: string): Promise<{ message: string; resource_id: string; is_pinned: boolean }> => {
+    const response = await apiClient.put<{ message: string; resource_id: string; is_pinned: boolean }>(
+      `/resources/${resourceId}/pin`
+    );
+    return response.data;
+  },
 };

@@ -6,9 +6,10 @@ interface ResourceCardProps {
   resource: Resource;
   compact?: boolean;
   onDelete?: (resourceId: string, blacklist: boolean) => void;
+  onTogglePin?: (resourceId: string) => void;
 }
 
-export default function ResourceCard({ resource, compact = false, onDelete }: ResourceCardProps) {
+export default function ResourceCard({ resource, compact = false, onDelete, onTogglePin }: ResourceCardProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const getTypeIcon = (type: string) => {
@@ -61,7 +62,26 @@ export default function ResourceCard({ resource, compact = false, onDelete }: Re
           }}
         />
 
-        <div className="flex items-start gap-3 p-3 bg-white border border-gray-200 rounded-lg relative group">
+        <div className={`flex items-start gap-3 p-3 border rounded-lg relative group ${
+          resource.is_pinned
+            ? 'bg-amber-50 border-amber-300'
+            : 'bg-white border-gray-200'
+        }`}>
+          {/* Pin Button */}
+          {onTogglePin && (
+            <button
+              onClick={() => onTogglePin(resource.id)}
+              className={`absolute top-2 right-10 p-1.5 rounded-full transition-all ${
+                resource.is_pinned
+                  ? 'bg-amber-500 text-white opacity-100'
+                  : 'bg-gray-200 text-gray-600 opacity-0 group-hover:opacity-100 hover:bg-gray-300'
+              }`}
+              title={resource.is_pinned ? 'Sabitlemeyi kaldır' : 'Sabitle'}
+            >
+              📌
+            </button>
+          )}
+
           {/* Delete Button */}
           {onDelete && (
             <button
@@ -148,7 +168,26 @@ export default function ResourceCard({ resource, compact = false, onDelete }: Re
         }}
       />
 
-      <div className="flex items-start gap-3 p-3 bg-white border border-gray-200 rounded-lg relative group">
+      <div className={`flex items-start gap-3 p-3 border rounded-lg relative group ${
+        resource.is_pinned
+          ? 'bg-amber-50 border-amber-300'
+          : 'bg-white border-gray-200'
+      }`}>
+        {/* Pin Button */}
+        {onTogglePin && (
+          <button
+            onClick={() => onTogglePin(resource.id)}
+            className={`absolute top-2 right-10 p-1.5 rounded-full transition-all z-10 ${
+              resource.is_pinned
+                ? 'bg-amber-500 text-white opacity-100'
+                : 'bg-gray-200 text-gray-600 opacity-0 group-hover:opacity-100 hover:bg-gray-300'
+            }`}
+            title={resource.is_pinned ? 'Sabitlemeyi kaldır' : 'Sabitle'}
+          >
+            📌
+          </button>
+        )}
+
         {/* Delete Button */}
         {onDelete && (
           <button
