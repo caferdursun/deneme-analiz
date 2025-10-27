@@ -270,12 +270,34 @@ class ResourceService:
             curated_data["pdf"] = [r for r in curated_data["pdf"] if r.get("url") not in exclude_set]
             curated_data["website"] = [r for r in curated_data["website"] if r.get("url") not in exclude_set]
 
+        # Get existing pinned resources for this recommendation
+        existing_links = self.db.query(RecommendationResource).filter(
+            RecommendationResource.recommendation_id == recommendation_id
+        ).all()
+        existing_resource_ids = [link.resource_id for link in existing_links]
+
+        pinned_resources = []
+        if existing_resource_ids:
+            pinned_resources = self.db.query(Resource).filter(
+                Resource.id.in_(existing_resource_ids),
+                Resource.is_pinned == True
+            ).all()
+
         # Process and save curated resources
         result = {
             "youtube": [],
             "pdf": [],
             "website": []
         }
+
+        # Start with pinned resources
+        for pinned in pinned_resources:
+            if pinned.type == "youtube":
+                result["youtube"].append(pinned)
+            elif pinned.type == "pdf":
+                result["pdf"].append(pinned)
+            elif pinned.type == "website":
+                result["website"].append(pinned)
 
         # Process YouTube resources
         for yt_data in curated_data.get("youtube", []):
@@ -433,7 +455,7 @@ class ResourceService:
             reason: Optional reason for blacklisting
 
         Returns:
-            True if successful
+            True if successful, False if resource not found or is pinned
         """
         # Get the resource
         resource = self.db.query(Resource).filter(
@@ -441,6 +463,10 @@ class ResourceService:
         ).first()
 
         if not resource:
+            return False
+
+        # Don't delete pinned resources
+        if resource.is_pinned:
             return False
 
         # Add to blacklist
@@ -482,7 +508,7 @@ class ResourceService:
             resource_id: ID of the resource to delete
 
         Returns:
-            True if successful
+            True if successful, False if resource not found or is pinned
         """
         # Get the resource
         resource = self.db.query(Resource).filter(
@@ -490,6 +516,10 @@ class ResourceService:
         ).first()
 
         if not resource:
+            return False
+
+        # Don't delete pinned resources
+        if resource.is_pinned:
             return False
 
         try:
@@ -508,6 +538,32 @@ class ResourceService:
             self.db.rollback()
             print(f"Error deleting resource: {e}")
             return False
+
+    def toggle_pin_resource(self, resource_id: str) -> Optional[bool]:
+        """
+        Toggle pin status of a resource
+
+        Args:
+            resource_id: ID of the resource to pin/unpin
+
+        Returns:
+            New pin status (True/False) or None if resource not found
+        """
+        resource = self.db.query(Resource).filter(
+            Resource.id == resource_id
+        ).first()
+
+        if not resource:
+            return None
+
+        try:
+            resource.is_pinned = not resource.is_pinned
+            self.db.commit()
+            return resource.is_pinned
+        except Exception as e:
+            self.db.rollback()
+            print(f"Error toggling pin status: {e}")
+            return None
 
     def filter_blacklisted_urls(self, resources: List[Dict]) -> List[Dict]:
         """

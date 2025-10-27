@@ -268,6 +268,7 @@ export interface Resource {
   education_level: string | null;
   curator_notes: string | null;
   is_active: boolean;
+  is_pinned: boolean;
   created_at: string;
 }
 

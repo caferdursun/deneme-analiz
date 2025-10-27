@@ -37,6 +37,7 @@ class Resource(Base):
 
     # Status
     is_active = Column(Boolean, default=True)
+    is_pinned = Column(Boolean, default=False)  # Pinned resources won't be replaced on refresh
 
     created_at = Column(DateTime, default=datetime.utcnow)
 

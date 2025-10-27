@@ -7,6 +7,7 @@ from typing import Optional, List, Dict
 
 from app.core.database import get_db
 from app.services.resource_service import ResourceService
+from app.models.resource import Resource
 from app.schemas.resource import (
     ResourceListResponse,
     ResourceResponse,
@@ -184,6 +185,34 @@ async def curate_resources(
         )
 
 
+@router.put("/{resource_id}/pin", response_model=dict)
+async def toggle_pin_resource(
+    resource_id: str,
+    db: Session = Depends(get_db),
+):
+    """
+    Toggle pin status of a resource
+
+    - Pinned resources won't be deleted on refresh
+    - Pinned resources can't be deleted until unpinned
+    """
+    resource_service = ResourceService(db)
+
+    new_pin_status = resource_service.toggle_pin_resource(resource_id)
+
+    if new_pin_status is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Resource with id {resource_id} not found"
+        )
+
+    return {
+        "message": "Resource pinned successfully" if new_pin_status else "Resource unpinned successfully",
+        "resource_id": resource_id,
+        "is_pinned": new_pin_status
+    }
+
+
 @router.delete("/{resource_id}", response_model=dict)
 async def delete_resource(
     resource_id: str,
@@ -211,6 +240,13 @@ async def delete_resource(
         message = "Resource deleted successfully"
 
     if not success:
+        # Check if resource is pinned
+        resource = db.query(Resource).filter(Resource.id == resource_id).first()
+        if resource and resource.is_pinned:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Cannot delete pinned resource. Please unpin it first."
+            )
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Resource with id {resource_id} not found"
