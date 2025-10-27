@@ -1,12 +1,13 @@
 """
 Resource service for managing study material recommendations
 """
-from typing import List, Optional
+from typing import List, Optional, Dict
 from sqlalchemy.orm import Session
 from sqlalchemy import and_
 
-from app.models import Resource, RecommendationResource, Recommendation
+from app.models import Resource, RecommendationResource, Recommendation, LearningOutcome
 from app.services.youtube_service import YouTubeService
+from app.services.claude_curator_service import ClaudeCuratorService
 import uuid
 
 
@@ -16,6 +17,7 @@ class ResourceService:
     def __init__(self, db: Session):
         self.db = db
         self.youtube_service = YouTubeService()
+        self.curator_service = ClaudeCuratorService()
 
     def get_or_create_youtube_resources(
         self,
@@ -208,3 +210,191 @@ class ResourceService:
         self.link_resources_to_recommendation(recommendation_id, resource_ids)
 
         return resources
+
+    def curate_resources(
+        self,
+        recommendation_id: str
+    ) -> Dict[str, List[Resource]]:
+        """
+        Use Claude AI to curate high-quality resources for a recommendation
+
+        Args:
+            recommendation_id: ID of the recommendation
+
+        Returns:
+            Dictionary with 'youtube', 'pdf', and 'website' resource lists
+        """
+        # Get recommendation details
+        rec = self.db.query(Recommendation).filter(
+            Recommendation.id == recommendation_id
+        ).first()
+
+        if not rec:
+            return {"youtube": [], "pdf": [], "website": []}
+
+        # Get learning outcome details if available
+        learning_outcome = None
+        category = None
+        subcategory = None
+
+        if rec.learning_outcome_ids and len(rec.learning_outcome_ids) > 0:
+            lo_id = rec.learning_outcome_ids[0]
+            lo = self.db.query(LearningOutcome).filter(
+                LearningOutcome.id == lo_id
+            ).first()
+            if lo:
+                learning_outcome = lo.outcome_description
+                category = lo.category
+                subcategory = lo.subcategory
+
+        # Use Claude to curate resources
+        curated_data = self.curator_service.curate_resources(
+            subject=rec.subject_name or "",
+            topic=rec.topic or "",
+            learning_outcome=learning_outcome,
+            category=category,
+            subcategory=subcategory
+        )
+
+        # Process and save curated resources
+        result = {
+            "youtube": [],
+            "pdf": [],
+            "website": []
+        }
+
+        # Process YouTube resources
+        for yt_data in curated_data.get("youtube", []):
+            resource = self._create_curated_resource(
+                resource_data=yt_data,
+                resource_type="youtube",
+                subject=rec.subject_name,
+                topic=rec.topic,
+                learning_outcome_ids=rec.learning_outcome_ids
+            )
+            if resource:
+                result["youtube"].append(resource)
+
+        # Process PDF resources
+        for pdf_data in curated_data.get("pdf", []):
+            resource = self._create_curated_resource(
+                resource_data=pdf_data,
+                resource_type="pdf",
+                subject=rec.subject_name,
+                topic=rec.topic,
+                learning_outcome_ids=rec.learning_outcome_ids
+            )
+            if resource:
+                result["pdf"].append(resource)
+
+        # Process website resources
+        for web_data in curated_data.get("website", []):
+            resource = self._create_curated_resource(
+                resource_data=web_data,
+                resource_type="website",
+                subject=rec.subject_name,
+                topic=rec.topic,
+                learning_outcome_ids=rec.learning_outcome_ids
+            )
+            if resource:
+                result["website"].append(resource)
+
+        # Link all resources to the recommendation
+        all_resource_ids = []
+        for resource_list in result.values():
+            all_resource_ids.extend([r.id for r in resource_list])
+
+        if all_resource_ids:
+            self.link_resources_to_recommendation(recommendation_id, all_resource_ids)
+
+        return result
+
+    def _create_curated_resource(
+        self,
+        resource_data: Dict,
+        resource_type: str,
+        subject: Optional[str],
+        topic: Optional[str],
+        learning_outcome_ids: Optional[List[str]]
+    ) -> Optional[Resource]:
+        """
+        Create a curated resource from Claude's recommendation
+
+        Args:
+            resource_data: Resource information from Claude
+            resource_type: 'youtube', 'pdf', or 'website'
+            subject: Subject name
+            topic: Topic name
+            learning_outcome_ids: List of learning outcome IDs
+
+        Returns:
+            Created Resource object or None
+        """
+        url = resource_data.get("url")
+        if not url:
+            return None
+
+        # Check if resource already exists
+        existing = self.db.query(Resource).filter(
+            Resource.url == url
+        ).first()
+
+        if existing:
+            return existing
+
+        # For YouTube, try to get additional metadata
+        thumbnail_url = None
+        extra_data = {}
+
+        if resource_type == "youtube":
+            try:
+                video_id = url.split("watch?v=")[-1].split("&")[0]
+                videos = self.youtube_service.search_videos(
+                    query=resource_data.get("title", ""),
+                    subject=subject or "",
+                    max_results=1
+                )
+                if videos and videos[0].get("url") == url:
+                    thumbnail_url = videos[0].get("thumbnail_url")
+                    extra_data = {
+                        "channel_name": videos[0].get("channel_name"),
+                        "view_count": videos[0].get("view_count", 0),
+                        "like_count": videos[0].get("like_count", 0),
+                    }
+            except:
+                # Use Claude's data if YouTube API fails
+                extra_data = {
+                    "channel_name": resource_data.get("channel_name", ""),
+                    "estimated_views": resource_data.get("estimated_views", "")
+                }
+
+        # Calculate quality score
+        learning_outcome_match = bool(learning_outcome_ids)
+        quality_score = self.curator_service.calculate_quality_score(
+            resource_data=resource_data,
+            learning_outcome_match=learning_outcome_match
+        )
+
+        # Create resource
+        resource = Resource(
+            id=str(uuid.uuid4()),
+            name=resource_data.get("title", ""),
+            type=resource_type,
+            url=url,
+            description=resource_data.get("description", ""),
+            subject_name=subject,
+            topic=topic,
+            thumbnail_url=thumbnail_url,
+            extra_data=extra_data,
+            learning_outcome_ids=learning_outcome_ids,
+            quality_score=quality_score,
+            education_level='lise',
+            curator_notes=resource_data.get("why_relevant", ""),
+            is_active=True
+        )
+
+        self.db.add(resource)
+        self.db.commit()
+        self.db.refresh(resource)
+
+        return resource

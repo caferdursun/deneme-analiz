@@ -3,7 +3,7 @@ Resources API endpoints
 """
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
-from typing import Optional, List
+from typing import Optional, List, Dict
 
 from app.core.database import get_db
 from app.services.resource_service import ResourceService
@@ -137,3 +137,40 @@ async def link_resources(
         "recommendation_id": recommendation_id,
         "resource_count": len(request.resource_ids)
     }
+
+
+@router.post("/recommendations/{recommendation_id}/curate")
+async def curate_resources(
+    recommendation_id: str,
+    db: Session = Depends(get_db),
+):
+    """
+    Use Claude AI to curate high-quality resources for a recommendation
+
+    - Uses Claude to intelligently find relevant resources
+    - Finds YouTube videos, PDFs, and websites
+    - Considers learning outcomes and high school curriculum
+    - Returns resources grouped by type (youtube, pdf, website)
+    """
+    resource_service = ResourceService(db)
+
+    try:
+        resources_by_type = resource_service.curate_resources(
+            recommendation_id=recommendation_id
+        )
+
+        # Convert to response format
+        response = {
+            "youtube": [ResourceResponse.from_orm(r) for r in resources_by_type.get("youtube", [])],
+            "pdf": [ResourceResponse.from_orm(r) for r in resources_by_type.get("pdf", [])],
+            "website": [ResourceResponse.from_orm(r) for r in resources_by_type.get("website", [])]
+        }
+
+        return response
+
+    except Exception as e:
+        print(f"Error curating resources: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error curating resources: {str(e)}"
+        )

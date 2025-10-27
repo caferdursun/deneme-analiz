@@ -15,6 +15,7 @@ import type {
   StudyPlanProgress,
   Resource,
   ResourceListResponse,
+  CuratedResourcesResponse,
 } from '../types';
 
 // Use relative URL to work with Vite proxy
@@ -239,6 +240,14 @@ export const resourceAPI = {
       `/resources/recommendations/${recId}/auto-link`,
       null,
       { params: { subject, topic, count } }
+    );
+    return response.data;
+  },
+
+  // Use Claude AI to curate resources for a recommendation
+  curateResources: async (recId: string): Promise<CuratedResourcesResponse> => {
+    const response = await apiClient.post<CuratedResourcesResponse>(
+      `/resources/recommendations/${recId}/curate`
     );
     return response.data;
   },

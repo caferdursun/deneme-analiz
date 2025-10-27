@@ -1,7 +1,7 @@
 """
 Resource model for study material recommendations
 """
-from sqlalchemy import Column, String, Text, DateTime, Boolean, JSON
+from sqlalchemy import Column, String, Text, DateTime, Boolean, JSON, Float
 from datetime import datetime
 import uuid
 
@@ -29,10 +29,16 @@ class Resource(Base):
     thumbnail_url = Column(String(500))  # YouTube thumbnail
     extra_data = Column(JSON)  # {view_count, subscriber_count, channel_name, duration, etc.}
 
+    # Quality and relevance (NEW)
+    learning_outcome_ids = Column(JSON)  # List of learning outcome IDs this resource covers
+    quality_score = Column(Float, default=50.0)  # 0-100 score based on Claude + metadata
+    education_level = Column(String(20), default='lise')  # 'lise', 'üniversite', etc.
+    curator_notes = Column(Text)  # Claude's reasoning for why this resource is relevant
+
     # Status
     is_active = Column(Boolean, default=True)
 
     created_at = Column(DateTime, default=datetime.utcnow)
 
     def __repr__(self):
-        return f"<Resource(type='{self.type}', name='{self.name}')>"
+        return f"<Resource(type='{self.type}', name='{self.name}', quality={self.quality_score})>"

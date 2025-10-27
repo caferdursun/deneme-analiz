@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { recommendationsAPI, resourceAPI } from '../api/client';
-import type { Recommendation, RefreshSummary, Resource } from '../types';
+import type { Recommendation, RefreshSummary, Resource, CuratedResourcesResponse } from '../types';
 import { RecommendationsSkeleton } from '../components/Skeleton';
 import ResourceCard from '../components/ResourceCard';
+import ResourceTabs from '../components/ResourceTabs';
 
 export const RecommendationsPage: React.FC = () => {
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
@@ -14,6 +15,8 @@ export const RecommendationsPage: React.FC = () => {
   const [refreshSummary, setRefreshSummary] = useState<RefreshSummary | null>(null);
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [recommendationResources, setRecommendationResources] = useState<Record<string, Resource[]>>({});
+  const [curatedResources, setCuratedResources] = useState<Record<string, CuratedResourcesResponse>>({});
+  const [curatingResourcesFor, setCuratingResourcesFor] = useState<Record<string, boolean>>({});
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -90,6 +93,25 @@ export const RecommendationsPage: React.FC = () => {
       const errorMsg = err.response?.data?.detail || 'Öneri tamamlanırken hata oluştu';
       toast.error(errorMsg);
       setError(errorMsg);
+    }
+  };
+
+  const handleCurateResources = async (recId: string) => {
+    const toastId = toast.loading('Claude AI ile kaynaklar öneriliyor...');
+
+    try {
+      setCuratingResourcesFor(prev => ({ ...prev, [recId]: true }));
+
+      const resources = await resourceAPI.curateResources(recId);
+      setCuratedResources(prev => ({ ...prev, [recId]: resources }));
+
+      const totalCount = resources.youtube.length + resources.pdf.length + resources.website.length;
+      toast.success(`✓ ${totalCount} kaynak önerildi`, { id: toastId, duration: 3000 });
+    } catch (err: any) {
+      const errorMsg = err.response?.data?.detail || 'Kaynaklar önerilirken hata oluştu';
+      toast.error(errorMsg, { id: toastId });
+    } finally {
+      setCuratingResourcesFor(prev => ({ ...prev, [recId]: false }));
     }
   };
 
@@ -418,22 +440,45 @@ export const RecommendationsPage: React.FC = () => {
                     </div>
                   )}
 
-                  {/* Resource Recommendations */}
-                  {recommendationResources[rec.id]?.length > 0 && (
-                    <div className="mb-4">
-                      <h4 className="text-sm font-semibold text-gray-900 mb-2 flex items-center gap-2">
-                        📚 Önerilen Kaynaklar
-                        <span className="text-xs font-normal text-gray-500">
-                          ({recommendationResources[rec.id].length} kaynak)
-                        </span>
-                      </h4>
-                      <div className="space-y-2">
-                        {recommendationResources[rec.id].map(resource => (
-                          <ResourceCard key={resource.id} resource={resource} />
-                        ))}
+                  {/* Curated Resources Section */}
+                  <div className="mb-4">
+                    {/* Curate Resources Button or Resource Tabs */}
+                    {!curatedResources[rec.id] ? (
+                      <button
+                        onClick={() => handleCurateResources(rec.id)}
+                        disabled={curatingResourcesFor[rec.id]}
+                        className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors text-sm font-medium"
+                      >
+                        {curatingResourcesFor[rec.id] ? (
+                          <>
+                            <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            <span>Kaynaklar Öneriliyor...</span>
+                          </>
+                        ) : (
+                          <>
+                            📚 Kaynak Öner
+                          </>
+                        )}
+                      </button>
+                    ) : (
+                      <div>
+                        <h4 className="text-sm font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                          📚 Önerilen Kaynaklar
+                          <span className="text-xs font-normal text-gray-500">
+                            (Claude AI tarafından seçildi)
+                          </span>
+                        </h4>
+                        <ResourceTabs
+                          youtubeResources={curatedResources[rec.id].youtube}
+                          pdfResources={curatedResources[rec.id].pdf}
+                          websiteResources={curatedResources[rec.id].website}
+                        />
                       </div>
-                    </div>
-                  )}
+                    )}
+                  </div>
 
                   {/* Footer */}
                   <div className="flex items-center justify-between pt-4 border-t">

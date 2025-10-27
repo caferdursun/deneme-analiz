@@ -263,8 +263,18 @@ export interface Resource {
     view_count?: number;
     like_count?: number;
   } | null;
+  learning_outcome_ids: string[] | null;
+  quality_score: number | null;
+  education_level: string | null;
+  curator_notes: string | null;
   is_active: boolean;
   created_at: string;
+}
+
+export interface CuratedResourcesResponse {
+  youtube: Resource[];
+  pdf: Resource[];
+  website: Resource[];
 }
 
 export interface ResourceListResponse {
