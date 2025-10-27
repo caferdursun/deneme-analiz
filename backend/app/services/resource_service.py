@@ -5,7 +5,7 @@ from typing import List, Optional, Dict
 from sqlalchemy.orm import Session
 from sqlalchemy import and_
 
-from app.models import Resource, RecommendationResource, Recommendation, LearningOutcome
+from app.models import Resource, RecommendationResource, Recommendation, LearningOutcome, ResourceBlacklist
 from app.services.youtube_service import YouTubeService
 from app.services.claude_curator_service import ClaudeCuratorService
 import uuid
@@ -256,6 +256,11 @@ class ResourceService:
             subcategory=subcategory
         )
 
+        # Filter out blacklisted URLs
+        curated_data["youtube"] = self.filter_blacklisted_urls(curated_data.get("youtube", []))
+        curated_data["pdf"] = self.filter_blacklisted_urls(curated_data.get("pdf", []))
+        curated_data["website"] = self.filter_blacklisted_urls(curated_data.get("website", []))
+
         # Process and save curated resources
         result = {
             "youtube": [],
@@ -398,3 +403,84 @@ class ResourceService:
         self.db.refresh(resource)
 
         return resource
+
+    def is_url_blacklisted(self, url: str) -> bool:
+        """Check if a URL is blacklisted"""
+        blacklist_entry = self.db.query(ResourceBlacklist).filter(
+            ResourceBlacklist.url == url
+        ).first()
+        return blacklist_entry is not None
+
+    def delete_and_blacklist_resource(
+        self,
+        resource_id: str,
+        reason: Optional[str] = None
+    ) -> bool:
+        """
+        Delete a resource and add its URL to blacklist
+
+        Args:
+            resource_id: ID of the resource to delete
+            reason: Optional reason for blacklisting
+
+        Returns:
+            True if successful
+        """
+        # Get the resource
+        resource = self.db.query(Resource).filter(
+            Resource.id == resource_id
+        ).first()
+
+        if not resource:
+            return False
+
+        # Add to blacklist
+        blacklist_entry = ResourceBlacklist(
+            id=str(uuid.uuid4()),
+            url=resource.url,
+            name=resource.name,
+            type=resource.type,
+            subject_name=resource.subject_name,
+            topic=resource.topic,
+            reason=reason or "User rejected",
+            blacklisted_by='user'
+        )
+
+        try:
+            self.db.add(blacklist_entry)
+
+            # Delete recommendation_resource links
+            self.db.query(RecommendationResource).filter(
+                RecommendationResource.resource_id == resource_id
+            ).delete()
+
+            # Delete the resource
+            self.db.delete(resource)
+
+            self.db.commit()
+            return True
+
+        except Exception as e:
+            self.db.rollback()
+            print(f"Error blacklisting resource: {e}")
+            return False
+
+    def filter_blacklisted_urls(self, resources: List[Dict]) -> List[Dict]:
+        """
+        Filter out blacklisted URLs from a list of resource data
+
+        Args:
+            resources: List of resource dictionaries with 'url' key
+
+        Returns:
+            Filtered list without blacklisted URLs
+        """
+        if not resources:
+            return []
+
+        # Get all blacklisted URLs
+        blacklisted = self.db.query(ResourceBlacklist.url).all()
+        blacklisted_urls = {url[0] for url in blacklisted}
+
+        # Filter resources
+        return [r for r in resources if r.get("url") not in blacklisted_urls]

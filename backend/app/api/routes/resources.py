@@ -174,3 +174,35 @@ async def curate_resources(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Error curating resources: {str(e)}"
         )
+
+
+@router.delete("/{resource_id}", response_model=dict)
+async def delete_resource(
+    resource_id: str,
+    reason: str = Query(None, description="Optional reason for deleting"),
+    db: Session = Depends(get_db),
+):
+    """
+    Delete a resource and add it to blacklist
+
+    - Removes resource from database
+    - Adds URL to blacklist so it won't be recommended again
+    - Returns success message
+    """
+    resource_service = ResourceService(db)
+
+    success = resource_service.delete_and_blacklist_resource(
+        resource_id=resource_id,
+        reason=reason
+    )
+
+    if not success:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Resource with id {resource_id} not found"
+        )
+
+    return {
+        "message": "Resource deleted and blacklisted successfully",
+        "resource_id": resource_id
+    }

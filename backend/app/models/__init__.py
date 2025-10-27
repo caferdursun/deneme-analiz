@@ -14,6 +14,7 @@ from app.models.study_plan_day import StudyPlanDay
 from app.models.study_plan_item import StudyPlanItem
 from app.models.resource import Resource
 from app.models.recommendation_resource import RecommendationResource
+from app.models.resource_blacklist import ResourceBlacklist
 
 __all__ = [
     "Student",
@@ -29,4 +30,5 @@ __all__ = [
     "StudyPlanItem",
     "Resource",
     "RecommendationResource",
+    "ResourceBlacklist",
 ]

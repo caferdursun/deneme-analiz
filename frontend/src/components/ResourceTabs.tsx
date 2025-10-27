@@ -6,6 +6,7 @@ interface ResourceTabsProps {
   youtubeResources: Resource[];
   pdfResources: Resource[];
   websiteResources: Resource[];
+  onDeleteResource?: (resourceId: string) => void;
 }
 
 type TabType = 'youtube' | 'pdf' | 'website';
@@ -14,6 +15,7 @@ export default function ResourceTabs({
   youtubeResources,
   pdfResources,
   websiteResources,
+  onDeleteResource,
 }: ResourceTabsProps) {
   const [activeTab, setActiveTab] = useState<TabType>('youtube');
 
@@ -77,7 +79,7 @@ export default function ResourceTabs({
         ) : (
           <div className="space-y-3">
             {activeResources.map((resource) => (
-              <ResourceCard key={resource.id} resource={resource} />
+              <ResourceCard key={resource.id} resource={resource} onDelete={onDeleteResource} />
             ))}
           </div>
         )}

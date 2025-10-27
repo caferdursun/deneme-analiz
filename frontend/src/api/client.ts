@@ -251,4 +251,14 @@ export const resourceAPI = {
     );
     return response.data;
   },
+
+  // Delete a resource and blacklist it
+  deleteResource: async (resourceId: string, reason?: string): Promise<{ message: string; resource_id: string }> => {
+    const params = reason ? { reason } : {};
+    const response = await apiClient.delete<{ message: string; resource_id: string }>(
+      `/resources/${resourceId}`,
+      { params }
+    );
+    return response.data;
+  },
 };

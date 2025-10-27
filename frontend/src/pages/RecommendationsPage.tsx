@@ -115,6 +115,34 @@ export const RecommendationsPage: React.FC = () => {
     }
   };
 
+  const handleDeleteResource = async (resourceId: string) => {
+    if (!confirm('Bu kaynağı silmek ve bir daha önermemek istediğinize emin misiniz?')) {
+      return;
+    }
+
+    try {
+      await resourceAPI.deleteResource(resourceId);
+
+      // Remove from curated resources state
+      setCuratedResources(prev => {
+        const updated = { ...prev };
+        Object.keys(updated).forEach(recId => {
+          updated[recId] = {
+            youtube: updated[recId].youtube.filter(r => r.id !== resourceId),
+            pdf: updated[recId].pdf.filter(r => r.id !== resourceId),
+            website: updated[recId].website.filter(r => r.id !== resourceId),
+          };
+        });
+        return updated;
+      });
+
+      toast.success('✓ Kaynak silindi ve kara listeye eklendi', { duration: 3000 });
+    } catch (err: any) {
+      const errorMsg = err.response?.data?.detail || 'Kaynak silinirken hata oluştu';
+      toast.error(errorMsg);
+    }
+  };
+
   const getPriorityColor = (priority: number): string => {
     if (priority === 1) return 'bg-red-100 text-red-700 border-red-300';
     if (priority === 2) return 'bg-orange-100 text-orange-700 border-orange-300';
@@ -475,6 +503,7 @@ export const RecommendationsPage: React.FC = () => {
                           youtubeResources={curatedResources[rec.id].youtube}
                           pdfResources={curatedResources[rec.id].pdf}
                           websiteResources={curatedResources[rec.id].website}
+                          onDeleteResource={handleDeleteResource}
                         />
                       </div>
                     )}
