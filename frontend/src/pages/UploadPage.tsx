@@ -12,9 +12,42 @@ export const UploadPage: React.FC = () => {
   const [currentStage, setCurrentStage] = useState('');
   const navigate = useNavigate();
 
+  const validateFile = (file: File): string | null => {
+    // Check file type
+    if (file.type !== 'application/pdf') {
+      return 'Sadece PDF dosyaları yüklenebilir';
+    }
+
+    // Check file size (max 10MB)
+    const maxSize = 10 * 1024 * 1024; // 10MB in bytes
+    if (file.size > maxSize) {
+      return 'Dosya boyutu 10MB\'dan büyük olamaz';
+    }
+
+    // Check file size (min 10KB - too small to be a real exam)
+    const minSize = 10 * 1024; // 10KB
+    if (file.size < minSize) {
+      return 'Dosya çok küçük, geçerli bir sınav PDF\'i değil';
+    }
+
+    return null;
+  };
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setFile(e.target.files[0]);
+      const selectedFile = e.target.files[0];
+
+      // Validate file
+      const validationError = validateFile(selectedFile);
+      if (validationError) {
+        setError(validationError);
+        setFile(null);
+        // Reset input
+        e.target.value = '';
+        return;
+      }
+
+      setFile(selectedFile);
       setResult(null);
       setError(null);
     }
@@ -23,6 +56,13 @@ export const UploadPage: React.FC = () => {
   const handleUpload = async () => {
     if (!file) {
       setError('Lütfen bir PDF dosyası seçin');
+      return;
+    }
+
+    // Double-check validation before upload
+    const validationError = validateFile(file);
+    if (validationError) {
+      setError(validationError);
       return;
     }
 
@@ -96,16 +136,26 @@ export const UploadPage: React.FC = () => {
                 hover:file:bg-blue-100
                 disabled:opacity-50 disabled:cursor-not-allowed"
             />
+            <p className="mt-2 text-xs text-gray-500">
+              Maksimum dosya boyutu: 10MB • Sadece PDF dosyaları
+            </p>
           </div>
 
-          {file && (
-            <div className="mb-6">
-              <p className="text-sm text-gray-600">
-                Seçili dosya: <span className="font-medium">{file.name}</span>
-              </p>
-              <p className="text-sm text-gray-500">
-                Boyut: {(file.size / 1024 / 1024).toFixed(2)} MB
-              </p>
+          {file && !error && (
+            <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+              <div className="flex items-start gap-3">
+                <svg className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-green-900">
+                    {file.name}
+                  </p>
+                  <p className="text-xs text-green-700 mt-1">
+                    Boyut: {(file.size / 1024 / 1024).toFixed(2)} MB • {file.type}
+                  </p>
+                </div>
+              </div>
             </div>
           )}
 

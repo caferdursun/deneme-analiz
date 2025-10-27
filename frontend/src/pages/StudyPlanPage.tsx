@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import { studyPlansAPI } from '../api/client';
 import type { StudyPlan, StudyPlanDay, StudyPlanItem, StudyPlanProgress } from '../types';
+import { StudyPlanSkeleton } from '../components/Skeleton';
 
 export default function StudyPlanPage() {
   const { planId } = useParams<{ planId: string }>();
@@ -20,15 +22,22 @@ export default function StudyPlanPage() {
     }
   }, [planId]);
 
-  const loadPlan = async () => {
+  const loadPlan = async (preserveSelectedDay: boolean = false) => {
     try {
       setLoading(true);
       setError(null);
       const data = await studyPlansAPI.getById(planId!);
       setPlan(data);
 
-      // Select first day by default
-      if (data.days && data.days.length > 0) {
+      // Update selected day with fresh data or select first day
+      if (preserveSelectedDay && selectedDay) {
+        // Find the same day in the fresh data
+        const updatedDay = data.days.find(d => d.id === selectedDay.id);
+        if (updatedDay) {
+          setSelectedDay(updatedDay);
+        }
+      } else if (data.days && data.days.length > 0 && !selectedDay) {
+        // Only select first day if no day is selected yet
         setSelectedDay(data.days[0]);
       }
     } catch (err: any) {
@@ -54,40 +63,43 @@ export default function StudyPlanPage() {
       const newCompleted = !item.completed;
       await studyPlansAPI.updateItemCompletion(plan.id, item.id, newCompleted);
 
-      // Update local state
-      setPlan(prevPlan => {
-        if (!prevPlan) return null;
-
-        return {
-          ...prevPlan,
-          days: prevPlan.days.map(day => ({
-            ...day,
-            items: day.items.map(i =>
-              i.id === item.id ? { ...i, completed: newCompleted, completed_at: newCompleted ? new Date().toISOString() : null } : i
-            ),
-            completed: day.items.every(i => i.id === item.id ? newCompleted : i.completed)
-          }))
-        };
-      });
-
-      // Update selected day
-      if (selectedDay && selectedDay.id === item.day_id) {
-        setSelectedDay(prevDay => {
-          if (!prevDay) return null;
-          return {
-            ...prevDay,
-            items: prevDay.items.map(i =>
-              i.id === item.id ? { ...i, completed: newCompleted, completed_at: newCompleted ? new Date().toISOString() : null } : i
-            ),
-            completed: prevDay.items.every(i => i.id === item.id ? newCompleted : i.completed)
-          };
-        });
-      }
-
-      // Reload progress
+      // Reload plan data from backend to ensure consistency
+      // Pass true to preserve the currently selected day
+      await loadPlan(true);
       await loadProgress();
+
+      // Show success toast
+      if (newCompleted) {
+        toast.success('✓ Görev tamamlandı!', { duration: 2000 });
+      }
     } catch (err: any) {
-      setError(err.response?.data?.detail || 'İşlem tamamlanırken hata oluştu');
+      toast.error(err.response?.data?.detail || 'İşlem tamamlanırken hata oluştu');
+    }
+  };
+
+  const handleArchivePlan = async () => {
+    if (!plan || !confirm('Bu planı arşivlemek istediğinizden emin misiniz? Arşivlenen planlar aktif olmaktan çıkar.')) return;
+
+    const toastId = toast.loading('Plan arşivleniyor...');
+    try {
+      await studyPlansAPI.archive(plan.id);
+      toast.success('Plan başarıyla arşivlendi!', { id: toastId });
+      navigate('/dashboard');
+    } catch (err: any) {
+      toast.error(err.response?.data?.detail || 'Plan arşivlenirken hata oluştu', { id: toastId });
+    }
+  };
+
+  const handleDeletePlan = async () => {
+    if (!plan || !confirm('Bu planı kalıcı olarak silmek istediğinizden emin misiniz? Bu işlem geri alınamaz!')) return;
+
+    const toastId = toast.loading('Plan siliniyor...');
+    try {
+      await studyPlansAPI.delete(plan.id);
+      toast.success('Plan başarıyla silindi!', { id: toastId });
+      navigate('/dashboard');
+    } catch (err: any) {
+      toast.error(err.response?.data?.detail || 'Plan silinirken hata oluştu', { id: toastId });
     }
   };
 
@@ -123,11 +135,7 @@ export default function StudyPlanPage() {
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-gray-600">Yükleniyor...</div>
-      </div>
-    );
+    return <StudyPlanSkeleton />;
   }
 
   if (error || !plan) {
@@ -175,12 +183,43 @@ export default function StudyPlanPage() {
                 </div>
               </div>
 
-              <div className={`px-4 py-2 rounded-lg font-semibold ${
-                plan.status === 'active' ? 'bg-green-100 text-green-700' :
-                plan.status === 'completed' ? 'bg-blue-100 text-blue-700' :
-                'bg-gray-100 text-gray-700'
-              }`}>
-                {plan.status === 'active' ? 'Aktif' : plan.status === 'completed' ? 'Tamamlandı' : 'Arşivlendi'}
+              <div className="flex items-center gap-3">
+                <div className={`px-4 py-2 rounded-lg font-semibold ${
+                  plan.status === 'active' ? 'bg-green-100 text-green-700' :
+                  plan.status === 'completed' ? 'bg-blue-100 text-blue-700' :
+                  'bg-gray-100 text-gray-700'
+                }`}>
+                  {plan.status === 'active' ? 'Aktif' : plan.status === 'completed' ? 'Tamamlandı' : 'Arşivlendi'}
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => navigate('/study-plan/create')}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+                    title="Yeni plan oluştur"
+                  >
+                    + Yeni Plan
+                  </button>
+
+                  {plan.status === 'active' && (
+                    <button
+                      onClick={handleArchivePlan}
+                      className="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors text-sm font-medium"
+                      title="Planı arşivle"
+                    >
+                      📦 Arşivle
+                    </button>
+                  )}
+
+                  <button
+                    onClick={handleDeletePlan}
+                    className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm font-medium"
+                    title="Planı sil"
+                  >
+                    🗑️ Sil
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -225,17 +264,25 @@ export default function StudyPlanPage() {
                   const past = isPast(day.date);
                   const selected = selectedDay?.id === day.id;
 
+                  // Calculate completion progress
+                  const completedCount = day.items.filter(item => item.completed).length;
+                  const totalCount = day.items.length;
+                  const isPartiallyCompleted = completedCount > 0 && completedCount < totalCount;
+                  const completionPercentage = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
+
                   return (
                     <button
                       key={day.id}
                       onClick={() => setSelectedDay(day)}
-                      className={`p-3 rounded-lg border-2 transition-all text-center ${
+                      className={`p-3 rounded-lg border-2 transition-all text-center relative ${
                         selected
                           ? 'border-blue-600 bg-blue-50'
                           : today
                           ? 'border-green-600 bg-green-50'
                           : day.completed
                           ? 'border-green-300 bg-green-50'
+                          : isPartiallyCompleted
+                          ? 'border-yellow-300 bg-yellow-50'
                           : past
                           ? 'border-gray-200 bg-gray-50 opacity-60'
                           : 'border-gray-300 hover:border-blue-300'
@@ -247,10 +294,23 @@ export default function StudyPlanPage() {
                       <div className={`text-lg font-bold ${selected ? 'text-blue-900' : today ? 'text-green-900' : 'text-gray-900'}`}>
                         {day.day_number}
                       </div>
+
+                      {/* Completion indicator */}
                       {day.completed && (
-                        <div className="text-green-600 mt-1">✓</div>
+                        <div className="text-green-600 mt-1 text-lg">✓</div>
                       )}
-                      {today && !day.completed && (
+                      {isPartiallyCompleted && (
+                        <div className="mt-1">
+                          <div className="text-xs text-yellow-700 font-semibold">{completedCount}/{totalCount}</div>
+                          <div className="w-full bg-yellow-200 rounded-full h-1 mt-1">
+                            <div
+                              className="bg-yellow-600 h-1 rounded-full transition-all"
+                              style={{ width: `${completionPercentage}%` }}
+                            />
+                          </div>
+                        </div>
+                      )}
+                      {today && !day.completed && !isPartiallyCompleted && (
                         <div className="text-xs text-green-700 mt-1 font-semibold">Bugün</div>
                       )}
                     </button>

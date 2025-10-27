@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import { recommendationsAPI } from '../api/client';
 import type { Recommendation, RefreshSummary } from '../types';
+import { RecommendationsSkeleton } from '../components/Skeleton';
 
 export const RecommendationsPage: React.FC = () => {
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
@@ -30,16 +32,26 @@ export const RecommendationsPage: React.FC = () => {
   };
 
   const handleRefresh = async () => {
+    const toastId = toast.loading('Öneriler AI ile yenileniyor...');
+
     try {
       setRefreshing(true);
       setError(null);
       const data = await recommendationsAPI.refreshRecommendations();
       setRecommendations(data.recommendations);
       setRefreshSummary(data.summary);
+
+      // Show success toast
+      const summary = data.summary;
+      const message = `✓ ${summary.new_count} yeni, ${summary.updated_count} güncellendi, ${summary.confirmed_count} onaylandı`;
+      toast.success(message, { id: toastId, duration: 4000 });
+
       // Auto-hide summary after 5 seconds
       setTimeout(() => setRefreshSummary(null), 5000);
     } catch (err: any) {
-      setError(err.response?.data?.detail || 'Öneriler yenilenirken hata oluştu');
+      const errorMsg = err.response?.data?.detail || 'Öneriler yenilenirken hata oluştu';
+      toast.error(errorMsg, { id: toastId });
+      setError(errorMsg);
     } finally {
       setRefreshing(false);
     }
@@ -50,8 +62,11 @@ export const RecommendationsPage: React.FC = () => {
       await recommendationsAPI.markAsComplete(id);
       // Remove from list
       setRecommendations(prev => prev.filter(r => r.id !== id));
+      toast.success('✓ Öneri tamamlandı olarak işaretlendi', { duration: 2000 });
     } catch (err: any) {
-      setError(err.response?.data?.detail || 'Öneri tamamlanırken hata oluştu');
+      const errorMsg = err.response?.data?.detail || 'Öneri tamamlanırken hata oluştu';
+      toast.error(errorMsg);
+      setError(errorMsg);
     }
   };
 
@@ -100,14 +115,7 @@ export const RecommendationsPage: React.FC = () => {
   });
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Öneriler yükleniyor...</p>
-        </div>
-      </div>
-    );
+    return <RecommendationsSkeleton />;
   }
 
   if (error) {

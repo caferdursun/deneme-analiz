@@ -13,6 +13,7 @@ from app.schemas.study_plan import (
     StudyPlanResponse,
     StudyPlanProgressResponse,
 )
+from app.core.config import settings
 from anthropic import Anthropic
 
 
@@ -21,7 +22,7 @@ class StudyPlanService:
 
     def __init__(self, db: Session):
         self.db = db
-        self.client = Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
+        self.client = Anthropic(api_key=settings.ANTHROPIC_API_KEY)
 
     def generate_study_plan(self, request: StudyPlanGenerateRequest) -> StudyPlanResponse:
         """
@@ -269,10 +270,15 @@ Generate the complete schedule now. Output ONLY valid JSON, no additional text."
         item.completed = completed
         item.completed_at = datetime.utcnow() if completed else None
 
+        # Flush to ensure the item update is reflected in the session
+        self.db.flush()
+
         # Update day completion status
         day = self.db.query(StudyPlanDay).filter(StudyPlanDay.id == item.day_id).first()
         if day:
+            # Get all items for this day (including the just-updated item)
             all_items = self.db.query(StudyPlanItem).filter(StudyPlanItem.day_id == day.id).all()
+            # Check if ALL items are completed
             day.completed = all(i.completed for i in all_items)
 
         self.db.commit()
