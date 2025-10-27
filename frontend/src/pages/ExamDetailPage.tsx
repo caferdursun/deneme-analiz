@@ -68,19 +68,19 @@ export const ExamDetailPage: React.FC = () => {
   const { exam, student, overall_result, subject_results, learning_outcomes, questions } = examDetail;
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4">
+    <div className="min-h-screen bg-gray-50 py-4 sm:py-8 px-3 sm:px-4">
       <div className="max-w-6xl mx-auto">
         <button
           onClick={() => navigate('/exams')}
-          className="text-blue-600 hover:text-blue-800 text-sm font-medium mb-6"
+          className="text-blue-600 hover:text-blue-800 text-sm font-medium mb-4 sm:mb-6"
         >
           ← Sınav listesine dön
         </button>
 
         {/* Header */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">{exam.exam_name}</h1>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+        <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 mb-4 sm:mb-6">
+          <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-4">{exam.exam_name}</h1>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 text-xs sm:text-sm">
             <div>
               <p className="text-gray-600">
                 <span className="font-medium">Öğrenci:</span> {student.name}
@@ -172,18 +172,18 @@ export const ExamDetailPage: React.FC = () => {
 
         {/* Subject Results */}
         {subject_results.length > 0 && (
-          <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Ders Bazında Sonuçlar</h2>
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
+          <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 mb-4 sm:mb-6">
+            <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 mb-4">Ders Bazında Sonuçlar</h2>
+            <div className="overflow-x-auto -mx-4 sm:mx-0">
+              <table className="w-full text-xs sm:text-sm">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th className="px-4 py-2 text-left font-medium text-gray-700">Ders</th>
-                    <th className="px-4 py-2 text-center font-medium text-gray-700">Doğru</th>
-                    <th className="px-4 py-2 text-center font-medium text-gray-700">Yanlış</th>
-                    <th className="px-4 py-2 text-center font-medium text-gray-700">Boş</th>
-                    <th className="px-4 py-2 text-center font-medium text-gray-700">Net</th>
-                    <th className="px-4 py-2 text-center font-medium text-gray-700">Başarı</th>
+                    <th className="px-2 sm:px-4 py-2 text-left font-medium text-gray-700">Ders</th>
+                    <th className="px-2 sm:px-4 py-2 text-center font-medium text-gray-700 hidden sm:table-cell">Doğru</th>
+                    <th className="px-2 sm:px-4 py-2 text-center font-medium text-gray-700 hidden sm:table-cell">Yanlış</th>
+                    <th className="px-2 sm:px-4 py-2 text-center font-medium text-gray-700 hidden sm:table-cell">Boş</th>
+                    <th className="px-2 sm:px-4 py-2 text-center font-medium text-gray-700">Net</th>
+                    <th className="px-2 sm:px-4 py-2 text-center font-medium text-gray-700">Başarı</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -191,21 +191,21 @@ export const ExamDetailPage: React.FC = () => {
                     const total = subject.correct + subject.wrong + subject.blank;
                     return (
                       <tr key={subject.id} className="border-t">
-                        <td className="px-4 py-3 font-medium">{subject.subject_name}</td>
-                        <td className="px-4 py-3 text-center text-green-600">
+                        <td className="px-2 sm:px-4 py-3 font-medium text-xs sm:text-sm">{subject.subject_name}</td>
+                        <td className="px-2 sm:px-4 py-3 text-center text-green-600 hidden sm:table-cell">
                           %{((subject.correct / total) * 100).toFixed(2)}
                           <span className="text-xs text-gray-500 block">({subject.correct}/{total})</span>
                         </td>
-                        <td className="px-4 py-3 text-center text-red-600">
+                        <td className="px-2 sm:px-4 py-3 text-center text-red-600 hidden sm:table-cell">
                           %{((subject.wrong / total) * 100).toFixed(2)}
                           <span className="text-xs text-gray-500 block">({subject.wrong}/{total})</span>
                         </td>
-                        <td className="px-4 py-3 text-center text-gray-600">
+                        <td className="px-2 sm:px-4 py-3 text-center text-gray-600 hidden sm:table-cell">
                           %{((subject.blank / total) * 100).toFixed(2)}
                           <span className="text-xs text-gray-500 block">({subject.blank}/{total})</span>
                         </td>
-                        <td className="px-4 py-3 text-center font-bold">{subject.net_score.toFixed(2)}</td>
-                        <td className="px-4 py-3 text-center">{subject.net_percentage.toFixed(1)}%</td>
+                        <td className="px-2 sm:px-4 py-3 text-center font-bold">{subject.net_score.toFixed(2)}</td>
+                        <td className="px-2 sm:px-4 py-3 text-center">{subject.net_percentage.toFixed(1)}%</td>
                       </tr>
                     );
                   })}

@@ -155,36 +155,36 @@ export default function StudyPlanPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-7xl mx-auto px-4">
+    <div className="min-h-screen bg-gray-50 py-4 sm:py-8">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4">
         {/* Header */}
-        <div className="mb-6">
+        <div className="mb-4 sm:mb-6">
           <button
             onClick={() => navigate('/dashboard')}
-            className="text-blue-600 hover:text-blue-800 mb-4 flex items-center gap-2"
+            className="text-blue-600 hover:text-blue-800 mb-4 flex items-center gap-2 text-sm sm:text-base"
           >
             ← Geri
           </button>
 
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <div className="flex justify-between items-start mb-4">
-              <div>
-                <h1 className="text-3xl font-bold text-gray-900 mb-2">{plan.name}</h1>
-                <div className="flex items-center gap-4 text-sm text-gray-600">
-                  <span>{new Date(plan.start_date).toLocaleDateString('tr-TR')} - {new Date(plan.end_date).toLocaleDateString('tr-TR')}</span>
-                  <span>•</span>
+          <div className="bg-white rounded-lg shadow-md p-4 sm:p-6">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-4">
+              <div className="flex-1">
+                <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-2">{plan.name}</h1>
+                <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-gray-600">
+                  <span className="whitespace-nowrap">{new Date(plan.start_date).toLocaleDateString('tr-TR', { day: 'numeric', month: 'short' })} - {new Date(plan.end_date).toLocaleDateString('tr-TR', { day: 'numeric', month: 'short' })}</span>
+                  <span className="hidden sm:inline">•</span>
                   <span>{plan.time_frame} gün</span>
-                  <span>•</span>
-                  <span>{plan.daily_study_time} dakika/gün</span>
-                  <span>•</span>
+                  <span className="hidden sm:inline">•</span>
+                  <span>{plan.daily_study_time} dk/gün</span>
+                  <span className="hidden sm:inline">•</span>
                   <span className="capitalize">
                     {plan.study_style === 'intensive' ? 'Yoğun' : plan.study_style === 'balanced' ? 'Dengeli' : 'Rahat'}
                   </span>
                 </div>
               </div>
 
-              <div className="flex items-center gap-3">
-                <div className={`px-4 py-2 rounded-lg font-semibold ${
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3">
+                <div className={`px-3 py-2 rounded-lg font-semibold text-center text-sm ${
                   plan.status === 'active' ? 'bg-green-100 text-green-700' :
                   plan.status === 'completed' ? 'bg-blue-100 text-blue-700' :
                   'bg-gray-100 text-gray-700'
@@ -196,28 +196,28 @@ export default function StudyPlanPage() {
                 <div className="flex gap-2">
                   <button
                     onClick={() => navigate('/study-plan/create')}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+                    className="flex-1 sm:flex-none px-3 sm:px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-xs sm:text-sm font-medium whitespace-nowrap"
                     title="Yeni plan oluştur"
                   >
-                    + Yeni Plan
+                    + Plan
                   </button>
 
                   {plan.status === 'active' && (
                     <button
                       onClick={handleArchivePlan}
-                      className="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors text-sm font-medium"
+                      className="flex-1 sm:flex-none px-3 sm:px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors text-xs sm:text-sm font-medium whitespace-nowrap"
                       title="Planı arşivle"
                     >
-                      📦 Arşivle
+                      📦
                     </button>
                   )}
 
                   <button
                     onClick={handleDeletePlan}
-                    className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm font-medium"
+                    className="flex-1 sm:flex-none px-3 sm:px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-xs sm:text-sm font-medium whitespace-nowrap"
                     title="Planı sil"
                   >
-                    🗑️ Sil
+                    🗑️
                   </button>
                 </div>
               </div>
@@ -252,13 +252,14 @@ export default function StudyPlanPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
           {/* Calendar Grid */}
           <div className="lg:col-span-2">
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-xl font-bold text-gray-900 mb-4">Günlük Plan</h2>
+            <div className="bg-white rounded-lg shadow-md p-4 sm:p-6">
+              <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4">Günlük Plan</h2>
 
-              <div className="grid grid-cols-7 gap-2">
+              {/* Mobile: 4 columns, Desktop: 7 columns */}
+              <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-7 gap-1.5 sm:gap-2">
                 {plan.days.map((day) => {
                   const today = isToday(day.date);
                   const past = isPast(day.date);
@@ -274,7 +275,7 @@ export default function StudyPlanPage() {
                     <button
                       key={day.id}
                       onClick={() => setSelectedDay(day)}
-                      className={`p-3 rounded-lg border-2 transition-all text-center relative ${
+                      className={`p-2 sm:p-3 rounded-lg border-2 transition-all text-center relative ${
                         selected
                           ? 'border-blue-600 bg-blue-50'
                           : today
@@ -288,21 +289,21 @@ export default function StudyPlanPage() {
                           : 'border-gray-300 hover:border-blue-300'
                       }`}
                     >
-                      <div className={`text-xs mb-1 ${selected ? 'text-blue-700' : today ? 'text-green-700' : 'text-gray-600'}`}>
+                      <div className={`text-xs mb-1 hidden sm:block ${selected ? 'text-blue-700' : today ? 'text-green-700' : 'text-gray-600'}`}>
                         {formatDate(day.date)}
                       </div>
-                      <div className={`text-lg font-bold ${selected ? 'text-blue-900' : today ? 'text-green-900' : 'text-gray-900'}`}>
+                      <div className={`text-base sm:text-lg font-bold ${selected ? 'text-blue-900' : today ? 'text-green-900' : 'text-gray-900'}`}>
                         {day.day_number}
                       </div>
 
                       {/* Completion indicator */}
                       {day.completed && (
-                        <div className="text-green-600 mt-1 text-lg">✓</div>
+                        <div className="text-green-600 mt-0.5 sm:mt-1 text-base sm:text-lg">✓</div>
                       )}
                       {isPartiallyCompleted && (
-                        <div className="mt-1">
+                        <div className="mt-0.5 sm:mt-1">
                           <div className="text-xs text-yellow-700 font-semibold">{completedCount}/{totalCount}</div>
-                          <div className="w-full bg-yellow-200 rounded-full h-1 mt-1">
+                          <div className="w-full bg-yellow-200 rounded-full h-1 mt-0.5 sm:mt-1">
                             <div
                               className="bg-yellow-600 h-1 rounded-full transition-all"
                               style={{ width: `${completionPercentage}%` }}
@@ -311,7 +312,7 @@ export default function StudyPlanPage() {
                         </div>
                       )}
                       {today && !day.completed && !isPartiallyCompleted && (
-                        <div className="text-xs text-green-700 mt-1 font-semibold">Bugün</div>
+                        <div className="text-xs text-green-700 mt-0.5 sm:mt-1 font-semibold hidden sm:block">Bugün</div>
                       )}
                     </button>
                   );
@@ -323,59 +324,59 @@ export default function StudyPlanPage() {
           {/* Day Detail Card */}
           <div className="lg:col-span-1">
             {selectedDay ? (
-              <div className="bg-white rounded-lg shadow-md p-6 sticky top-8">
+              <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 lg:sticky lg:top-8">
                 <div className="flex justify-between items-start mb-4">
                   <div>
-                    <h3 className="text-xl font-bold text-gray-900">Gün {selectedDay.day_number}</h3>
-                    <div className="text-sm text-gray-600">{new Date(selectedDay.date).toLocaleDateString('tr-TR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</div>
+                    <h3 className="text-lg sm:text-xl font-bold text-gray-900">Gün {selectedDay.day_number}</h3>
+                    <div className="text-xs sm:text-sm text-gray-600">{new Date(selectedDay.date).toLocaleDateString('tr-TR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</div>
                   </div>
                   {selectedDay.completed && (
-                    <div className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-semibold">
+                    <div className="bg-green-100 text-green-700 px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-semibold">
                       Tamamlandı
                     </div>
                   )}
                 </div>
 
                 <div className="mb-4">
-                  <div className="text-sm text-gray-600">Toplam Süre</div>
-                  <div className="text-lg font-semibold text-gray-900">
+                  <div className="text-xs sm:text-sm text-gray-600">Toplam Süre</div>
+                  <div className="text-base sm:text-lg font-semibold text-gray-900">
                     {Math.floor(selectedDay.total_duration_minutes / 60)}s {selectedDay.total_duration_minutes % 60}dk
                   </div>
                 </div>
 
-                <div className="space-y-3">
+                <div className="space-y-2 sm:space-y-3">
                   {selectedDay.items.map((item) => (
                     <div
                       key={item.id}
-                      className={`p-4 border-2 rounded-lg ${
+                      className={`p-3 sm:p-4 border-2 rounded-lg ${
                         item.completed ? 'border-green-300 bg-green-50' : 'border-gray-300'
                       }`}
                     >
-                      <label className="flex items-start gap-3 cursor-pointer">
+                      <label className="flex items-start gap-2 sm:gap-3 cursor-pointer">
                         <input
                           type="checkbox"
                           checked={item.completed}
                           onChange={() => handleItemToggle(item)}
-                          className="mt-1 h-5 w-5 text-green-600"
+                          className="mt-1 h-4 w-4 sm:h-5 sm:w-5 text-green-600 flex-shrink-0"
                         />
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-2">
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-2 flex-wrap">
                             <span className={`px-2 py-1 rounded text-xs font-semibold border ${getSubjectColor(item.subject_name)}`}>
                               {item.subject_name}
                             </span>
-                            <span className="text-xs text-gray-600">{item.duration_minutes} dk</span>
+                            <span className="text-xs text-gray-600 whitespace-nowrap">{item.duration_minutes} dk</span>
                           </div>
-                          <div className={`font-semibold mb-1 ${item.completed ? 'line-through text-gray-500' : 'text-gray-900'}`}>
+                          <div className={`text-sm sm:text-base font-semibold mb-1 ${item.completed ? 'line-through text-gray-500' : 'text-gray-900'}`}>
                             {item.topic}
                           </div>
                           {item.description && (
-                            <div className={`text-sm ${item.completed ? 'text-gray-400' : 'text-gray-600'}`}>
+                            <div className={`text-xs sm:text-sm ${item.completed ? 'text-gray-400' : 'text-gray-600'}`}>
                               {item.description}
                             </div>
                           )}
                           {item.completed && item.completed_at && (
                             <div className="text-xs text-green-600 mt-2">
-                              ✓ {new Date(item.completed_at).toLocaleString('tr-TR')}
+                              ✓ {new Date(item.completed_at).toLocaleString('tr-TR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
                             </div>
                           )}
                         </div>

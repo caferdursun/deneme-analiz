@@ -1,17 +1,32 @@
+import { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { ErrorBoundary } from './components/ErrorBoundary';
+
+// Eager load critical pages for faster initial render
 import { DashboardPage } from './pages/DashboardPage';
 import { UploadPage } from './pages/UploadPage';
-import { ExamListPage } from './pages/ExamListPage';
-import { ExamDetailPage } from './pages/ExamDetailPage';
-import { SubjectAnalysisPage } from './pages/SubjectAnalysisPage';
-import { LearningOutcomesPage } from './pages/LearningOutcomesPage';
-import { RecommendationsPage } from './pages/RecommendationsPage';
-import { ValidationReviewPage } from './pages/ValidationReviewPage';
-import { CleanupWizardPage } from './pages/CleanupWizardPage';
-import StudyPlanWizardPage from './pages/StudyPlanWizardPage';
-import StudyPlanPage from './pages/StudyPlanPage';
+
+// Lazy load less critical pages for better performance
+const ExamListPage = lazy(() => import('./pages/ExamListPage').then(m => ({ default: m.ExamListPage })));
+const ExamDetailPage = lazy(() => import('./pages/ExamDetailPage').then(m => ({ default: m.ExamDetailPage })));
+const SubjectAnalysisPage = lazy(() => import('./pages/SubjectAnalysisPage').then(m => ({ default: m.SubjectAnalysisPage })));
+const LearningOutcomesPage = lazy(() => import('./pages/LearningOutcomesPage').then(m => ({ default: m.LearningOutcomesPage })));
+const RecommendationsPage = lazy(() => import('./pages/RecommendationsPage').then(m => ({ default: m.RecommendationsPage })));
+const ValidationReviewPage = lazy(() => import('./pages/ValidationReviewPage').then(m => ({ default: m.ValidationReviewPage })));
+const CleanupWizardPage = lazy(() => import('./pages/CleanupWizardPage').then(m => ({ default: m.CleanupWizardPage })));
+const StudyPlanWizardPage = lazy(() => import('./pages/StudyPlanWizardPage'));
+const StudyPlanPage = lazy(() => import('./pages/StudyPlanPage'));
+
+// Loading component
+const PageLoader = () => (
+  <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+    <div className="text-center">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+      <p className="mt-4 text-gray-600">Yükleniyor...</p>
+    </div>
+  </div>
+);
 
 function App() {
   return (
@@ -43,20 +58,22 @@ function App() {
           },
         }}
       />
-      <Routes>
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
-        <Route path="/dashboard" element={<DashboardPage />} />
-        <Route path="/exams" element={<ExamListPage />} />
-        <Route path="/exams/:examId" element={<ExamDetailPage />} />
-        <Route path="/exams/:examId/validate" element={<ValidationReviewPage />} />
-        <Route path="/upload" element={<UploadPage />} />
-        <Route path="/subjects/:subjectName" element={<SubjectAnalysisPage />} />
-        <Route path="/learning-outcomes" element={<LearningOutcomesPage />} />
-        <Route path="/learning-outcomes/cleanup" element={<CleanupWizardPage />} />
-        <Route path="/recommendations" element={<RecommendationsPage />} />
-        <Route path="/study-plan/create" element={<StudyPlanWizardPage />} />
-        <Route path="/study-plan/:planId" element={<StudyPlanPage />} />
-      </Routes>
+      <Suspense fallback={<PageLoader />}>
+        <Routes>
+          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/exams" element={<ExamListPage />} />
+          <Route path="/exams/:examId" element={<ExamDetailPage />} />
+          <Route path="/exams/:examId/validate" element={<ValidationReviewPage />} />
+          <Route path="/upload" element={<UploadPage />} />
+          <Route path="/subjects/:subjectName" element={<SubjectAnalysisPage />} />
+          <Route path="/learning-outcomes" element={<LearningOutcomesPage />} />
+          <Route path="/learning-outcomes/cleanup" element={<CleanupWizardPage />} />
+          <Route path="/recommendations" element={<RecommendationsPage />} />
+          <Route path="/study-plan/create" element={<StudyPlanWizardPage />} />
+          <Route path="/study-plan/:planId" element={<StudyPlanPage />} />
+        </Routes>
+      </Suspense>
     </Router>
     </ErrorBoundary>
   );

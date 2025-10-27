@@ -169,75 +169,78 @@ export const DashboardPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4">
+    <div className="min-h-screen bg-gray-50 py-4 sm:py-8 px-3 sm:px-4">
       <div className="max-w-7xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-          <div className="flex gap-3">
+        {/* Mobile-optimized header */}
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Dashboard</h1>
+
+          {/* Mobile: 2x3 grid, Desktop: horizontal */}
+          <div className="grid grid-cols-2 sm:flex gap-2 sm:gap-3">
             <button
               onClick={() => navigate('/upload')}
-              className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 text-sm font-medium"
+              className="bg-blue-600 text-white py-2 px-3 sm:px-4 rounded-md hover:bg-blue-700 text-xs sm:text-sm font-medium whitespace-nowrap"
             >
-              + Yeni Sınav
+              + Sınav
             </button>
             <button
               onClick={() => navigate('/exams')}
-              className="bg-gray-600 text-white py-2 px-4 rounded-md hover:bg-gray-700 text-sm font-medium relative"
+              className="bg-gray-600 text-white py-2 px-3 sm:px-4 rounded-md hover:bg-gray-700 text-xs sm:text-sm font-medium relative whitespace-nowrap"
             >
               Sınavlar
               {pendingCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center animate-pulse">
+                <span className="absolute -top-1 sm:-top-2 -right-1 sm:-right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center animate-pulse">
                   {pendingCount}
                 </span>
               )}
             </button>
             <button
               onClick={() => navigate('/learning-outcomes')}
-              className="bg-purple-600 text-white py-2 px-4 rounded-md hover:bg-purple-700 text-sm font-medium"
+              className="bg-purple-600 text-white py-2 px-3 sm:px-4 rounded-md hover:bg-purple-700 text-xs sm:text-sm font-medium whitespace-nowrap"
             >
               Kazanımlar
             </button>
             <button
               onClick={() => navigate('/recommendations')}
-              className="bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 text-sm font-medium relative"
+              className="bg-green-600 text-white py-2 px-3 sm:px-4 rounded-md hover:bg-green-700 text-xs sm:text-sm font-medium relative whitespace-nowrap"
             >
               Öneriler
               {newRecommendationsCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-yellow-400 text-gray-900 text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center animate-pulse">
+                <span className="absolute -top-1 sm:-top-2 -right-1 sm:-right-2 bg-yellow-400 text-gray-900 text-xs font-bold rounded-full w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center animate-pulse">
                   {newRecommendationsCount}
                 </span>
               )}
             </button>
             <button
               onClick={() => navigate(activePlan ? `/study-plan/${activePlan.id}` : '/study-plan/create')}
-              className="bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 text-sm font-medium"
+              className="bg-indigo-600 text-white py-2 px-3 sm:px-4 rounded-md hover:bg-indigo-700 text-xs sm:text-sm font-medium col-span-2 sm:col-span-1 whitespace-nowrap"
             >
               {activePlan ? '📅 Planım' : '+ Çalışma Planı'}
             </button>
           </div>
         </div>
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-          <div className="bg-white rounded-lg shadow p-6">
-            <p className="text-sm text-gray-600 mb-1">Toplam Sınav</p>
-            <p className="text-3xl font-bold text-blue-600">{stats.total_exams}</p>
+        {/* Stats Cards - Mobile: 2 columns, Desktop: 4 columns */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
+          <div className="bg-white rounded-lg shadow p-4 sm:p-6">
+            <p className="text-xs sm:text-sm text-gray-600 mb-1">Toplam Sınav</p>
+            <p className="text-2xl sm:text-3xl font-bold text-blue-600">{stats.total_exams}</p>
           </div>
-          <div className="bg-white rounded-lg shadow p-6">
-            <p className="text-sm text-gray-600 mb-1">Son Net</p>
-            <p className="text-3xl font-bold text-green-600">
+          <div className="bg-white rounded-lg shadow p-4 sm:p-6">
+            <p className="text-xs sm:text-sm text-gray-600 mb-1">Son Net</p>
+            <p className="text-2xl sm:text-3xl font-bold text-green-600">
               {stats.latest_net_score?.toFixed(2) || '-'}
             </p>
           </div>
-          <div className="bg-white rounded-lg shadow p-6">
-            <p className="text-sm text-gray-600 mb-1">Ortalama Net</p>
-            <p className="text-3xl font-bold text-purple-600">
+          <div className="bg-white rounded-lg shadow p-4 sm:p-6">
+            <p className="text-xs sm:text-sm text-gray-600 mb-1">Ortalama Net</p>
+            <p className="text-2xl sm:text-3xl font-bold text-purple-600">
               {stats.average_net_score?.toFixed(2) || '-'}
             </p>
           </div>
-          <div className="bg-white rounded-lg shadow p-6">
-            <p className="text-sm text-gray-600 mb-1">Doğruluk Oranı</p>
-            <p className="text-3xl font-bold text-yellow-600">
+          <div className="bg-white rounded-lg shadow p-4 sm:p-6">
+            <p className="text-xs sm:text-sm text-gray-600 mb-1">Doğruluk Oranı</p>
+            <p className="text-2xl sm:text-3xl font-bold text-yellow-600">
               {stats.overall_accuracy ? `%${stats.overall_accuracy.toFixed(1)}` : '-'}
             </p>
           </div>
@@ -245,12 +248,12 @@ export const DashboardPage: React.FC = () => {
 
         {/* Recommendations Section */}
         {recommendations.length > 0 && (
-          <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-lg shadow-lg p-6 mb-8 border-l-4 border-green-500">
+          <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-lg shadow-lg p-4 sm:p-6 mb-6 sm:mb-8 border-l-4 border-green-500">
             <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-3">
-                <div className="text-2xl">💡</div>
+              <div className="flex items-center gap-2 sm:gap-3">
+                <div className="text-xl sm:text-2xl">💡</div>
                 <div>
-                  <h2 className="text-xl font-bold text-gray-900">Sizin İçin Öneriler</h2>
+                  <h2 className="text-lg sm:text-xl font-bold text-gray-900">Sizin İçin Öneriler</h2>
                   <p className="text-xs text-gray-600 mt-0.5">
                     {allRecommendations.length} aktif öneri
                     {newRecommendationsCount > 0 && (
@@ -263,9 +266,9 @@ export const DashboardPage: React.FC = () => {
               </div>
               <button
                 onClick={() => navigate('/recommendations')}
-                className="text-sm font-medium text-blue-600 hover:text-blue-800"
+                className="text-xs sm:text-sm font-medium text-blue-600 hover:text-blue-800 whitespace-nowrap"
               >
-                Tümünü Gör →
+                Tümü →
               </button>
             </div>
 
@@ -315,12 +318,12 @@ export const DashboardPage: React.FC = () => {
 
         {/* Today's Tasks Section */}
         {todayTasks.length > 0 && (
-          <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg shadow-lg p-6 mb-8 border-l-4 border-indigo-500">
+          <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg shadow-lg p-4 sm:p-6 mb-6 sm:mb-8 border-l-4 border-indigo-500">
             <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-3">
-                <div className="text-2xl">📅</div>
+              <div className="flex items-center gap-2 sm:gap-3">
+                <div className="text-xl sm:text-2xl">📅</div>
                 <div>
-                  <h2 className="text-xl font-bold text-gray-900">Bugünün Görevleri</h2>
+                  <h2 className="text-lg sm:text-xl font-bold text-gray-900">Bugünün Görevleri</h2>
                   <p className="text-xs text-gray-600 mt-0.5">
                     {todayTasks.filter(t => t.completed).length} / {todayTasks.length} tamamlandı
                   </p>
@@ -328,9 +331,9 @@ export const DashboardPage: React.FC = () => {
               </div>
               <button
                 onClick={() => navigate(`/study-plan/${activePlan!.id}`)}
-                className="text-sm font-medium text-blue-600 hover:text-blue-800"
+                className="text-xs sm:text-sm font-medium text-blue-600 hover:text-blue-800 whitespace-nowrap"
               >
-                Tüm Planı Gör →
+                Tümü →
               </button>
             </div>
 
@@ -374,8 +377,8 @@ export const DashboardPage: React.FC = () => {
 
         {/* Score Trend Chart */}
         {formattedScoreTrends.length > 0 && (
-          <div className="bg-white rounded-lg shadow p-6 mb-8">
-            <h2 className="text-xl font-bold mb-4">Başarı Oranı Gelişimi (%)</h2>
+          <div className="bg-white rounded-lg shadow p-4 sm:p-6 mb-6 sm:mb-8">
+            <h2 className="text-lg sm:text-xl font-bold mb-4">Başarı Oranı Gelişimi (%)</h2>
             <ResponsiveContainer width="100%" height={300}>
               <LineChart data={formattedScoreTrends}>
                 <CartesianGrid strokeDasharray="3 3" />
@@ -404,11 +407,11 @@ export const DashboardPage: React.FC = () => {
         )}
 
         {/* Subject Performance */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
           {/* Top Subjects - Show top 3 MF subjects for chart */}
           {topMfSubjects.length > 0 && (
-            <div className="bg-white rounded-lg shadow p-6">
-              <h2 className="text-xl font-bold mb-4 text-green-600">En İyi 3 Ders (MF)</h2>
+            <div className="bg-white rounded-lg shadow p-4 sm:p-6">
+              <h2 className="text-lg sm:text-xl font-bold mb-4 text-green-600">En İyi 3 Ders (MF)</h2>
               <ResponsiveContainer width="100%" height={250}>
                 <BarChart data={topMfSubjects}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -423,8 +426,8 @@ export const DashboardPage: React.FC = () => {
 
           {/* Weak Subjects - Show bottom 3 MF subjects */}
           {weakMfSubjects.length > 0 && (
-            <div className="bg-white rounded-lg shadow p-6">
-              <h2 className="text-xl font-bold mb-4 text-red-600">Gelişmesi Gereken 3 Ders (MF)</h2>
+            <div className="bg-white rounded-lg shadow p-4 sm:p-6">
+              <h2 className="text-lg sm:text-xl font-bold mb-4 text-red-600">Gelişmesi Gereken 3 Ders (MF)</h2>
               <ResponsiveContainer width="100%" height={250}>
                 <BarChart data={weakMfSubjects}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -439,18 +442,18 @@ export const DashboardPage: React.FC = () => {
         </div>
 
         {/* Subject Details Table - All Subjects */}
-        <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-xl font-bold mb-4">Tüm Dersler ({top_subjects.length})</h2>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
+        <div className="bg-white rounded-lg shadow p-4 sm:p-6">
+          <h2 className="text-lg sm:text-xl font-bold mb-4">Tüm Dersler ({top_subjects.length})</h2>
+          <div className="overflow-x-auto -mx-4 sm:mx-0">
+            <table className="w-full text-xs sm:text-sm">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-4 py-2 text-left">Ders</th>
-                  <th className="px-4 py-2 text-center">Sınav Sayısı</th>
-                  <th className="px-4 py-2 text-center">Ort. Net</th>
-                  <th className="px-4 py-2 text-center">Ort. %</th>
-                  <th className="px-4 py-2 text-center">En İyi</th>
-                  <th className="px-4 py-2 text-center">Trend</th>
+                  <th className="px-2 sm:px-4 py-2 text-left">Ders</th>
+                  <th className="px-2 sm:px-4 py-2 text-center hidden sm:table-cell">Sınav</th>
+                  <th className="px-2 sm:px-4 py-2 text-center">Ort. Net</th>
+                  <th className="px-2 sm:px-4 py-2 text-center">Ort. %</th>
+                  <th className="px-2 sm:px-4 py-2 text-center hidden md:table-cell">En İyi</th>
+                  <th className="px-2 sm:px-4 py-2 text-center hidden lg:table-cell">Trend</th>
                 </tr>
               </thead>
               <tbody>
@@ -470,29 +473,29 @@ export const DashboardPage: React.FC = () => {
                       }`}
                       onClick={() => navigate(`/subjects/${encodeURIComponent(subject.subject_name)}`)}
                     >
-                      <td className="px-4 py-3">
-                        <div className="flex items-center gap-2">
-                          <span className="font-medium text-blue-600 hover:text-blue-800">{subject.subject_name}</span>
+                      <td className="px-2 sm:px-4 py-3">
+                        <div className="flex items-center gap-1 sm:gap-2 flex-wrap">
+                          <span className="font-medium text-blue-600 hover:text-blue-800 text-xs sm:text-sm">{subject.subject_name}</span>
                           {hasRecommendation && (
-                            <span className="text-xs px-2 py-0.5 bg-green-100 text-green-700 rounded-full border border-green-300">
-                              💡 {recommendationCount} öneri
+                            <span className="text-xs px-1.5 sm:px-2 py-0.5 bg-green-100 text-green-700 rounded-full border border-green-300">
+                              💡 {recommendationCount}
                             </span>
                           )}
                         </div>
                       </td>
-                      <td className="px-4 py-3 text-center">{subject.total_exams}</td>
-                      <td className="px-4 py-3 text-center">{subject.average_net.toFixed(2)}</td>
-                      <td className="px-4 py-3 text-center">{subject.average_percentage.toFixed(1)}%</td>
-                      <td className="px-4 py-3 text-center">{subject.best_net.toFixed(2)}</td>
-                      <td className="px-4 py-3 text-center">
+                      <td className="px-2 sm:px-4 py-3 text-center hidden sm:table-cell">{subject.total_exams}</td>
+                      <td className="px-2 sm:px-4 py-3 text-center">{subject.average_net.toFixed(2)}</td>
+                      <td className="px-2 sm:px-4 py-3 text-center">{subject.average_percentage.toFixed(1)}%</td>
+                      <td className="px-2 sm:px-4 py-3 text-center hidden md:table-cell">{subject.best_net.toFixed(2)}</td>
+                      <td className="px-2 sm:px-4 py-3 text-center hidden lg:table-cell">
                         <span className={`px-2 py-1 rounded text-xs ${
                           subject.improvement_trend === 'improving' ? 'bg-green-100 text-green-700' :
                           subject.improvement_trend === 'declining' ? 'bg-red-100 text-red-700' :
                           'bg-gray-100 text-gray-700'
                         }`}>
-                          {subject.improvement_trend === 'improving' ? '↑ Gelişiyor' :
-                           subject.improvement_trend === 'declining' ? '↓ Düşüyor' :
-                           '→ Stabil'}
+                          {subject.improvement_trend === 'improving' ? '↑' :
+                           subject.improvement_trend === 'declining' ? '↓' :
+                           '→'}
                         </span>
                       </td>
                     </tr>
