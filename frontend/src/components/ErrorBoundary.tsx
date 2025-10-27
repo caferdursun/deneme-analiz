@@ -47,14 +47,15 @@ export class ErrorBoundary extends Component<Props, State> {
       }
 
       return (
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4" role="alert" aria-live="assertive">
           <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8">
-            <div className="flex items-center justify-center w-16 h-16 bg-red-100 rounded-full mx-auto mb-4">
+            <div className="flex items-center justify-center w-16 h-16 bg-red-100 rounded-full mx-auto mb-4" aria-hidden="true">
               <svg
                 className="w-8 h-8 text-red-600"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
+                aria-label="Hata ikonu"
               >
                 <path
                   strokeLinecap="round"
@@ -94,16 +95,18 @@ export class ErrorBoundary extends Component<Props, State> {
               </details>
             )}
 
-            <div className="flex gap-3">
+            <div className="flex gap-3" role="group" aria-label="Hata kurtarma seçenekleri">
               <button
                 onClick={() => window.location.reload()}
-                className="flex-1 bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-medium hover:bg-gray-300 transition-colors"
+                className="flex-1 bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-medium hover:bg-gray-300 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2"
+                aria-label="Sayfayı yenile"
               >
                 Sayfayı Yenile
               </button>
               <button
                 onClick={this.handleReset}
-                className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors"
+                className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                aria-label="Ana sayfaya dön"
               >
                 Ana Sayfaya Dön
               </button>
