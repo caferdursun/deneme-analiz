@@ -37,6 +37,13 @@ class RecommendationResponse(RecommendationBase):
     last_confirmed_at: Optional[datetime] = None
     previous_recommendation_id: Optional[str] = None
 
+    # Learning outcome details (for UI display)
+    learning_outcome_description: Optional[str] = None
+    learning_outcome_success_rate: Optional[float] = None
+    learning_outcome_category: Optional[str] = None
+    learning_outcome_subcategory: Optional[str] = None
+    learning_outcome_trend: Optional[str] = None  # 'improving', 'declining', 'stable'
+
     class Config:
         from_attributes = True
 

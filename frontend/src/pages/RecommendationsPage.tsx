@@ -320,6 +320,81 @@ export const RecommendationsPage: React.FC = () => {
                     </div>
                   )}
 
+                  {/* Learning Outcome Details */}
+                  {rec.learning_outcome_description && (
+                    <div className="mb-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="flex-1">
+                          <p className="text-xs font-semibold text-gray-500 mb-1 uppercase tracking-wide">
+                            Kazanım Detayı
+                          </p>
+                          <p className="text-sm text-gray-700 mb-2 font-medium">
+                            {rec.learning_outcome_description}
+                          </p>
+                          {/* Category Hierarchy */}
+                          {(rec.learning_outcome_category || rec.learning_outcome_subcategory) && (
+                            <div className="flex items-center gap-2 text-xs text-gray-600">
+                              {rec.learning_outcome_category && (
+                                <span className="px-2 py-0.5 bg-gray-200 rounded">
+                                  {rec.learning_outcome_category}
+                                </span>
+                              )}
+                              {rec.learning_outcome_category && rec.learning_outcome_subcategory && (
+                                <span>→</span>
+                              )}
+                              {rec.learning_outcome_subcategory && (
+                                <span className="px-2 py-0.5 bg-gray-200 rounded">
+                                  {rec.learning_outcome_subcategory}
+                                </span>
+                              )}
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="flex items-center gap-3">
+                          {/* Success Rate Badge */}
+                          {rec.learning_outcome_success_rate !== null && rec.learning_outcome_success_rate !== undefined && (
+                            <div className="text-center">
+                              <div
+                                className={`text-lg font-bold px-3 py-1 rounded-lg ${
+                                  rec.learning_outcome_success_rate >= 75
+                                    ? 'bg-green-100 text-green-700'
+                                    : rec.learning_outcome_success_rate >= 50
+                                    ? 'bg-yellow-100 text-yellow-700'
+                                    : 'bg-red-100 text-red-700'
+                                }`}
+                                title={`Başarı oranı: %${rec.learning_outcome_success_rate.toFixed(1)}`}
+                              >
+                                %{rec.learning_outcome_success_rate.toFixed(0)}
+                              </div>
+                              <div className="text-xs text-gray-500 mt-1">Başarı</div>
+                            </div>
+                          )}
+
+                          {/* Trend Indicator */}
+                          {rec.learning_outcome_trend && (
+                            <div className="text-center" title={
+                              rec.learning_outcome_trend === 'improving' ? 'Yükseliyor' :
+                              rec.learning_outcome_trend === 'declining' ? 'Düşüyor' : 'Sabit'
+                            }>
+                              <div className={`text-2xl ${
+                                rec.learning_outcome_trend === 'improving' ? 'text-green-600' :
+                                rec.learning_outcome_trend === 'declining' ? 'text-red-600' : 'text-gray-500'
+                              }`}>
+                                {rec.learning_outcome_trend === 'improving' ? '📈' :
+                                 rec.learning_outcome_trend === 'declining' ? '📉' : '➡️'}
+                              </div>
+                              <div className="text-xs text-gray-500 mt-1">
+                                {rec.learning_outcome_trend === 'improving' ? 'İlerliyor' :
+                                 rec.learning_outcome_trend === 'declining' ? 'Geriliyor' : 'Sabit'}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
                   {/* Footer */}
                   <div className="flex items-center justify-between pt-4 border-t">
                     <span className="text-xs text-gray-500">

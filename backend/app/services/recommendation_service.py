@@ -688,11 +688,71 @@ SADECE JSON ARRAY DÖNDÜR, BAŞKA HİÇBİR ŞEY EKLEME."""
         return recommendations
 
     def get_active_recommendations(self, student_id: str) -> List[Recommendation]:
-        """Get active recommendations for a student"""
-        return self.db.query(Recommendation).filter(
+        """Get active recommendations for a student with enriched learning outcome details"""
+        recommendations = self.db.query(Recommendation).filter(
             Recommendation.student_id == student_id,
             Recommendation.is_active == True
         ).order_by(Recommendation.priority).all()
+
+        # Enrich each recommendation with learning outcome details
+        for rec in recommendations:
+            self._enrich_recommendation_with_outcome_details(rec)
+
+        return recommendations
+
+    def _enrich_recommendation_with_outcome_details(self, rec: Recommendation):
+        """
+        Enrich a recommendation with learning outcome details for UI display.
+        Modifies the recommendation object in-place by setting:
+        - learning_outcome_description
+        - learning_outcome_success_rate
+        - learning_outcome_category
+        - learning_outcome_subcategory
+        - learning_outcome_trend
+        """
+        if not rec.learning_outcome_ids or len(rec.learning_outcome_ids) == 0:
+            return
+
+        # Get the first learning outcome (primary focus)
+        outcome_id = rec.learning_outcome_ids[0]
+        outcome = self.db.query(LearningOutcome).filter(
+            LearningOutcome.id == outcome_id
+        ).first()
+
+        if not outcome:
+            return
+
+        # Set basic info
+        rec.learning_outcome_description = outcome.outcome_description
+        rec.learning_outcome_success_rate = outcome.success_rate
+        rec.learning_outcome_category = outcome.category
+        rec.learning_outcome_subcategory = outcome.subcategory
+
+        # Calculate trend by comparing with previous exams
+        # Get all instances of this outcome for trend analysis
+        all_outcomes = self.db.query(LearningOutcome).join(Exam).filter(
+            Exam.student_id == rec.student_id,
+            LearningOutcome.subject_name == outcome.subject_name,
+            LearningOutcome.category == outcome.category,
+            LearningOutcome.subcategory == outcome.subcategory,
+            LearningOutcome.outcome_description == outcome.outcome_description
+        ).order_by(Exam.exam_date).all()
+
+        # Calculate trend based on last 3+ exams
+        if len(all_outcomes) >= 3:
+            recent = all_outcomes[-3:]
+            first_rate = recent[0].success_rate if recent[0].success_rate is not None else 0
+            last_rate = recent[-1].success_rate if recent[-1].success_rate is not None else 0
+
+            diff = last_rate - first_rate
+            if diff > 5:
+                rec.learning_outcome_trend = 'improving'
+            elif diff < -5:
+                rec.learning_outcome_trend = 'declining'
+            else:
+                rec.learning_outcome_trend = 'stable'
+        else:
+            rec.learning_outcome_trend = 'stable'
 
     def mark_as_completed(self, recommendation_id: str) -> bool:
         """Mark a recommendation as completed (inactive)"""

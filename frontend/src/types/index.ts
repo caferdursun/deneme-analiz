@@ -219,6 +219,13 @@ export interface Recommendation {
   status: string;  // 'new', 'active', 'updated', 'resolved', 'superseded'
   last_confirmed_at: string | null;  // When this recommendation was last confirmed
   previous_recommendation_id: string | null;  // Link to previous version
+
+  // Learning outcome details (for UI display)
+  learning_outcome_description?: string | null;
+  learning_outcome_success_rate?: number | null;
+  learning_outcome_category?: string | null;
+  learning_outcome_subcategory?: string | null;
+  learning_outcome_trend?: 'improving' | 'declining' | 'stable' | null;
 }
 
 export interface RefreshSummary {
