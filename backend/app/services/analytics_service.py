@@ -650,10 +650,28 @@ class AnalyticsService:
         # Convert to list format
         tree_list = list(tree.values())
 
-        # Convert nested dicts to lists
+        # Convert nested dicts to lists and sort by success rate (descending)
         for subject in tree_list:
-            subject['children'] = list(subject['children'].values())
+            subject['children'] = sorted(
+                list(subject['children'].values()),
+                key=lambda x: x['stats']['average_success_rate'],
+                reverse=True
+            )
             for category in subject['children']:
-                category['children'] = list(category['children'].values())
+                category['children'] = sorted(
+                    list(category['children'].values()),
+                    key=lambda x: x['stats']['average_success_rate'],
+                    reverse=True
+                )
+                for subcategory in category['children']:
+                    # Sort outcomes by success rate too
+                    subcategory['children'] = sorted(
+                        subcategory['children'],
+                        key=lambda x: x['stats']['average_success_rate'],
+                        reverse=True
+                    )
+
+        # Sort subjects by success rate (descending)
+        tree_list.sort(key=lambda x: x['stats']['average_success_rate'], reverse=True)
 
         return {'tree': tree_list}

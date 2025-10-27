@@ -21,7 +21,7 @@ interface TreeNodeProps {
 }
 
 export const TreeNode: React.FC<TreeNodeProps> = ({ node, level, onOutcomeClick }) => {
-  const [isExpanded, setIsExpanded] = useState(level === 0); // Subjects expanded by default
+  const [isExpanded, setIsExpanded] = useState(false); // Start collapsed
 
   const hasChildren = node.children && node.children.length > 0;
   const successRate = node.stats.average_success_rate;
