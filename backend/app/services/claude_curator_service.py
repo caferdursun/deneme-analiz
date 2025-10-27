@@ -92,19 +92,25 @@ class ClaudeCuratorService:
         if subcategory:
             outcome_context += f"\n**Alt Kategori:** {subcategory}"
 
-        prompt = f"""Türkiye'de lise seviyesi (YKS/AYT hazırlık) için eğitim kaynağı küratörlüğü yapıyorsun.
+        prompt = f"""Türkiye'de **TYT/AYT/YKS hazırlık** için eğitim kaynağı küratörlüğü yapıyorsun.
 
 **Konu:** {subject} - {topic}
 {outcome_context}
 
+**Sınav Bağlamı:**
+- TYT (Temel Yeterlilik Testi): 1. oturum - Matematik, Türkçe, Fen, Sosyal
+- AYT (Alan Yeterlilik Testi): 2. oturum - Alan dersleri (Mat, Fen, Sözel)
+- YKS: Yükseköğretim Kurumları Sınavı (TYT + AYT)
+
 **Görevin:**
-1. Bu konu için 3 adet **YouTube videosu** öner
+1. Bu konu için 3 adet **YouTube videosu** öner (TYT/AYT/YKS odaklı)
 2. Bu konu için 3 adet **direkt erişilebilir web sayfası veya PDF** öner
 
 **Kriterler:**
 - Kaynaklar **mutlaka Türkçe** olmalı
-- **Lise seviyesine** uygun olmalı (üniversite seviyesi OLMAMALI)
-- YouTube için: Eğitim kanalları (Tonguç Akademi, Khan Academy Türkçe, FenBilimleri.net, Eğitim Vadisi, Fizikle vb.)
+- **TYT/AYT/YKS seviyesine** uygun olmalı (üniversite seviyesi OLMAMALI)
+- YouTube aramalarında **"TYT", "AYT", "YKS"** kelimelerini kullan
+- YouTube için: TYT/AYT kanalları (Tonguç Akademi, Khan Academy Türkçe, FenBilimleri.net, Eğitim Vadisi, Fizikle, Hocalara Geldik vb.)
 - PDF/Web için:
   * **SADECE** login gerektirmeyen, **direkt erişilebilir** sayfalar öner
   * **MEB EBA kullanma** (giriş gerektirir)
@@ -114,12 +120,14 @@ class ClaudeCuratorService:
   * Her link konuya **özel** olmalı, ana sayfa olmamalı
 - Güncel ve kaliteli içerikler olmalı
 - Her kaynak konuya **doğrudan ilgili** olmalı
+- Video başlıklarında/açıklamalarında TYT, AYT veya YKS geçmesi tercih edilir
 
 **ÖNEMLİ:**
 - Sadece gerçek, var olan kaynakları öner
 - URL'leri tahmin etme, bildiğin gerçek kaynakları kullan
 - Login gerektiren siteleri önerme (EBA, Morpa Kampüs vb.)
 - Ana sayfa yerine konuya özel sayfa linkle
+- Aramalarında "TYT [konu]", "AYT [konu]", "YKS [konu]" kullan
 
 **Çıktı Formatı (sadece JSON döndür, başka bir şey yazma):**
 
