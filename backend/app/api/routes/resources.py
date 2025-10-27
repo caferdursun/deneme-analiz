@@ -142,6 +142,7 @@ async def link_resources(
 @router.post("/recommendations/{recommendation_id}/curate")
 async def curate_resources(
     recommendation_id: str,
+    exclude_urls: str = Query(None, description="Comma-separated list of URLs to exclude temporarily"),
     db: Session = Depends(get_db),
 ):
     """
@@ -151,12 +152,19 @@ async def curate_resources(
     - Finds YouTube videos, PDFs, and websites
     - Considers learning outcomes and high school curriculum
     - Returns resources grouped by type (youtube, pdf, website)
+    - Optionally excludes specific URLs temporarily (without blacklisting)
     """
     resource_service = ResourceService(db)
 
+    # Parse exclude_urls
+    exclude_url_list = []
+    if exclude_urls:
+        exclude_url_list = [url.strip() for url in exclude_urls.split(",") if url.strip()]
+
     try:
         resources_by_type = resource_service.curate_resources(
-            recommendation_id=recommendation_id
+            recommendation_id=recommendation_id,
+            exclude_urls=exclude_url_list
         )
 
         # Convert to response format

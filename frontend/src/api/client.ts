@@ -245,9 +245,14 @@ export const resourceAPI = {
   },
 
   // Use Claude AI to curate resources for a recommendation
-  curateResources: async (recId: string): Promise<CuratedResourcesResponse> => {
+  curateResources: async (recId: string, excludeUrls?: string[]): Promise<CuratedResourcesResponse> => {
+    const params = excludeUrls && excludeUrls.length > 0
+      ? { exclude_urls: excludeUrls.join(',') }
+      : {};
     const response = await apiClient.post<CuratedResourcesResponse>(
-      `/resources/recommendations/${recId}/curate`
+      `/resources/recommendations/${recId}/curate`,
+      null,
+      { params }
     );
     return response.data;
   },

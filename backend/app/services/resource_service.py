@@ -213,13 +213,15 @@ class ResourceService:
 
     def curate_resources(
         self,
-        recommendation_id: str
+        recommendation_id: str,
+        exclude_urls: Optional[List[str]] = None
     ) -> Dict[str, List[Resource]]:
         """
         Use Claude AI to curate high-quality resources for a recommendation
 
         Args:
             recommendation_id: ID of the recommendation
+            exclude_urls: Optional list of URLs to exclude temporarily (without blacklisting)
 
         Returns:
             Dictionary with 'youtube', 'pdf', and 'website' resource lists
@@ -260,6 +262,13 @@ class ResourceService:
         curated_data["youtube"] = self.filter_blacklisted_urls(curated_data.get("youtube", []))
         curated_data["pdf"] = self.filter_blacklisted_urls(curated_data.get("pdf", []))
         curated_data["website"] = self.filter_blacklisted_urls(curated_data.get("website", []))
+
+        # Filter out temporarily excluded URLs (for refresh)
+        if exclude_urls:
+            exclude_set = set(exclude_urls)
+            curated_data["youtube"] = [r for r in curated_data["youtube"] if r.get("url") not in exclude_set]
+            curated_data["pdf"] = [r for r in curated_data["pdf"] if r.get("url") not in exclude_set]
+            curated_data["website"] = [r for r in curated_data["website"] if r.get("url") not in exclude_set]
 
         # Process and save curated resources
         result = {

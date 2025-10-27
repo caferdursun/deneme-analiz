@@ -117,13 +117,24 @@ export const RecommendationsPage: React.FC = () => {
     try {
       setCuratingResourcesFor(prev => ({ ...prev, [recId]: true }));
 
-      const resources = await resourceAPI.curateResources(recId);
+      // If refreshing, collect current URLs to exclude temporarily
+      let excludeUrls: string[] = [];
+      if (isRefresh && curatedResources[recId]) {
+        const currentResources = curatedResources[recId];
+        excludeUrls = [
+          ...currentResources.youtube.map(r => r.url),
+          ...currentResources.pdf.map(r => r.url),
+          ...currentResources.website.map(r => r.url),
+        ].filter(url => url); // Filter out any null/undefined
+      }
+
+      const resources = await resourceAPI.curateResources(recId, excludeUrls);
       setCuratedResources(prev => ({ ...prev, [recId]: resources }));
 
       const totalCount = resources.youtube.length + resources.pdf.length + resources.website.length;
 
       if (isRefresh) {
-        toast.success(`✓ Kaynak listesi yenilendi (${totalCount} kaynak)`, { id: toastId, duration: 3000 });
+        toast.success(`✓ Kaynak listesi yenilendi (${totalCount} yeni kaynak)`, { id: toastId, duration: 3000 });
       } else {
         toast.success(`✓ ${totalCount} kaynak önerildi`, { id: toastId, duration: 3000 });
       }
