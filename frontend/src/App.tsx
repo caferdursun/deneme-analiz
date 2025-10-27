@@ -16,6 +16,7 @@ const ValidationReviewPage = lazy(() => import('./pages/ValidationReviewPage').t
 const CleanupWizardPage = lazy(() => import('./pages/CleanupWizardPage').then(m => ({ default: m.CleanupWizardPage })));
 const StudyPlanWizardPage = lazy(() => import('./pages/StudyPlanWizardPage'));
 const StudyPlanPage = lazy(() => import('./pages/StudyPlanPage'));
+const StudyPlanListPage = lazy(() => import('./pages/StudyPlanListPage'));
 const TopicTreePage = lazy(() => import('./pages/TopicTreePage'));
 
 // Loading component
@@ -70,6 +71,7 @@ function App() {
           <Route path="/learning-outcomes/cleanup" element={<CleanupWizardPage />} />
           <Route path="/learning-outcomes/tree" element={<TopicTreePage />} />
           <Route path="/recommendations" element={<RecommendationsPage />} />
+          <Route path="/study-plans" element={<StudyPlanListPage />} />
           <Route path="/study-plan/create" element={<StudyPlanWizardPage />} />
           <Route path="/study-plan/:planId" element={<StudyPlanPage />} />
         </Routes>

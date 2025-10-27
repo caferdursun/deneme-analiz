@@ -212,10 +212,10 @@ export const DashboardPage: React.FC = () => {
               )}
             </button>
             <button
-              onClick={() => navigate(activePlan ? `/study-plan/${activePlan.id}` : '/study-plan/create')}
+              onClick={() => navigate('/study-plans')}
               className="bg-indigo-600 text-white py-2 px-3 sm:px-4 rounded-md hover:bg-indigo-700 text-xs sm:text-sm font-medium col-span-2 sm:col-span-1 whitespace-nowrap"
             >
-              {activePlan ? '📅 Planım' : '+ Çalışma Planı'}
+              📅 Çalışma Planları
             </button>
           </div>
         </div>

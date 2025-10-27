@@ -160,10 +160,10 @@ export default function StudyPlanPage() {
         {/* Header */}
         <div className="mb-4 sm:mb-6">
           <button
-            onClick={() => navigate('/dashboard')}
+            onClick={() => navigate('/study-plans')}
             className="text-blue-600 hover:text-blue-800 mb-4 flex items-center gap-2 text-sm sm:text-base"
           >
-            ← Geri
+            ← Tüm Planlar
           </button>
 
           <div className="bg-white rounded-lg shadow-md p-4 sm:p-6">
