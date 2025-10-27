@@ -14,7 +14,6 @@ export const RecommendationsPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [refreshSummary, setRefreshSummary] = useState<RefreshSummary | null>(null);
   const [statusFilter, setStatusFilter] = useState<string>('all');
-  const [recommendationResources, setRecommendationResources] = useState<Record<string, Resource[]>>({});
   const [curatedResources, setCuratedResources] = useState<Record<string, CuratedResourcesResponse>>({});
   const [curatingResourcesFor, setCuratingResourcesFor] = useState<Record<string, boolean>>({});
   const navigate = useNavigate();
@@ -40,13 +39,25 @@ export const RecommendationsPage: React.FC = () => {
   };
 
   const loadResourcesForRecommendations = async (recs: Recommendation[]) => {
-    const resourcesMap: Record<string, Resource[]> = {};
+    const curatedMap: Record<string, CuratedResourcesResponse> = {};
 
     for (const rec of recs) {
       try {
         const resources = await resourceAPI.getRecommendationResources(rec.id);
         if (resources.length > 0) {
-          resourcesMap[rec.id] = resources;
+          // Group resources by type
+          const youtubeResources = resources.filter(r => r.type === 'youtube');
+          const pdfResources = resources.filter(r => r.type === 'pdf');
+          const websiteResources = resources.filter(r => r.type === 'website');
+
+          // Only add to curated resources if at least one resource exists
+          if (youtubeResources.length > 0 || pdfResources.length > 0 || websiteResources.length > 0) {
+            curatedMap[rec.id] = {
+              youtube: youtubeResources,
+              pdf: pdfResources,
+              website: websiteResources,
+            };
+          }
         }
       } catch (err) {
         // Silently fail for individual resource loading
@@ -54,7 +65,7 @@ export const RecommendationsPage: React.FC = () => {
       }
     }
 
-    setRecommendationResources(resourcesMap);
+    setCuratedResources(curatedMap);
   };
 
   const handleRefresh = async () => {
