@@ -117,12 +117,22 @@ export const TopicTreePage: React.FC = () => {
           </button>
 
           <div className="bg-white rounded-lg shadow-md p-4 sm:p-6">
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
-              Konu Ağacı 🌳
-            </h1>
-            <p className="text-sm sm:text-base text-gray-600 mb-6">
-              Tüm kazanımlar hiyerarşik yapıda gösteriliyor. Başarı oranına göre renk kodlu.
-            </p>
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-3">
+              <div>
+                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+                  Konu Ağacı 🌳
+                </h1>
+                <p className="text-sm sm:text-base text-gray-600 mt-2">
+                  Tüm kazanımlar hiyerarşik yapıda gösteriliyor. Başarı oranına göre renk kodlu.
+                </p>
+              </div>
+              <button
+                onClick={() => navigate('/learning-outcomes/cleanup')}
+                className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors text-sm sm:text-base font-medium whitespace-nowrap flex items-center gap-2"
+              >
+                🔧 Kazanımları Temizle
+              </button>
+            </div>
 
             {/* Search and Filter */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
