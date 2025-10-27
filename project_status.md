@@ -118,15 +118,18 @@
 
 ### 2. ORTA ÖNCELİK (Opsiyonel Özellikler)
 
-#### 2.1 Topic Tree View (Phase 8.5)
-- [ ] Hierarchical tree component
+#### 2.1 Topic Tree View (Phase 8.5) ✅ TAMAMLANDI
+- [x] Hierarchical tree component ✅
   - Subject → Category → Subcategory → Outcome
-  - Color-coded by success rate
+  - Color-coded by success rate (green/yellow/red)
   - Expandable/collapsible nodes
-- [ ] Recommendation count badges
-- [ ] Click to view related recommendations
-- [ ] Search and filter
-- [ ] Interactive navigation
+- [x] Recommendation count badges ✅
+- [x] Click to view related recommendations ✅
+- [x] Search and filter ✅
+- [x] Interactive navigation ✅
+- [x] Subject name normalization ✅
+  - "Biyoloji.09" → "Biyoloji"
+  - "KURS EDEBİYAT" → "Türkçe"
 
 #### 2.2 Enhanced Learning Outcomes Page
 - [ ] "View Recommendations" button on weak outcomes
@@ -192,10 +195,13 @@
 
 ### Sonraki Adımlar (Öncelik Sırasına Göre):
 
-#### Opsiyonel Özellikler:
-1. 🌲 **Topic Tree View**
-   - Hierarchical visualization
-   - Interactive navigation
+#### ✅ Tamamlanan Opsiyonel Özellikler:
+1. ✅ **Topic Tree View** - TAMAMLANDI!
+   - Hierarchical visualization ✅
+   - Interactive navigation ✅
+   - Subject normalization ✅
+
+#### Kalan Opsiyonel Özellikler:
 
 2. 📚 **Resource Database**
    - Setup database
@@ -231,9 +237,9 @@
 - Phase 6: %90 ✅ (Validation working)
 - Phase 7: %100 ✅ (Cleanup complete)
 
-### Genel İlerleme: %92 🎉
-**MVP DURUMU**: Ana özellikler %100 tamamlandı! ⭐
-**SONRAKI ADIM**: Polish & testing veya opsiyonel özellikler (topic tree, resources)
+### Genel İlerleme: %94 🎉
+**MVP DURUMU**: Ana özellikler + Topic Tree %100 tamamlandı! ⭐
+**SONRAKI ADIM**: Resources system, study plan export, veya testing
 
 ---
 
