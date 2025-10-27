@@ -12,6 +12,8 @@ from app.models.outcome_merge_history import OutcomeMergeHistory
 from app.models.study_plan import StudyPlan
 from app.models.study_plan_day import StudyPlanDay
 from app.models.study_plan_item import StudyPlanItem
+from app.models.resource import Resource
+from app.models.recommendation_resource import RecommendationResource
 
 __all__ = [
     "Student",
@@ -25,4 +27,6 @@ __all__ = [
     "StudyPlan",
     "StudyPlanDay",
     "StudyPlanItem",
+    "Resource",
+    "RecommendationResource",
 ]

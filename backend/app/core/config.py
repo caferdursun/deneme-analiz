@@ -22,6 +22,9 @@ class Settings(BaseSettings):
     # Claude API
     ANTHROPIC_API_KEY: str = ""  # Will be required when PDF analysis is used
 
+    # YouTube Data API
+    YOUTUBE_API_KEY: Optional[str] = None  # For resource recommendations
+
     # Security
     SECRET_KEY: str = "change-this-in-production"
 
