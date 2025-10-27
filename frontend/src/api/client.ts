@@ -9,6 +9,10 @@ import type {
   LearningOutcomeStats,
   RecommendationsListResponse,
   RecommendationRefreshResponse,
+  StudyPlan,
+  StudyPlanGenerateRequest,
+  StudyPlanListResponse,
+  StudyPlanProgress,
 } from '../types';
 
 // Use relative URL to work with Vite proxy
@@ -148,5 +152,59 @@ export const learningOutcomesAPI = {
       params: { limit, include_undone: includeUndone }
     });
     return response.data;
+  },
+};
+
+export const studyPlansAPI = {
+  // Generate a new study plan
+  generate: async (request: StudyPlanGenerateRequest): Promise<StudyPlan> => {
+    const response = await apiClient.post<StudyPlan>('/study-plans/generate', request);
+    return response.data;
+  },
+
+  // Get study plan by ID
+  getById: async (planId: string): Promise<StudyPlan> => {
+    const response = await apiClient.get<StudyPlan>(`/study-plans/${planId}`);
+    return response.data;
+  },
+
+  // Get active study plan
+  getActive: async (studentId?: string): Promise<StudyPlan> => {
+    const params = studentId ? { student_id: studentId } : {};
+    const response = await apiClient.get<StudyPlan>('/study-plans/active/current', { params });
+    return response.data;
+  },
+
+  // List all study plans
+  list: async (studentId?: string): Promise<StudyPlanListResponse> => {
+    const params = studentId ? { student_id: studentId } : {};
+    const response = await apiClient.get<StudyPlanListResponse>('/study-plans', { params });
+    return response.data;
+  },
+
+  // Update item completion status
+  updateItemCompletion: async (planId: string, itemId: string, completed: boolean): Promise<{ success: boolean; item_id: string; completed: boolean }> => {
+    const response = await apiClient.put<{ success: boolean; item_id: string; completed: boolean }>(
+      `/study-plans/${planId}/items/${itemId}/complete`,
+      { completed }
+    );
+    return response.data;
+  },
+
+  // Get progress for a study plan
+  getProgress: async (planId: string): Promise<StudyPlanProgress> => {
+    const response = await apiClient.get<StudyPlanProgress>(`/study-plans/${planId}/progress`);
+    return response.data;
+  },
+
+  // Archive a study plan
+  archive: async (planId: string): Promise<{ success: boolean; plan_id: string; status: string }> => {
+    const response = await apiClient.put<{ success: boolean; plan_id: string; status: string }>(`/study-plans/${planId}/archive`);
+    return response.data;
+  },
+
+  // Delete a study plan
+  delete: async (planId: string): Promise<void> => {
+    await apiClient.delete(`/study-plans/${planId}`);
   },
 };

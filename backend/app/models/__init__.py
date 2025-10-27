@@ -9,6 +9,9 @@ from app.models.learning_outcome import LearningOutcome
 from app.models.question import Question
 from app.models.recommendation import Recommendation
 from app.models.outcome_merge_history import OutcomeMergeHistory
+from app.models.study_plan import StudyPlan
+from app.models.study_plan_day import StudyPlanDay
+from app.models.study_plan_item import StudyPlanItem
 
 __all__ = [
     "Student",
@@ -19,4 +22,7 @@ __all__ = [
     "Question",
     "Recommendation",
     "OutcomeMergeHistory",
+    "StudyPlan",
+    "StudyPlanDay",
+    "StudyPlanItem",
 ]

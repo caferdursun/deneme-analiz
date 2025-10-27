@@ -8,6 +8,8 @@ import { LearningOutcomesPage } from './pages/LearningOutcomesPage';
 import { RecommendationsPage } from './pages/RecommendationsPage';
 import { ValidationReviewPage } from './pages/ValidationReviewPage';
 import { CleanupWizardPage } from './pages/CleanupWizardPage';
+import StudyPlanWizardPage from './pages/StudyPlanWizardPage';
+import StudyPlanPage from './pages/StudyPlanPage';
 
 function App() {
   return (
@@ -23,6 +25,8 @@ function App() {
         <Route path="/learning-outcomes" element={<LearningOutcomesPage />} />
         <Route path="/learning-outcomes/cleanup" element={<CleanupWizardPage />} />
         <Route path="/recommendations" element={<RecommendationsPage />} />
+        <Route path="/study-plan/create" element={<StudyPlanWizardPage />} />
+        <Route path="/study-plan/:planId" element={<StudyPlanPage />} />
       </Routes>
     </Router>
   );

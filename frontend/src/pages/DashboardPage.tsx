@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { analyticsAPI, recommendationsAPI, examAPI } from '../api/client';
-import type { AnalyticsOverview, Recommendation } from '../types';
+import { analyticsAPI, recommendationsAPI, examAPI, studyPlansAPI } from '../api/client';
+import type { AnalyticsOverview, Recommendation, StudyPlan, StudyPlanItem } from '../types';
 
 export const DashboardPage: React.FC = () => {
   const [analytics, setAnalytics] = useState<AnalyticsOverview | null>(null);
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
+  const [allRecommendations, setAllRecommendations] = useState<Recommendation[]>([]); // All recs for flag matching
   const [pendingCount, setPendingCount] = useState(0);
+  const [newRecommendationsCount, setNewRecommendationsCount] = useState(0);
+  const [activePlan, setActivePlan] = useState<StudyPlan | null>(null);
+  const [todayTasks, setTodayTasks] = useState<StudyPlanItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -26,8 +30,32 @@ export const DashboardPage: React.FC = () => {
         examAPI.getPendingCount().catch(() => ({ pending_count: 0 }))
       ]);
       setAnalytics(analyticsData);
-      setRecommendations(recommendationsData.recommendations.slice(0, 3)); // Top 3
+      setAllRecommendations(recommendationsData.recommendations); // Store all for flag matching
+      setRecommendations(recommendationsData.recommendations.slice(0, 3)); // Top 3 for display
       setPendingCount(pendingData.pending_count);
+
+      // Calculate new/updated recommendations count for badge
+      const newUpdatedCount = recommendationsData.recommendations.filter(
+        (r: Recommendation) => r.status === 'new' || r.status === 'updated'
+      ).length;
+      setNewRecommendationsCount(newUpdatedCount);
+
+      // Load active study plan and today's tasks
+      try {
+        const plan = await studyPlansAPI.getActive();
+        setActivePlan(plan);
+
+        // Find today's tasks
+        const today = new Date().toISOString().split('T')[0];
+        const todayDay = plan.days.find(day => day.date === today);
+        if (todayDay) {
+          setTodayTasks(todayDay.items);
+        }
+      } catch (err) {
+        // No active plan is fine, just don't set it
+        setActivePlan(null);
+        setTodayTasks([]);
+      }
     } catch (err: any) {
       setError(err.response?.data?.detail || 'Analytics yüklenirken hata oluştu');
     } finally {
@@ -103,6 +131,49 @@ export const DashboardPage: React.FC = () => {
     return 'Düşük';
   };
 
+  const getStatusBadge = (status: string): { color: string; label: string } => {
+    switch (status) {
+      case 'new':
+        return { color: 'bg-green-100 text-green-700 border-green-300', label: 'YENİ' };
+      case 'updated':
+        return { color: 'bg-blue-100 text-blue-700 border-blue-300', label: 'GÜNCELLENDİ' };
+      case 'active':
+        return { color: 'bg-gray-100 text-gray-700 border-gray-300', label: 'AKTİF' };
+      default:
+        return { color: 'bg-gray-100 text-gray-700 border-gray-300', label: status.toUpperCase() };
+    }
+  };
+
+  const getSubjectColor = (subject: string): string => {
+    const colors: { [key: string]: string } = {
+      'Matematik': 'bg-blue-100 text-blue-700 border-blue-300',
+      'Fizik': 'bg-purple-100 text-purple-700 border-purple-300',
+      'Kimya': 'bg-green-100 text-green-700 border-green-300',
+      'Biyoloji': 'bg-teal-100 text-teal-700 border-teal-300',
+      'Türkçe': 'bg-red-100 text-red-700 border-red-300',
+      'Geometri': 'bg-orange-100 text-orange-700 border-orange-300',
+    };
+    return colors[subject] || 'bg-gray-100 text-gray-700 border-gray-300';
+  };
+
+  const handleTaskToggle = async (item: StudyPlanItem) => {
+    if (!activePlan) return;
+
+    try {
+      const newCompleted = !item.completed;
+      await studyPlansAPI.updateItemCompletion(activePlan.id, item.id, newCompleted);
+
+      // Update local state
+      setTodayTasks(prevTasks =>
+        prevTasks.map(task =>
+          task.id === item.id ? { ...task, completed: newCompleted } : task
+        )
+      );
+    } catch (err) {
+      console.error('Task toggle hatası:', err);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4">
       <div className="max-w-7xl mx-auto">
@@ -134,9 +205,20 @@ export const DashboardPage: React.FC = () => {
             </button>
             <button
               onClick={() => navigate('/recommendations')}
-              className="bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 text-sm font-medium"
+              className="bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 text-sm font-medium relative"
             >
               Öneriler
+              {newRecommendationsCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-yellow-400 text-gray-900 text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center animate-pulse">
+                  {newRecommendationsCount}
+                </span>
+              )}
+            </button>
+            <button
+              onClick={() => navigate(activePlan ? `/study-plan/${activePlan.id}` : '/study-plan/create')}
+              className="bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 text-sm font-medium"
+            >
+              {activePlan ? '📅 Planım' : '+ Çalışma Planı'}
             </button>
           </div>
         </div>
@@ -173,7 +255,17 @@ export const DashboardPage: React.FC = () => {
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
                 <div className="text-2xl">💡</div>
-                <h2 className="text-xl font-bold text-gray-900">Sizin İçin Öneriler</h2>
+                <div>
+                  <h2 className="text-xl font-bold text-gray-900">Sizin İçin Öneriler</h2>
+                  <p className="text-xs text-gray-600 mt-0.5">
+                    {allRecommendations.length} aktif öneri
+                    {newRecommendationsCount > 0 && (
+                      <span className="ml-2 text-green-600 font-semibold">
+                        ({newRecommendationsCount} yeni)
+                      </span>
+                    )}
+                  </p>
+                </div>
               </div>
               <button
                 onClick={() => navigate('/recommendations')}
@@ -192,7 +284,12 @@ export const DashboardPage: React.FC = () => {
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2">
+                      <div className="flex items-center gap-2 mb-2 flex-wrap">
+                        {/* Status Badge */}
+                        <span className={`px-2 py-1 rounded text-xs font-bold border ${getStatusBadge(rec.status).color}`}>
+                          {getStatusBadge(rec.status).label}
+                        </span>
+                        {/* Priority Badge */}
                         <span className="text-xs font-semibold px-2 py-1 rounded bg-white border">
                           {getPriorityLabel(rec.priority)}
                         </span>
@@ -216,6 +313,65 @@ export const DashboardPage: React.FC = () => {
                       </div>
                     )}
                   </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Today's Tasks Section */}
+        {todayTasks.length > 0 && (
+          <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg shadow-lg p-6 mb-8 border-l-4 border-indigo-500">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-3">
+                <div className="text-2xl">📅</div>
+                <div>
+                  <h2 className="text-xl font-bold text-gray-900">Bugünün Görevleri</h2>
+                  <p className="text-xs text-gray-600 mt-0.5">
+                    {todayTasks.filter(t => t.completed).length} / {todayTasks.length} tamamlandı
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => navigate(`/study-plan/${activePlan!.id}`)}
+                className="text-sm font-medium text-blue-600 hover:text-blue-800"
+              >
+                Tüm Planı Gör →
+              </button>
+            </div>
+
+            <div className="space-y-3">
+              {todayTasks.map((task) => (
+                <div
+                  key={task.id}
+                  className={`bg-white rounded-lg p-4 border-2 ${
+                    task.completed ? 'border-green-300 bg-green-50' : 'border-gray-300'
+                  }`}
+                >
+                  <label className="flex items-start gap-3 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={task.completed}
+                      onChange={() => handleTaskToggle(task)}
+                      className="mt-1 h-5 w-5 text-green-600"
+                    />
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className={`px-2 py-1 rounded text-xs font-semibold border ${getSubjectColor(task.subject_name)}`}>
+                          {task.subject_name}
+                        </span>
+                        <span className="text-xs text-gray-600">{task.duration_minutes} dk</span>
+                      </div>
+                      <div className={`font-semibold mb-1 ${task.completed ? 'line-through text-gray-500' : 'text-gray-900'}`}>
+                        {task.topic}
+                      </div>
+                      {task.description && (
+                        <div className={`text-sm ${task.completed ? 'text-gray-400' : 'text-gray-600'}`}>
+                          {task.description}
+                        </div>
+                      )}
+                    </div>
+                  </label>
                 </div>
               ))}
             </div>
@@ -305,7 +461,10 @@ export const DashboardPage: React.FC = () => {
               </thead>
               <tbody>
                 {top_subjects.map((subject) => {
-                  const hasRecommendation = recommendations.some(r => r.subject_name === subject.subject_name);
+                  // Count active recommendations for this subject
+                  const subjectRecommendations = allRecommendations.filter(r => r.subject_name === subject.subject_name);
+                  const recommendationCount = subjectRecommendations.length;
+                  const hasRecommendation = recommendationCount > 0;
                   const isMfSubject = MF_SUBJECTS.includes(subject.subject_name);
                   return (
                     <tr
@@ -322,7 +481,7 @@ export const DashboardPage: React.FC = () => {
                           <span className="font-medium text-blue-600 hover:text-blue-800">{subject.subject_name}</span>
                           {hasRecommendation && (
                             <span className="text-xs px-2 py-0.5 bg-green-100 text-green-700 rounded-full border border-green-300">
-                              💡 Öneri var
+                              💡 {recommendationCount} öneri
                             </span>
                           )}
                         </div>

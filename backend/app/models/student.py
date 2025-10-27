@@ -27,6 +27,7 @@ class Student(Base):
     # Relationships
     exams = relationship("Exam", back_populates="student", cascade="all, delete-orphan")
     recommendations = relationship("Recommendation", back_populates="student", cascade="all, delete-orphan")
+    study_plans = relationship("StudyPlan", back_populates="student", cascade="all, delete-orphan")
 
     def __repr__(self):
         return f"<Student(name='{self.name}', school='{self.school}', class='{self.class_section}')>"

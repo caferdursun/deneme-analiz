@@ -23,8 +23,42 @@ from app.schemas.analytics import (
 class AnalyticsService:
     """Service for analytics calculations"""
 
+    # Subject aliases for flexible matching
+    # Some subjects appear differently in different contexts (e.g., Türkçe vs EDEBİYAT)
+    SUBJECT_ALIASES = {
+        'Türkçe': ['Türkçe', 'EDEBİYAT', 'KURS EDEBİYAT'],
+        'Matematik': ['Matematik', 'KURS.*MATEMATİK'],
+        'Geometri': ['Geometri'],
+        'Fizik': ['Fizik'],
+        'Kimya': ['Kimya'],
+        'Biyoloji': ['Biyoloji']
+    }
+
     def __init__(self, db: Session):
         self.db = db
+
+    def _matches_subject(self, subject_name_to_check: str, target_subject: str) -> bool:
+        """
+        Check if a subject name matches the target subject, considering aliases.
+
+        Args:
+            subject_name_to_check: The subject name from database (e.g., "12. SINIF KURS EDEBİYAT YKS")
+            target_subject: The target subject we're looking for (e.g., "Türkçe")
+
+        Returns:
+            True if there's a match (exact or via alias)
+        """
+        # Exact match
+        if subject_name_to_check == target_subject:
+            return True
+
+        # Check aliases
+        aliases = self.SUBJECT_ALIASES.get(target_subject, [target_subject])
+        for alias in aliases:
+            if alias in subject_name_to_check:
+                return True
+
+        return False
 
     def get_all_learning_outcomes(self, student_id: Optional[str] = None) -> List[LearningOutcomeStats]:
         """Get all learning outcomes aggregated across exams"""
@@ -407,10 +441,9 @@ class AnalyticsService:
             for lo in exam.learning_outcomes:
                 # Match if:
                 # 1. No filter specified, OR
-                # 2. Exact match, OR
-                # 3. Subject name appears in learning outcome subject name
+                # 2. Matches via _matches_subject (handles exact match and aliases)
                 if subject_name:
-                    if lo.subject_name != subject_name and subject_name not in lo.subject_name:
+                    if not self._matches_subject(lo.subject_name, subject_name):
                         continue
 
                 key = (lo.subject_name, lo.category, lo.subcategory, lo.outcome_description)

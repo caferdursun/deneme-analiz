@@ -240,3 +240,69 @@ export interface RecommendationRefreshResponse {
   recommendations: Recommendation[];
   summary: RefreshSummary;  // Detailed change summary
 }
+
+// Study Plan types
+export interface StudyPlanItem {
+  id: string;
+  day_id: string;
+  recommendation_id: string | null;
+  subject_name: string;
+  topic: string;
+  description: string | null;
+  duration_minutes: number;
+  order: number;
+  completed: boolean;
+  completed_at: string | null;
+}
+
+export interface StudyPlanDay {
+  id: string;
+  plan_id: string;
+  day_number: number;
+  date: string;
+  total_duration_minutes: number;
+  completed: boolean;
+  notes: string | null;
+  items: StudyPlanItem[];
+}
+
+export interface StudyPlan {
+  id: string;
+  student_id: string;
+  name: string;
+  time_frame: number;
+  daily_study_time: number;
+  study_style: string;
+  status: string;
+  start_date: string;
+  end_date: string;
+  description: string | null;
+  created_at: string;
+  updated_at: string;
+  days: StudyPlanDay[];
+}
+
+export interface StudyPlanGenerateRequest {
+  name: string;
+  time_frame: number;
+  daily_study_time: number;
+  study_style: string;
+  recommendation_ids: string[];
+  student_id?: string;
+}
+
+export interface StudyPlanListResponse {
+  plans: StudyPlan[];
+  total: number;
+}
+
+export interface StudyPlanProgress {
+  plan_id: string;
+  total_items: number;
+  completed_items: number;
+  completion_percentage: number;
+  total_days: number;
+  completed_days: number;
+  days_remaining: number;
+  on_track: boolean;
+}

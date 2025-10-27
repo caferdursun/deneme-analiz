@@ -72,20 +72,21 @@
 ### 1. YÜKSEK ÖNCELİK (1-2 Gün)
 
 #### 1.1 Recommendations Page Enhancements
-- [ ] Status badges gösterimi (NEW/UPDATED/ACTIVE badges)
-- [ ] Summary message display (X yeni, Y güncellendi, Z onaylandı)
+- [x] Status badges gösterimi (NEW/UPDATED/ACTIVE badges) ✅
+- [x] Summary message display (X yeni, Y güncellendi, Z onaylandı) ✅
 - [ ] Learning outcome details on cards
   - Success rate badge
   - Trend indicator
   - Topic hierarchy (category → subcategory)
-- [ ] Filter by status (new/updated/active)
-- [ ] Refresh button loading state iyileştirmesi
+- [x] Filter by status (new/updated/active) ✅
+- [x] Refresh button loading state iyileştirmesi ✅
 
-#### 1.2 Dashboard Integration
-- [ ] Top 3 recommendations widget
-- [ ] Recent recommendations section
-- [ ] Quick stats (pending recommendations count)
-- [ ] Link to recommendations page
+#### 1.2 Dashboard Integration ✅
+- [x] Top 3 recommendations widget ✅
+- [x] Status badges on dashboard cards ✅
+- [x] Quick stats (new/updated recommendations count badge) ✅
+- [x] Widget header showing total recommendations count ✅
+- [x] Link to recommendations page ✅
 
 ---
 

@@ -223,9 +223,109 @@ class RecommendationService:
                     }
                 })
 
+        # Get all learning outcomes (used by Pattern 5 and 6)
+        all_outcomes = self.analytics_service.get_all_learning_outcomes(student_id=student_id)
+
+        # Pattern 5: All learning outcomes below 80% per MF subject
+        # For each MF subject, find ALL outcomes with success rate < 80%
+        # Group by severity: Zayıf (<40%), Orta (40-60%), İyi (60-80%)
+
+        # Subject name mapping for flexible matching
+        # Kazanımlar farklı isimlerle gelebiliyor (örn: "12. SINIF KURS EDEBİYAT YKS" -> Türkçe)
+        subject_aliases = {
+            'Türkçe': ['Türkçe', 'EDEBİYAT', 'KURS EDEBİYAT'],
+            'Matematik': ['Matematik', 'KURS.*MATEMATİK'],
+            'Geometri': ['Geometri'],  # Geometri kazanımları genelde Matematik içinde
+            'Fizik': ['Fizik'],
+            'Kimya': ['Kimya'],
+            'Biyoloji': ['Biyoloji']
+        }
+
+        # Group outcomes by subject (only MF subjects)
+        # Note: Learning outcomes have subject names like "Matematik.09", "Fizik.10", "12. SINIF KURS EDEBİYAT YKS" etc.
+        outcomes_by_subject_all = {}
+        for outcome in all_outcomes:
+            # Check if outcome subject matches any MF subject (including aliases)
+            matched_subject = None
+            for mf_subject in relevant_subjects:
+                aliases = subject_aliases.get(mf_subject, [mf_subject])
+                for alias in aliases:
+                    if alias in outcome.subject_name:
+                        matched_subject = mf_subject
+                        break
+                if matched_subject:
+                    break
+
+            if matched_subject:
+                if matched_subject not in outcomes_by_subject_all:
+                    outcomes_by_subject_all[matched_subject] = []
+                outcomes_by_subject_all[matched_subject].append(outcome)
+
+        # For each MF subject, get ALL outcomes below 80%
+        for subject_name, outcomes in outcomes_by_subject_all.items():
+            # Filter for outcomes below 80% success rate
+            outcomes_below_80 = [o for o in outcomes if o.average_success_rate < 80]
+
+            if outcomes_below_80:  # Only if we have outcomes below 80%
+                # Sort by success rate (ascending - worst first)
+                outcomes_below_80_sorted = sorted(outcomes_below_80, key=lambda o: o.average_success_rate)
+
+                # Get outcome IDs for the pattern
+                outcome_query = self.db.query(LearningOutcome).join(Exam).filter(
+                    Exam.student_id == student_id
+                ).all()
+
+                outcome_id_map = {}
+                for lo in outcome_query:
+                    key = (lo.subject_name, lo.category or "", lo.subcategory or "", lo.outcome_description or "")
+                    if key not in outcome_id_map:
+                        outcome_id_map[key] = []
+                    outcome_id_map[key].append(lo.id)
+
+                # Collect details of ALL outcomes below 80%, grouped by severity
+                outcome_details = []
+                outcome_ids = []
+
+                for o in outcomes_below_80_sorted:
+                    key = (o.subject_name, o.category or "", o.subcategory or "", o.outcome_description or "")
+                    ids = outcome_id_map.get(key, [])
+                    outcome_ids.extend(ids)
+
+                    outcome_details.append({
+                        "category": o.category,
+                        "subcategory": o.subcategory,
+                        "description": o.outcome_description,
+                        "success_rate": o.average_success_rate,
+                        "status": "zayıf" if o.average_success_rate < 40 else ("orta" if o.average_success_rate < 60 else "iyi")
+                    })
+
+                # Determine priority based on average success rate of ALL outcomes below 80%
+                avg_success = sum(o.average_success_rate for o in outcomes_below_80) / len(outcomes_below_80)
+
+                # Count by severity for better insights
+                zayif_count = len([o for o in outcomes_below_80 if o.average_success_rate < 40])
+                orta_count = len([o for o in outcomes_below_80 if 40 <= o.average_success_rate < 60])
+                iyi_count = len([o for o in outcomes_below_80 if 60 <= o.average_success_rate < 80])
+
+                severity = "high" if avg_success < 40 else ("medium" if avg_success < 60 else "low")
+
+                patterns.append({
+                    "type": "outcomes_below_80",
+                    "subject_name": subject_name,
+                    "severity": severity,
+                    "data": {
+                        "total_outcomes_below_80": len(outcomes_below_80),
+                        "zayif_count": zayif_count,  # <40%
+                        "orta_count": orta_count,     # 40-60%
+                        "iyi_count": iyi_count,       # 60-80%
+                        "average_success_rate": avg_success,
+                        "outcomes": outcome_details,
+                        "outcome_ids": list(set(outcome_ids))
+                    }
+                })
+
         # Pattern 4: Learning outcomes by status
         # Group outcomes by status: Zayıf (<40%), Orta (40-60%), İyi (60-80%), Çok İyi (≥80%)
-        all_outcomes = self.analytics_service.get_all_learning_outcomes(student_id=student_id)
 
         # Categorize by success rate
         weak_outcomes = []  # Zayıf: <40%
@@ -440,7 +540,7 @@ Lütfen her sorun için şu formatta öneriler oluştur. ÖNEMLİ: Zayıf kazan�
   "priority": 1-5 arası sayı (1=en önemli),
   "subject_name": "Ders adı",
   "topic": "Spesifik konu/alan (kazanım varsa category-subcategory kullan)",
-  "issue_type": "weak_subject/declining_trend/high_blank_rate/weak_outcomes",
+  "issue_type": "weak_subject/declining_trend/high_blank_rate/weak_outcomes/outcomes_below_80",
   "description": "Sorunun kısa açıklaması (1-2 cümle)",
   "action_items": ["Somut aksiyon 1", "Somut aksiyon 2", "Somut aksiyon 3"],
   "rationale": "Neden bu öneri önemli (2-3 cümle)",
@@ -483,8 +583,8 @@ SADECE JSON ARRAY DÖNDÜR, BAŞKA HİÇBİR ŞEY EKLEME."""
                 if i < len(patterns):
                     pattern = patterns[i]
 
-                    # Add learning outcome IDs if this is a weak_outcomes pattern
-                    if pattern["type"] == "weak_outcomes" and "outcome_ids" in pattern.get("data", {}):
+                    # Add learning outcome IDs if this is a weak_outcomes or outcomes_below_80 pattern
+                    if pattern["type"] in ["weak_outcomes", "outcomes_below_80"] and "outcome_ids" in pattern.get("data", {}):
                         rec["learning_outcome_ids"] = pattern["data"]["outcome_ids"]
 
                     # Add previous recommendation ID if this is an update
@@ -539,6 +639,22 @@ SADECE JSON ARRAY DÖNDÜR, BAŞKA HİÇBİR ŞEY EKLEME."""
                 context_lines.append(
                     f"{i}. {subject} - Zayıf Kazanımlar (Önem: {severity})\n"
                     f"   - {len(data['outcomes'])} kazanımda düşük başarı\n"
+                    f"   - Detaylı kazanım analizi:\n{outcomes_text}"
+                )
+            elif pattern_type == "outcomes_below_80":
+                outcomes_text = "\n".join([
+                    f"     * [{o['status'].upper()}] {o['category']}" +
+                    (f" / {o.get('subcategory', '')}" if o.get('subcategory') else "") +
+                    (f"\n       Kazanım: {o.get('description', '')}" if o.get('description') else "") +
+                    f"\n       Başarı: %{o['success_rate']:.1f}"
+                    for o in data['outcomes']
+                ])
+                context_lines.append(
+                    f"{i}. {subject} - %80 Altı Tüm Kazanımlar (Önem: {severity})\n"
+                    f"   - Toplam {data['total_outcomes_below_80']} kazanım %80'in altında\n"
+                    f"   - Dağılım: {data['zayif_count']} zayıf (<40%), {data['orta_count']} orta (40-60%), {data['iyi_count']} iyi (60-80%)\n"
+                    f"   - Ortalama başarı: %{data['average_success_rate']:.1f}\n"
+                    f"   - Amaç: Tüm eksik konuları güçlendirerek genel performansı artırmak\n"
                     f"   - Detaylı kazanım analizi:\n{outcomes_text}"
                 )
 
