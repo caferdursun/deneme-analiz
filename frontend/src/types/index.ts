@@ -248,6 +248,30 @@ export interface RecommendationRefreshResponse {
   summary: RefreshSummary;  // Detailed change summary
 }
 
+// Resource types
+export interface Resource {
+  id: string;
+  name: string;
+  type: 'youtube' | 'pdf' | 'website';
+  url: string;
+  description: string | null;
+  subject_name: string | null;
+  topic: string | null;
+  thumbnail_url: string | null;
+  extra_data: {
+    channel_name?: string;
+    view_count?: number;
+    like_count?: number;
+  } | null;
+  is_active: boolean;
+  created_at: string;
+}
+
+export interface ResourceListResponse {
+  resources: Resource[];
+  total: number;
+}
+
 // Study Plan types
 export interface StudyPlanItem {
   id: string;

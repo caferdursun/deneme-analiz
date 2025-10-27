@@ -13,6 +13,8 @@ import type {
   StudyPlanGenerateRequest,
   StudyPlanListResponse,
   StudyPlanProgress,
+  Resource,
+  ResourceListResponse,
 } from '../types';
 
 // Use relative URL to work with Vite proxy
@@ -213,5 +215,31 @@ export const studyPlansAPI = {
   // Delete a study plan
   delete: async (planId: string): Promise<void> => {
     await apiClient.delete(`/study-plans/${planId}`);
+  },
+};
+
+// Resource API
+export const resourceAPI = {
+  // Get all resources
+  getAll: async (subject?: string): Promise<Resource[]> => {
+    const params = subject ? { subject } : {};
+    const response = await apiClient.get<ResourceListResponse>('/resources', { params });
+    return response.data.resources;
+  },
+
+  // Get resources for a recommendation
+  getRecommendationResources: async (recId: string): Promise<Resource[]> => {
+    const response = await apiClient.get<Resource[]>(`/resources/recommendations/${recId}`);
+    return response.data;
+  },
+
+  // Auto-link resources to a recommendation
+  autoLinkResources: async (recId: string, subject: string, topic: string, count: number = 3): Promise<Resource[]> => {
+    const response = await apiClient.post<Resource[]>(
+      `/resources/recommendations/${recId}/auto-link`,
+      null,
+      { params: { subject, topic, count } }
+    );
+    return response.data;
   },
 };

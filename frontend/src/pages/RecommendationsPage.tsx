@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { recommendationsAPI } from '../api/client';
-import type { Recommendation, RefreshSummary } from '../types';
+import { recommendationsAPI, resourceAPI } from '../api/client';
+import type { Recommendation, RefreshSummary, Resource } from '../types';
 import { RecommendationsSkeleton } from '../components/Skeleton';
+import ResourceCard from '../components/ResourceCard';
 
 export const RecommendationsPage: React.FC = () => {
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
@@ -12,6 +13,7 @@ export const RecommendationsPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [refreshSummary, setRefreshSummary] = useState<RefreshSummary | null>(null);
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [recommendationResources, setRecommendationResources] = useState<Record<string, Resource[]>>({});
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -24,11 +26,32 @@ export const RecommendationsPage: React.FC = () => {
       setError(null);
       const data = await recommendationsAPI.getRecommendations();
       setRecommendations(data.recommendations);
+
+      // Load resources for each recommendation
+      loadResourcesForRecommendations(data.recommendations);
     } catch (err: any) {
       setError(err.response?.data?.detail || 'Öneriler yüklenirken hata oluştu');
     } finally {
       setLoading(false);
     }
+  };
+
+  const loadResourcesForRecommendations = async (recs: Recommendation[]) => {
+    const resourcesMap: Record<string, Resource[]> = {};
+
+    for (const rec of recs) {
+      try {
+        const resources = await resourceAPI.getRecommendationResources(rec.id);
+        if (resources.length > 0) {
+          resourcesMap[rec.id] = resources;
+        }
+      } catch (err) {
+        // Silently fail for individual resource loading
+        console.error(`Failed to load resources for recommendation ${rec.id}`, err);
+      }
+    }
+
+    setRecommendationResources(resourcesMap);
   };
 
   const handleRefresh = async () => {
@@ -391,6 +414,23 @@ export const RecommendationsPage: React.FC = () => {
                             </div>
                           )}
                         </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Resource Recommendations */}
+                  {recommendationResources[rec.id]?.length > 0 && (
+                    <div className="mb-4">
+                      <h4 className="text-sm font-semibold text-gray-900 mb-2 flex items-center gap-2">
+                        📚 Önerilen Kaynaklar
+                        <span className="text-xs font-normal text-gray-500">
+                          ({recommendationResources[rec.id].length} kaynak)
+                        </span>
+                      </h4>
+                      <div className="space-y-2">
+                        {recommendationResources[rec.id].map(resource => (
+                          <ResourceCard key={resource.id} resource={resource} />
+                        ))}
                       </div>
                     </div>
                   )}
