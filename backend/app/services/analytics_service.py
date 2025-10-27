@@ -27,15 +27,56 @@ class AnalyticsService:
     # Some subjects appear differently in different contexts (e.g., Türkçe vs EDEBİYAT)
     SUBJECT_ALIASES = {
         'Türkçe': ['Türkçe', 'EDEBİYAT', 'KURS EDEBİYAT'],
-        'Matematik': ['Matematik', 'KURS.*MATEMATİK'],
+        'Matematik': ['Matematik', 'MATEMATİK'],
         'Geometri': ['Geometri'],
         'Fizik': ['Fizik'],
         'Kimya': ['Kimya'],
-        'Biyoloji': ['Biyoloji']
+        'Biyoloji': ['Biyoloji'],
+        'Coğrafya': ['Coğrafya'],
+        'Tarih': ['Tarih'],
+        'Felsefe': ['Felsefe'],
+        'Din Kültürü': ['Din Kültürü', 'DİN'],
+        'İngilizce': ['İngilizce', 'ENGLISH']
     }
 
     def __init__(self, db: Session):
         self.db = db
+
+    def _normalize_subject(self, subject_name: str) -> str:
+        """
+        Normalize subject name to standard form.
+
+        Examples:
+            "Biyoloji.09" -> "Biyoloji"
+            "12. SINIF KURS EDEBİYAT YKS" -> "Türkçe"
+            "Matematik.08" -> "Matematik"
+
+        Args:
+            subject_name: Raw subject name from database
+
+        Returns:
+            Normalized subject name
+        """
+        # First, check if it has a dot notation (e.g., "Biyoloji.09")
+        if '.' in subject_name:
+            base_name = subject_name.split('.')[0].strip()
+            # Check if base_name is a known subject
+            if base_name in self.SUBJECT_ALIASES:
+                return base_name
+
+        # Check against aliases
+        for normalized_name, aliases in self.SUBJECT_ALIASES.items():
+            for alias in aliases:
+                if alias in subject_name:
+                    return normalized_name
+
+        # If no match, try to extract first word if it's a known subject
+        first_word = subject_name.split()[0] if subject_name else subject_name
+        if first_word in self.SUBJECT_ALIASES:
+            return first_word
+
+        # Return as-is if no normalization found
+        return subject_name
 
     def _matches_subject(self, subject_name_to_check: str, target_subject: str) -> bool:
         """
@@ -506,7 +547,10 @@ class AnalyticsService:
         tree = {}
 
         for outcome in outcomes:
-            subject = outcome.subject_name if outcome.subject_name else 'Unknown'
+            # Normalize subject name
+            raw_subject = outcome.subject_name if outcome.subject_name else 'Unknown'
+            subject = self._normalize_subject(raw_subject)
+
             category = outcome.category if outcome.category else 'Uncategorized'
             subcategory = outcome.subcategory if outcome.subcategory else 'General'
 
