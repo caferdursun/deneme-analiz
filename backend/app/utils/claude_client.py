@@ -166,7 +166,7 @@ Return ONLY valid JSON."""
         except Exception as e:
             raise Exception(f"Claude API error: {str(e)}")
 
-    def analyze_text(self, prompt: str, max_tokens: int = 8000) -> str:
+    def analyze_text(self, prompt: str, max_tokens: int = 16000) -> str:
         """
         Analyze text using Claude API
 
@@ -302,7 +302,7 @@ Notes:
 
 Return ONLY valid JSON with these 4 top-level keys: student, exam, overall_result, subjects."""
 
-        return self._call_claude_api(pdf_data, system_prompt, user_prompt, max_tokens=7500)
+        return self._call_claude_api(pdf_data, system_prompt, user_prompt, max_tokens=16000)
 
     def _extract_stage2_outcomes_part1(self, pdf_data: str) -> Dict[str, Any]:
         """Stage 2: Extract learning outcomes - Part 1 (first half)"""
@@ -336,7 +336,7 @@ Notes:
 
 Return ONLY valid JSON."""
 
-        return self._call_claude_api(pdf_data, system_prompt, user_prompt, max_tokens=7500)
+        return self._call_claude_api(pdf_data, system_prompt, user_prompt, max_tokens=16000)
 
     def _extract_stage3_outcomes_part2(self, pdf_data: str) -> Dict[str, Any]:
         """Stage 3: Extract learning outcomes - Part 2 (second half)"""
@@ -370,7 +370,7 @@ Notes:
 
 Return ONLY valid JSON."""
 
-        return self._call_claude_api(pdf_data, system_prompt, user_prompt, max_tokens=7500)
+        return self._call_claude_api(pdf_data, system_prompt, user_prompt, max_tokens=16000)
 
     def _extract_stage4_questions_part1(self, pdf_data: str) -> Dict[str, Any]:
         """Stage 4: Extract questions - Part 1 (first half)"""
@@ -401,7 +401,7 @@ Notes:
 
 Return ONLY valid JSON."""
 
-        return self._call_claude_api(pdf_data, system_prompt, user_prompt, max_tokens=7500)
+        return self._call_claude_api(pdf_data, system_prompt, user_prompt, max_tokens=16000)
 
     def _extract_stage5_questions_part2(self, pdf_data: str) -> Dict[str, Any]:
         """Stage 5: Extract questions - Part 2 (second half)"""
@@ -432,7 +432,7 @@ Notes:
 
 Return ONLY valid JSON."""
 
-        return self._call_claude_api(pdf_data, system_prompt, user_prompt, max_tokens=7500)
+        return self._call_claude_api(pdf_data, system_prompt, user_prompt, max_tokens=16000)
 
     def _call_claude_api(
         self,

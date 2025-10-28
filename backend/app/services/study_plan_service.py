@@ -209,17 +209,37 @@ class StudyPlanService:
 ]
 ```
 
-Generate the complete schedule now. Output ONLY valid JSON, no additional text."""
+**CRITICAL JSON RULES:**
+- Use ONLY double quotes for strings, never single quotes
+- Escape all special characters in strings (quotes, newlines, backslashes)
+- NO trailing commas after last item in arrays or objects
+- NO comments in JSON
+- Ensure all strings are properly closed with matching quotes
+
+Generate the complete schedule now. Output ONLY valid JSON, no additional text or explanations."""
 
         # Call Claude API
         message = self.client.messages.create(
             model="claude-sonnet-4-20250514",
-            max_tokens=8000,
+            max_tokens=16000,  # Increased for longer study plans
             messages=[{"role": "user", "content": prompt}]
         )
 
+        # Check for truncation
+        if message.stop_reason == "max_tokens":
+            raise ValueError(
+                f"Study plan response was truncated at {message.usage.output_tokens} tokens. "
+                "The plan is too complex. Try reducing the time frame or number of topics."
+            )
+
         # Parse Claude's response
         response_text = message.content[0].text
+
+        # Save response for debugging
+        debug_dir = "/tmp/study_plan_debug"
+        os.makedirs(debug_dir, exist_ok=True)
+        with open(f"{debug_dir}/last_response.txt", "w", encoding="utf-8") as f:
+            f.write(response_text)
 
         # Extract JSON from response (remove markdown code blocks if present)
         if "```json" in response_text:
@@ -227,7 +247,23 @@ Generate the complete schedule now. Output ONLY valid JSON, no additional text."
         elif "```" in response_text:
             response_text = response_text.split("```")[1].split("```")[0].strip()
 
-        schedule = json.loads(response_text)
+        # Parse JSON with error handling
+        try:
+            schedule = json.loads(response_text)
+        except json.JSONDecodeError as e:
+            # Save error details
+            with open(f"{debug_dir}/last_error.txt", "w", encoding="utf-8") as f:
+                f.write(f"JSON Error: {e}\n")
+                f.write(f"Error message: {str(e)}\n")
+                f.write(f"Line: {e.lineno}, Column: {e.colno}, Position: {e.pos}\n\n")
+                f.write(f"Response length: {len(response_text)} chars\n\n")
+                f.write(f"First 1000 chars:\n{response_text[:1000]}\n\n")
+                f.write(f"Error location (around char {e.pos}):\n{response_text[max(0, e.pos-200):min(len(response_text), e.pos+200)]}\n")
+
+            raise ValueError(
+                f"Failed to parse study plan JSON: {str(e)}\n"
+                f"See {debug_dir}/last_error.txt for details"
+            )
 
         return schedule
 
