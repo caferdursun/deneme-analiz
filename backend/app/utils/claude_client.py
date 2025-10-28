@@ -126,6 +126,16 @@ Return ONLY valid JSON."""
                 extracted_data = json.loads(response_text)
                 return extracted_data
             except json.JSONDecodeError as e:
+                # Save error details first
+                with open(f"{debug_dir}/last_error.txt", "w", encoding="utf-8") as f:
+                    f.write(f"JSON Error: {e}\n")
+                    f.write(f"Error message: {str(e)}\n")
+                    f.write(f"Line: {e.lineno}, Column: {e.colno}, Position: {e.pos}\n\n")
+                    f.write(f"Response length: {len(response_text)} chars\n\n")
+                    f.write(f"First 1000 chars:\n{response_text[:1000]}\n\n")
+                    f.write(f"Error location (around char {e.pos}):\n{response_text[max(0, e.pos-200):min(len(response_text), e.pos+200)]}\n")
+                print(f"❌ JSON parsing failed: {e}", flush=True)
+
                 # If JSON parsing fails, try to extract JSON from markdown code blocks
                 if "```json" in response_text:
                     json_start = response_text.find("```json") + 7
@@ -254,11 +264,16 @@ Return ONLY valid JSON."""
 
     def _extract_stage1_basic(self, pdf_data: str) -> Dict[str, Any]:
         """Stage 1: Extract student, exam, overall results, and subjects"""
+        print("🔵 [STAGE 1] Starting basic data extraction...")
         system_prompt = """You are an expert at analyzing Turkish university entrance exam reports.
 Extract student, exam metadata, overall results, and subject breakdowns.
 Pay close attention to Turkish characters and numerical data accuracy."""
 
-        user_prompt = """Extract basic exam data in JSON format:
+        user_prompt = """Extract ONLY basic exam data (student, exam, overall_result, subjects) in JSON format.
+
+IMPORTANT: DO NOT include "learning_outcomes" or "questions" fields. These will be extracted in later stages.
+
+Return this EXACT structure:
 
 {
   "student": {"name": "", "school": "", "grade": "", "class_section": ""},
@@ -283,8 +298,9 @@ Notes:
 - Şb N = class_avg, Ok N = school_avg
 - Subjects: Matematik, Fizik, Kimya, Biyoloji, Türkçe, Edebiyat, Tarih, Coğrafya, etc.
 - Net = Correct - (Wrong/4)
+- STOP after subjects array - do NOT add learning_outcomes or questions
 
-Return ONLY valid JSON."""
+Return ONLY valid JSON with these 4 top-level keys: student, exam, overall_result, subjects."""
 
         return self._call_claude_api(pdf_data, system_prompt, user_prompt, max_tokens=7500)
 
@@ -423,65 +439,101 @@ Return ONLY valid JSON."""
         pdf_data: str,
         system_prompt: str,
         user_prompt: str,
-        max_tokens: int
+        max_tokens: int,
+        max_retries: int = 3
     ) -> Dict[str, Any]:
-        """Helper method to call Claude API with consistent error handling"""
-        try:
-            message = self.client.messages.create(
-                model=self.model,
-                max_tokens=max_tokens,
-                temperature=0,
-                system=system_prompt,
-                messages=[
-                    {
-                        "role": "user",
-                        "content": [
-                            {
-                                "type": "document",
-                                "source": {
-                                    "type": "base64",
-                                    "media_type": "application/pdf",
-                                    "data": pdf_data,
+        """Helper method to call Claude API with consistent error handling and retries"""
+        import time
+
+        last_error = None
+        for attempt in range(max_retries):
+            try:
+                if attempt > 0:
+                    wait_time = 10 * attempt  # 10s, 20s, 30s
+                    print(f"⏳ Retry attempt {attempt + 1}/{max_retries} after {wait_time}s...")
+                    time.sleep(wait_time)
+
+                message = self.client.messages.create(
+                    model=self.model,
+                    max_tokens=max_tokens,
+                    temperature=0,
+                    system=system_prompt,
+                    messages=[
+                        {
+                            "role": "user",
+                            "content": [
+                                {
+                                    "type": "document",
+                                    "source": {
+                                        "type": "base64",
+                                        "media_type": "application/pdf",
+                                        "data": pdf_data,
+                                    },
                                 },
-                            },
-                            {
-                                "type": "text",
-                                "text": user_prompt,
-                            },
-                        ],
-                    }
-                ],
-            )
-
-            response_text = message.content[0].text
-
-            # Check for truncation
-            if message.stop_reason == "max_tokens":
-                raise ValueError(
-                    f"Response was truncated at {max_tokens} tokens. "
-                    "This stage contains too much data."
+                                {
+                                    "type": "text",
+                                    "text": user_prompt,
+                                },
+                            ],
+                        }
+                    ],
                 )
 
-            # Parse JSON
-            try:
-                return json.loads(response_text)
-            except json.JSONDecodeError as e:
-                # Try to extract from code blocks
-                if "```json" in response_text:
-                    json_start = response_text.find("```json") + 7
-                    json_end = response_text.find("```", json_start)
-                    json_str = response_text[json_start:json_end].strip()
-                    return json.loads(json_str)
-                elif "```" in response_text:
-                    json_start = response_text.find("```") + 3
-                    first_newline = response_text.find("\n", json_start)
-                    if first_newline > json_start:
-                        json_start = first_newline + 1
-                    json_end = response_text.find("```", json_start)
-                    json_str = response_text[json_start:json_end].strip()
-                    return json.loads(json_str)
-                else:
-                    raise ValueError(f"Failed to parse JSON: {e}")
+                response_text = message.content[0].text
 
-        except Exception as e:
-            raise Exception(f"Claude API error: {str(e)}")
+                # Check for truncation
+                if message.stop_reason == "max_tokens":
+                    # Save debug info
+                    import os
+                    debug_dir = "/tmp/claude_debug"
+                    os.makedirs(debug_dir, exist_ok=True)
+                    with open(f"{debug_dir}/truncation_error.txt", "w", encoding="utf-8") as f:
+                        f.write(f"Response was truncated! Stop reason: {message.stop_reason}\n")
+                        f.write(f"Response length: {len(response_text)} chars\n")
+                        f.write(f"Max tokens requested: {max_tokens}\n")
+                        f.write(f"\nLast 500 chars:\n{response_text[-500:]}\n")
+
+                    raise ValueError(
+                        f"Response was truncated at {max_tokens} tokens. "
+                        "This stage contains too much data."
+                    )
+
+                # Parse JSON
+                try:
+                    return json.loads(response_text)
+                except json.JSONDecodeError as e:
+                    # Try to extract from code blocks
+                    if "```json" in response_text:
+                        json_start = response_text.find("```json") + 7
+                        json_end = response_text.find("```", json_start)
+                        json_str = response_text[json_start:json_end].strip()
+                        return json.loads(json_str)
+                    elif "```" in response_text:
+                        json_start = response_text.find("```") + 3
+                        first_newline = response_text.find("\n", json_start)
+                        if first_newline > json_start:
+                            json_start = first_newline + 1
+                        json_end = response_text.find("```", json_start)
+                        json_str = response_text[json_start:json_end].strip()
+                        return json.loads(json_str)
+                    else:
+                        raise ValueError(f"Failed to parse JSON: {e}")
+
+            except anthropic.APIError as e:
+                last_error = e
+                # Check if it's an overloaded error (retryable)
+                if "overloaded" in str(e).lower():
+                    print(f"⚠️ Claude API overloaded, will retry...")
+                    continue
+                else:
+                    # Non-retryable error, fail immediately
+                    raise Exception(f"Claude API error: {str(e)}")
+            except Exception as e:
+                # Non-API errors (like JSON parsing), fail immediately
+                raise Exception(f"Claude API error: {str(e)}")
+
+        # All retries exhausted
+        if last_error:
+            raise Exception(f"Claude API error after {max_retries} retries: {str(last_error)}")
+        else:
+            raise Exception(f"Claude API error: Unknown error after {max_retries} retries")
