@@ -92,7 +92,7 @@ class ClaudeCuratorService:
         if subcategory:
             outcome_context += f"\n**Alt Kategori:** {subcategory}"
 
-        prompt = f"""Türkiye'de **TYT/AYT/YKS hazırlık** için eğitim kaynağı küratörlüğü yapıyorsun.
+        prompt = f"""Sen Türkiye'de **TYT/AYT/YKS hazırlık** için eğitim kaynağı küratörüsün. Görevin yüksek kaliteli, doğrulanmış kaynaklar önermek.
 
 **Konu:** {subject} - {topic}
 {outcome_context}
@@ -106,28 +106,46 @@ class ClaudeCuratorService:
 1. Bu konu için 3 adet **YouTube videosu** öner (TYT/AYT/YKS odaklı)
 2. Bu konu için 3 adet **direkt erişilebilir web sayfası veya PDF** öner
 
-**Kriterler:**
-- Kaynaklar **mutlaka Türkçe** olmalı
-- **TYT/AYT/YKS seviyesine** uygun olmalı (üniversite seviyesi OLMAMALI)
-- YouTube aramalarında **"TYT", "AYT", "YKS"** kelimelerini kullan
-- YouTube için: TYT/AYT kanalları (Tonguç Akademi, Khan Academy Türkçe, FenBilimleri.net, Eğitim Vadisi, Fizikle, Hocalara Geldik vb.)
-- PDF/Web için:
-  * **SADECE** login gerektirmeyen, **direkt erişilebilir** sayfalar öner
-  * **MEB EBA kullanma** (giriş gerektirir)
-  * **Root sayfaları önerme** (örn: tonguçakademi.com değil, konuya özel sayfa)
-  * Khan Academy Türkçe, Biyoloji Portalı, FenBilimleri.net, AçıkLise gibi açık erişimli siteler
-  * PDF öneri yapıyorsan, doğrudan PDF linkini ver
-  * Her link konuya **özel** olmalı, ana sayfa olmamalı
-- Güncel ve kaliteli içerikler olmalı
-- Her kaynak konuya **doğrudan ilgili** olmalı
-- Video başlıklarında/açıklamalarında TYT, AYT veya YKS geçmesi tercih edilir
+**KALİTE KRİTERLERİ (ZORUNLU):**
 
-**ÖNEMLİ:**
-- Sadece gerçek, var olan kaynakları öner
-- URL'leri tahmin etme, bildiğin gerçek kaynakları kullan
-- Login gerektiren siteleri önerme (EBA, Morpa Kampüs vb.)
-- Ana sayfa yerine konuya özel sayfa linkle
-- Aramalarında "TYT [konu]", "AYT [konu]", "YKS [konu]" kullan
+**YouTube için:**
+- Video başlığında konuyla DOĞRUDAN ilgili olmalı
+- Kanal tanınmış bir TYT/AYT kanalı olmalı (Tonguç, Khan Academy TR, FenBilimleri, Eğitim Vadisi, Fizikle, Hocalara Geldik, vb.)
+- Video süresi 5-30 dakika arası (çok kısa veya çok uzun videolar önerme)
+- Başlıkta TYT, AYT veya YKS geçmesi ZORUNLU
+- Video içeriği SADECE bu konuya odaklanmalı (genel konu anlatımı değil)
+- Eğer bu konuya özel bir video bulamıyorsan, HİÇ ÖNERİ YAPMA (boş liste döndür)
+
+**PDF/Web için:**
+- **KESİNLİKLE** ana sayfa önerme (örn: tonguçakademi.com YANLIŞ)
+- Sayfa içeriği SADECE bu konuya odaklanmalı
+- Login/kayıt gerektiren siteler YASAK (MEB EBA, Morpa Kampüs, vb.)
+- PDF ise, doğrudan .pdf uzantılı link ver
+- Web sayfası ise, konuya özel bir makale/ders sayfası olmalı
+- Eğer bu konuya özel bir kaynak bulamıyorsan, HİÇ ÖNERİ YAPMA (boş liste döndür)
+
+**Güvenilir Platformlar:**
+- YouTube: Tonguç Akademi, Khan Academy Türkçe, FenBilimleri.net, Eğitim Vadisi, Fizikle, Hocalara Geldik, Kimya Aşkı, Biyoloji Portalı
+- Web: Khan Academy TR, FenBilimleri.net, AçıkLise, Biyoloji Portalı, edu.tr alan adlı siteler
+- PDF: Üniversite ders notları, açık eğitim materyalleri
+
+**YASAKLAR (ÖNERİRSEN YANLIŞ OLUR):**
+❌ MEB EBA ve login gerektiren siteler
+❌ Ana sayfalar ve genel içerikler
+❌ Konuyla DOLAYLI ilgili kaynaklar
+❌ Üniversite seviyesi ileri düzey içerikler
+❌ Ticari kurs siteleri (Udemy, Udacity vb.)
+❌ Tahmin edilen/uydurulan URL'ler
+❌ Çok eski (5+ yıl önce) içerikler
+
+**KALİTE KONTROLÜ:**
+Her öneri için kendin şu soruları sor:
+1. Bu kaynak SADECE bu konuyu mu anlatıyor? (Evet olmalı)
+2. Lise öğrencisi bu kaynaktan faydalanabilir mi? (Evet olmalı)
+3. URL'i biliyorum, tahmin etmiyorum? (Evet olmalı)
+4. Kaynak TYT/AYT hazırlığı için mi üretilmiş? (Evet olmalı)
+
+Eğer herhangi bir sorunun cevabı HAYIR ise, o kaynağı ÖNERME!
 
 **Çıktı Formatı (sadece JSON döndür, başka bir şey yazma):**
 
