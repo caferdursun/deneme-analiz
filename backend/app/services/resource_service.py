@@ -308,8 +308,8 @@ class ResourceService:
                 topic=rec.topic,
                 learning_outcome_ids=rec.learning_outcome_ids
             )
-            # Apply quality threshold: Only accept resources with score >= 65
-            if resource and resource.quality_score >= 65.0:
+            # Apply quality threshold: Only accept resources with score >= 55
+            if resource and resource.quality_score >= 55.0:
                 result["youtube"].append(resource)
 
         # Process PDF resources
@@ -321,8 +321,8 @@ class ResourceService:
                 topic=rec.topic,
                 learning_outcome_ids=rec.learning_outcome_ids
             )
-            # Apply quality threshold: Only accept resources with score >= 65
-            if resource and resource.quality_score >= 65.0:
+            # Apply quality threshold: Only accept resources with score >= 55
+            if resource and resource.quality_score >= 55.0:
                 result["pdf"].append(resource)
 
         # Process website resources
@@ -334,8 +334,8 @@ class ResourceService:
                 topic=rec.topic,
                 learning_outcome_ids=rec.learning_outcome_ids
             )
-            # Apply quality threshold: Only accept resources with score >= 65
-            if resource and resource.quality_score >= 65.0:
+            # Apply quality threshold: Only accept resources with score >= 55
+            if resource and resource.quality_score >= 55.0:
                 result["website"].append(resource)
 
         # Link all resources to the recommendation

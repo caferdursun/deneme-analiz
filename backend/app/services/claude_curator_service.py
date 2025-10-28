@@ -260,7 +260,8 @@ Eğer herhangi bir sorunun cevabı HAYIR ise, o kaynağı ÖNERME!
         channel = resource_data.get("channel_name", "").lower()
         reputable_channels = [
             "tonguç", "khan academy", "fenbilimleri",
-            "eğitim vadisi", "fizikle", "kimya aşkı", "biyoloji portalı"
+            "eğitim vadisi", "fizikle", "kimya aşkı", "biyoloji portalı",
+            "hocalara geldik", "uni", "matematik", "fizik", "kimya", "biyoloji"
         ]
         if any(ch in channel for ch in reputable_channels):
             score += 10.0
