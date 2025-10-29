@@ -5,7 +5,7 @@ from typing import List, Optional, Dict
 from sqlalchemy.orm import Session
 from sqlalchemy import and_
 
-from app.models import Resource, RecommendationResource, Recommendation, LearningOutcome, ResourceBlacklist
+from app.models import Resource, RecommendationResource, Recommendation, LearningOutcome, ResourceBlacklist, StudyPlanItem
 from app.services.youtube_service import YouTubeService
 from app.services.claude_curator_service import ClaudeCuratorService
 import uuid
@@ -258,17 +258,13 @@ class ResourceService:
             subcategory=subcategory
         )
 
-        # Filter out blacklisted URLs
+        # Filter out blacklisted URLs (only YouTube)
         curated_data["youtube"] = self.filter_blacklisted_urls(curated_data.get("youtube", []))
-        curated_data["pdf"] = self.filter_blacklisted_urls(curated_data.get("pdf", []))
-        curated_data["website"] = self.filter_blacklisted_urls(curated_data.get("website", []))
 
         # Filter out temporarily excluded URLs (for refresh)
         if exclude_urls:
             exclude_set = set(exclude_urls)
             curated_data["youtube"] = [r for r in curated_data["youtube"] if r.get("url") not in exclude_set]
-            curated_data["pdf"] = [r for r in curated_data["pdf"] if r.get("url") not in exclude_set]
-            curated_data["website"] = [r for r in curated_data["website"] if r.get("url") not in exclude_set]
 
         # Get existing pinned resources for this recommendation
         existing_links = self.db.query(RecommendationResource).filter(
@@ -283,21 +279,17 @@ class ResourceService:
                 Resource.is_pinned == True
             ).all()
 
-        # Process and save curated resources
+        # Process and save curated resources (YouTube only)
         result = {
             "youtube": [],
             "pdf": [],
             "website": []
         }
 
-        # Start with pinned resources
+        # Start with pinned YouTube resources only
         for pinned in pinned_resources:
             if pinned.type == "youtube":
                 result["youtube"].append(pinned)
-            elif pinned.type == "pdf":
-                result["pdf"].append(pinned)
-            elif pinned.type == "website":
-                result["website"].append(pinned)
 
         # Process YouTube resources
         for yt_data in curated_data.get("youtube", []):
@@ -311,32 +303,6 @@ class ResourceService:
             # Apply quality threshold: Only accept resources with score >= 55
             if resource and resource.quality_score >= 55.0:
                 result["youtube"].append(resource)
-
-        # Process PDF resources
-        for pdf_data in curated_data.get("pdf", []):
-            resource = self._create_curated_resource(
-                resource_data=pdf_data,
-                resource_type="pdf",
-                subject=rec.subject_name,
-                topic=rec.topic,
-                learning_outcome_ids=rec.learning_outcome_ids
-            )
-            # Apply quality threshold: Only accept resources with score >= 55
-            if resource and resource.quality_score >= 55.0:
-                result["pdf"].append(resource)
-
-        # Process website resources
-        for web_data in curated_data.get("website", []):
-            resource = self._create_curated_resource(
-                resource_data=web_data,
-                resource_type="website",
-                subject=rec.subject_name,
-                topic=rec.topic,
-                learning_outcome_ids=rec.learning_outcome_ids
-            )
-            # Apply quality threshold: Only accept resources with score >= 55
-            if resource and resource.quality_score >= 55.0:
-                result["website"].append(resource)
 
         # Link all resources to the recommendation
         all_resource_ids = []
@@ -587,3 +553,104 @@ class ResourceService:
 
         # Filter resources
         return [r for r in resources if r.get("url") not in blacklisted_urls]
+
+    def curate_resources_for_study_item(
+        self,
+        study_plan_item_id: str,
+        exclude_urls: Optional[List[str]] = None
+    ) -> Dict[str, List[Resource]]:
+        """
+        Use Claude AI to curate high-quality resources for a study plan item
+
+        If the item has a recommendation_id, uses full recommendation context.
+        Otherwise, uses just subject and topic information.
+
+        Args:
+            study_plan_item_id: ID of the study plan item
+            exclude_urls: Optional list of URLs to exclude temporarily
+
+        Returns:
+            Dictionary with 'youtube', 'pdf', and 'website' resource lists
+        """
+        # Get study plan item
+        item = self.db.query(StudyPlanItem).filter(
+            StudyPlanItem.id == study_plan_item_id
+        ).first()
+
+        if not item:
+            return {"youtube": [], "pdf": [], "website": []}
+
+        # If item has recommendation_id, use existing curate_resources method
+        if item.recommendation_id:
+            return self.curate_resources(
+                recommendation_id=item.recommendation_id,
+                exclude_urls=exclude_urls
+            )
+
+        # Otherwise, curate based on subject and topic only
+        learning_outcome = None
+        category = None
+        subcategory = None
+
+        # Use Claude to curate resources
+        curated_data = self.curator_service.curate_resources(
+            subject=item.subject_name or "",
+            topic=item.topic or "",
+            learning_outcome=learning_outcome,
+            category=category,
+            subcategory=subcategory
+        )
+
+        # Filter out blacklisted URLs (YouTube only)
+        curated_data["youtube"] = self.filter_blacklisted_urls(curated_data.get("youtube", []))
+
+        # Filter out temporarily excluded URLs
+        if exclude_urls:
+            exclude_set = set(exclude_urls)
+            curated_data["youtube"] = [r for r in curated_data["youtube"] if r.get("url") not in exclude_set]
+
+        # Since there's no recommendation_id, we need to create resources without linking
+        # We'll create them as standalone resources (YouTube only)
+        result = {
+            "youtube": [],
+            "pdf": [],
+            "website": []
+        }
+
+        # Process YouTube resources
+        for yt_data in curated_data.get("youtube", []):
+            resource = self._create_curated_resource(
+                resource_data=yt_data,
+                resource_type="youtube",
+                subject=item.subject_name,
+                topic=item.topic,
+                learning_outcome_ids=None
+            )
+            if resource and resource.quality_score >= 55.0:
+                result["youtube"].append(resource)
+
+        return result
+
+    def get_study_item_resources(self, study_plan_item_id: str) -> List[Resource]:
+        """
+        Get all resources for a study plan item
+
+        If item has recommendation_id, returns resources for that recommendation.
+        Otherwise, returns empty list.
+
+        Args:
+            study_plan_item_id: ID of the study plan item
+
+        Returns:
+            List of Resource objects
+        """
+        # Get study plan item
+        item = self.db.query(StudyPlanItem).filter(
+            StudyPlanItem.id == study_plan_item_id
+        ).first()
+
+        if not item or not item.recommendation_id:
+            return []
+
+        # Get resources via recommendation
+        return self.get_recommendation_resources(item.recommendation_id)

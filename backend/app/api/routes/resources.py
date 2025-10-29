@@ -213,6 +213,68 @@ async def toggle_pin_resource(
     }
 
 
+@router.post("/study-plan-items/{item_id}/curate")
+async def curate_study_item_resources(
+    item_id: str,
+    exclude_urls: str = Query(None, description="Comma-separated list of URLs to exclude temporarily"),
+    db: Session = Depends(get_db),
+):
+    """
+    Use Claude AI to curate high-quality resources for a study plan item
+
+    - If item has a recommendation_id, uses recommendation context
+    - Otherwise, uses just subject and topic information
+    - Finds YouTube videos, PDFs, and websites
+    - Returns resources grouped by type (youtube, pdf, website)
+    - Optionally excludes specific URLs temporarily (without blacklisting)
+    """
+    resource_service = ResourceService(db)
+
+    # Parse exclude_urls
+    exclude_url_list = []
+    if exclude_urls:
+        exclude_url_list = [url.strip() for url in exclude_urls.split(",") if url.strip()]
+
+    try:
+        resources_by_type = resource_service.curate_resources_for_study_item(
+            study_plan_item_id=item_id,
+            exclude_urls=exclude_url_list
+        )
+
+        # Convert to response format
+        response = {
+            "youtube": [ResourceResponse.from_orm(r) for r in resources_by_type.get("youtube", [])],
+            "pdf": [ResourceResponse.from_orm(r) for r in resources_by_type.get("pdf", [])],
+            "website": [ResourceResponse.from_orm(r) for r in resources_by_type.get("website", [])]
+        }
+
+        return response
+
+    except Exception as e:
+        print(f"Error curating resources for study item: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error curating resources for study item: {str(e)}"
+        )
+
+
+@router.get("/study-plan-items/{item_id}", response_model=List[ResourceResponse])
+async def get_study_item_resources(
+    item_id: str,
+    db: Session = Depends(get_db),
+):
+    """
+    Get all resources for a study plan item
+
+    - If item has recommendation_id, returns resources for that recommendation
+    - Returns empty list if no resources found
+    """
+    resource_service = ResourceService(db)
+    resources = resource_service.get_study_item_resources(item_id)
+
+    return resources
+
+
 @router.delete("/{resource_id}", response_model=dict)
 async def delete_resource(
     resource_id: str,

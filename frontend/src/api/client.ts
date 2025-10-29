@@ -277,4 +277,23 @@ export const resourceAPI = {
     );
     return response.data;
   },
+
+  // Get resources for a study plan item
+  getStudyItemResources: async (itemId: string): Promise<Resource[]> => {
+    const response = await apiClient.get<Resource[]>(`/resources/study-plan-items/${itemId}`);
+    return response.data;
+  },
+
+  // Use Claude AI to curate resources for a study plan item
+  curateStudyItemResources: async (itemId: string, excludeUrls?: string[]): Promise<CuratedResourcesResponse> => {
+    const params = excludeUrls && excludeUrls.length > 0
+      ? { exclude_urls: excludeUrls.join(',') }
+      : {};
+    const response = await apiClient.post<CuratedResourcesResponse>(
+      `/resources/study-plan-items/${itemId}/curate`,
+      null,
+      { params }
+    );
+    return response.data;
+  },
 };

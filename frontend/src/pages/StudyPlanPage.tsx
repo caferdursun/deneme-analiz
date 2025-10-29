@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { studyPlansAPI } from '../api/client';
-import type { StudyPlan, StudyPlanDay, StudyPlanItem, StudyPlanProgress } from '../types';
+import { studyPlansAPI, resourceAPI } from '../api/client';
+import type { StudyPlan, StudyPlanDay, StudyPlanItem, StudyPlanProgress, Resource } from '../types';
 import { StudyPlanSkeleton } from '../components/Skeleton';
+import ResourceCard from '../components/ResourceCard';
 
 export default function StudyPlanPage() {
   const { planId } = useParams<{ planId: string }>();
@@ -14,6 +15,11 @@ export default function StudyPlanPage() {
   const [selectedDay, setSelectedDay] = useState<StudyPlanDay | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Resource states for each item
+  const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
+  const [itemResources, setItemResources] = useState<{ [itemId: string]: { youtube: Resource[], pdf: Resource[], website: Resource[] } }>({});
+  const [loadingResources, setLoadingResources] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     if (planId) {
@@ -119,6 +125,122 @@ export default function StudyPlanPage() {
     const date = new Date(dateStr);
     const days = ['Paz', 'Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt'];
     return `${days[date.getDay()]} ${date.getDate()}`;
+  };
+
+  const toggleItemResources = (itemId: string) => {
+    setExpandedItems(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(itemId)) {
+        newSet.delete(itemId);
+      } else {
+        newSet.add(itemId);
+      }
+      return newSet;
+    });
+  };
+
+  const handleCurateItemResources = async (item: StudyPlanItem) => {
+    const toastId = toast.loading('Kaynaklar öneriliyor...');
+    setLoadingResources(prev => new Set(prev).add(item.id));
+
+    try {
+      const resources = await resourceAPI.curateStudyItemResources(item.id);
+      setItemResources(prev => ({ ...prev, [item.id]: resources }));
+      setExpandedItems(prev => new Set(prev).add(item.id));
+      toast.success('Kaynaklar başarıyla önerildi!', { id: toastId });
+    } catch (err: any) {
+      toast.error(err.response?.data?.detail || 'Kaynaklar önerilirken hata oluştu', { id: toastId });
+    } finally {
+      setLoadingResources(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(item.id);
+        return newSet;
+      });
+    }
+  };
+
+  const handleRefreshItemResources = async (item: StudyPlanItem) => {
+    // Exclude currently displayed resources
+    const currentResources = itemResources[item.id];
+    const excludeUrls: string[] = [];
+
+    if (currentResources) {
+      excludeUrls.push(...currentResources.youtube.map(r => r.url));
+      excludeUrls.push(...currentResources.pdf.map(r => r.url));
+      excludeUrls.push(...currentResources.website.map(r => r.url));
+    }
+
+    const toastId = toast.loading('Yeni kaynaklar aranıyor...');
+    setLoadingResources(prev => new Set(prev).add(item.id));
+
+    try {
+      const resources = await resourceAPI.curateStudyItemResources(item.id, excludeUrls);
+      setItemResources(prev => ({ ...prev, [item.id]: resources }));
+      toast.success('Yeni kaynaklar önerildi!', { id: toastId });
+    } catch (err: any) {
+      toast.error(err.response?.data?.detail || 'Yeni kaynaklar önerilirken hata oluştu', { id: toastId });
+    } finally {
+      setLoadingResources(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(item.id);
+        return newSet;
+      });
+    }
+  };
+
+  const handleDeleteResource = async (resourceId: string, itemId: string, blacklist: boolean = true) => {
+    const toastId = toast.loading('Kaynak siliniyor...');
+
+    try {
+      await resourceAPI.deleteResource(resourceId, blacklist);
+
+      // Remove from local state
+      setItemResources(prev => {
+        const current = prev[itemId];
+        if (!current) return prev;
+
+        return {
+          ...prev,
+          [itemId]: {
+            youtube: current.youtube.filter(r => r.id !== resourceId),
+            pdf: current.pdf.filter(r => r.id !== resourceId),
+            website: current.website.filter(r => r.id !== resourceId),
+          }
+        };
+      });
+
+      toast.success(blacklist ? 'Kaynak silindi ve kara listeye eklendi' : 'Kaynak silindi', { id: toastId });
+    } catch (err: any) {
+      toast.error(err.response?.data?.detail || 'Kaynak silinirken hata oluştu', { id: toastId });
+    }
+  };
+
+  const handleTogglePin = async (resourceId: string, itemId: string) => {
+    try {
+      const result = await resourceAPI.togglePin(resourceId);
+
+      // Update local state
+      setItemResources(prev => {
+        const current = prev[itemId];
+        if (!current) return prev;
+
+        const updateResource = (resource: Resource) =>
+          resource.id === resourceId ? { ...resource, is_pinned: result.is_pinned } : resource;
+
+        return {
+          ...prev,
+          [itemId]: {
+            youtube: current.youtube.map(updateResource),
+            pdf: current.pdf.map(updateResource),
+            website: current.website.map(updateResource),
+          }
+        };
+      });
+
+      toast.success(result.is_pinned ? 'Kaynak sabitlendi' : 'Kaynak sabitleme kaldırıldı', { duration: 2000 });
+    } catch (err: any) {
+      toast.error(err.response?.data?.detail || 'İşlem başarısız', { duration: 2000 });
+    }
   };
 
   const isToday = (dateStr: string): boolean => {
@@ -345,44 +467,107 @@ export default function StudyPlanPage() {
                 </div>
 
                 <div className="space-y-2 sm:space-y-3">
-                  {selectedDay.items.map((item) => (
-                    <div
-                      key={item.id}
-                      className={`p-3 sm:p-4 border-2 rounded-lg ${
-                        item.completed ? 'border-green-300 bg-green-50' : 'border-gray-300'
-                      }`}
-                    >
-                      <label className="flex items-start gap-2 sm:gap-3 cursor-pointer">
-                        <input
-                          type="checkbox"
-                          checked={item.completed}
-                          onChange={() => handleItemToggle(item)}
-                          className="mt-1 h-4 w-4 sm:h-5 sm:w-5 text-green-600 flex-shrink-0"
-                        />
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 mb-2 flex-wrap">
-                            <span className={`px-2 py-1 rounded text-xs font-semibold border ${getSubjectColor(item.subject_name)}`}>
-                              {item.subject_name}
-                            </span>
-                            <span className="text-xs text-gray-600 whitespace-nowrap">{item.duration_minutes} dk</span>
-                          </div>
-                          <div className={`text-sm sm:text-base font-semibold mb-1 ${item.completed ? 'line-through text-gray-500' : 'text-gray-900'}`}>
-                            {item.topic}
-                          </div>
-                          {item.description && (
-                            <div className={`text-xs sm:text-sm ${item.completed ? 'text-gray-400' : 'text-gray-600'}`}>
-                              {item.description}
+                  {selectedDay.items.map((item) => {
+                    const isExpanded = expandedItems.has(item.id);
+                    const isLoadingRes = loadingResources.has(item.id);
+                    const resources = itemResources[item.id];
+                    const hasResources = resources && (resources.youtube.length > 0 || resources.pdf.length > 0 || resources.website.length > 0);
+
+                    return (
+                      <div
+                        key={item.id}
+                        className={`p-3 sm:p-4 border-2 rounded-lg ${
+                          item.completed ? 'border-green-300 bg-green-50' : 'border-gray-300'
+                        }`}
+                      >
+                        <label className="flex items-start gap-2 sm:gap-3 cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={item.completed}
+                            onChange={() => handleItemToggle(item)}
+                            className="mt-1 h-4 w-4 sm:h-5 sm:w-5 text-green-600 flex-shrink-0"
+                          />
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 mb-2 flex-wrap">
+                              <span className={`px-2 py-1 rounded text-xs font-semibold border ${getSubjectColor(item.subject_name)}`}>
+                                {item.subject_name}
+                              </span>
+                              <span className="text-xs text-gray-600 whitespace-nowrap">{item.duration_minutes} dk</span>
                             </div>
-                          )}
-                          {item.completed && item.completed_at && (
-                            <div className="text-xs text-green-600 mt-2">
-                              ✓ {new Date(item.completed_at).toLocaleString('tr-TR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
+                            <div className={`text-sm sm:text-base font-semibold mb-1 ${item.completed ? 'line-through text-gray-500' : 'text-gray-900'}`}>
+                              {item.topic}
                             </div>
+                            {item.description && (
+                              <div className={`text-xs sm:text-sm ${item.completed ? 'text-gray-400' : 'text-gray-600'}`}>
+                                {item.description}
+                              </div>
+                            )}
+                            {item.completed && item.completed_at && (
+                              <div className="text-xs text-green-600 mt-2">
+                                ✓ {new Date(item.completed_at).toLocaleString('tr-TR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
+                              </div>
+                            )}
+                          </div>
+                        </label>
+
+                        {/* Resource button */}
+                        <div className="mt-3 pt-3 border-t border-gray-200 flex gap-2 items-center">
+                          <button
+                            onClick={() => hasResources ? toggleItemResources(item.id) : handleCurateItemResources(item)}
+                            disabled={isLoadingRes}
+                            className="px-3 py-1.5 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
+                          >
+                            {isLoadingRes ? (
+                              <>
+                                <div className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full" />
+                                <span>Yükleniyor...</span>
+                              </>
+                            ) : hasResources ? (
+                              <>
+                                📚 <span>{isExpanded ? 'Kaynakları Gizle' : 'Kaynakları Göster'}</span>
+                              </>
+                            ) : (
+                              <>
+                                📚 <span>Kaynak Öner</span>
+                              </>
+                            )}
+                          </button>
+                          {hasResources && !isLoadingRes && (
+                            <button
+                              onClick={() => handleRefreshItemResources(item)}
+                              className="px-3 py-1.5 bg-gray-200 text-gray-700 text-sm rounded-lg hover:bg-gray-300 flex items-center gap-1"
+                              title="Yeni kaynaklar öner"
+                            >
+                              🔄 <span>Yenile</span>
+                            </button>
                           )}
                         </div>
-                      </label>
-                    </div>
-                  ))}
+
+                        {/* Collapsible Resources Section (YouTube only) */}
+                        {isExpanded && hasResources && (
+                          <div className="mt-3 pt-3 border-t border-gray-300 space-y-3">
+                            {resources.youtube.length > 0 && (
+                              <div>
+                                <h4 className="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-1">
+                                  🎥 YouTube Videoları ({resources.youtube.length})
+                                </h4>
+                                <div className="space-y-2">
+                                  {resources.youtube.map((resource) => (
+                                    <ResourceCard
+                                      key={resource.id}
+                                      resource={resource}
+                                      onDelete={(blacklist) => handleDeleteResource(resource.id, item.id, blacklist)}
+                                      onTogglePin={() => handleTogglePin(resource.id, item.id)}
+                                    />
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
 
                 {selectedDay.notes && (

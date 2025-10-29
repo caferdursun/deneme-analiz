@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Resource } from '../types';
 import ResourceCard from './ResourceCard';
 
@@ -10,8 +9,6 @@ interface ResourceTabsProps {
   onTogglePin?: (resourceId: string) => void;
 }
 
-type TabType = 'youtube' | 'pdf' | 'website';
-
 export default function ResourceTabs({
   youtubeResources,
   pdfResources,
@@ -19,64 +16,29 @@ export default function ResourceTabs({
   onDeleteResource,
   onTogglePin,
 }: ResourceTabsProps) {
-  const [activeTab, setActiveTab] = useState<TabType>('youtube');
-
-  const tabs = [
-    { id: 'youtube' as TabType, label: '🎥 YouTube', count: youtubeResources.length },
-    { id: 'pdf' as TabType, label: '📄 PDF', count: pdfResources.length },
-    { id: 'website' as TabType, label: '🌐 Web Sitesi', count: websiteResources.length },
-  ];
-
-  const getActiveResources = (): Resource[] => {
-    switch (activeTab) {
-      case 'youtube':
-        return youtubeResources;
-      case 'pdf':
-        return pdfResources;
-      case 'website':
-        return websiteResources;
-      default:
-        return [];
-    }
-  };
-
-  const activeResources = getActiveResources();
+  // Only show YouTube resources now
+  const activeResources = youtubeResources;
 
   return (
     <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-      {/* Tab Headers */}
-      <div className="flex border-b border-gray-200">
-        {tabs.map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
-            className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${
-              activeTab === tab.id
-                ? 'bg-blue-50 text-blue-700 border-b-2 border-blue-600'
-                : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-            }`}
-          >
-            {tab.label}
-            {tab.count > 0 && (
-              <span
-                className={`ml-2 px-2 py-0.5 text-xs rounded-full ${
-                  activeTab === tab.id
-                    ? 'bg-blue-200 text-blue-800'
-                    : 'bg-gray-200 text-gray-700'
-                }`}
-              >
-                {tab.count}
-              </span>
-            )}
-          </button>
-        ))}
+      {/* Header */}
+      <div className="flex items-center justify-between border-b border-gray-200 bg-blue-50 px-4 py-3">
+        <div className="flex items-center gap-2">
+          <span className="text-lg">🎥</span>
+          <span className="text-sm font-semibold text-blue-700">YouTube Videoları</span>
+          {activeResources.length > 0 && (
+            <span className="px-2 py-0.5 text-xs rounded-full bg-blue-200 text-blue-800">
+              {activeResources.length}
+            </span>
+          )}
+        </div>
       </div>
 
-      {/* Tab Content */}
+      {/* Content */}
       <div className="p-4">
         {activeResources.length === 0 ? (
           <div className="text-center py-8 text-gray-500">
-            <p className="text-sm">Bu kategoride kaynak bulunamadı.</p>
+            <p className="text-sm">Video bulunamadı.</p>
           </div>
         ) : (
           <div className="space-y-3">
