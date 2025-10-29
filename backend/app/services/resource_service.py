@@ -8,6 +8,7 @@ from sqlalchemy import and_
 from app.models import Resource, RecommendationResource, Recommendation, LearningOutcome, ResourceBlacklist, StudyPlanItem
 from app.services.youtube_service import YouTubeService
 from app.services.claude_curator_service import ClaudeCuratorService
+from app.services.channel_service import ChannelService
 import uuid
 
 
@@ -18,6 +19,7 @@ class ResourceService:
         self.db = db
         self.youtube_service = YouTubeService()
         self.curator_service = ClaudeCuratorService()
+        self.channel_service = ChannelService(db)
 
     def get_or_create_youtube_resources(
         self,
@@ -560,19 +562,24 @@ class ResourceService:
         exclude_urls: Optional[List[str]] = None
     ) -> Dict[str, List[Resource]]:
         """
-        Use Claude AI to curate high-quality resources for a study plan item
+        NEW ALGORITHM - Channel-based video curation with AI-powered keywords
 
-        If the item has a recommendation_id, uses full recommendation context.
-        Otherwise, uses just subject and topic information.
+        Uses the new multi-stage algorithm:
+        1. Get/Discover trusted channels for subject
+        2. Generate search keywords using Claude
+        3. Search videos in each channel with each keyword
+        4. Verify availability and filter
+        5. Score and rank videos
+        6. Create Resource objects
 
         Args:
             study_plan_item_id: ID of the study plan item
             exclude_urls: Optional list of URLs to exclude temporarily
 
         Returns:
-            Dictionary with 'youtube', 'pdf', and 'website' resource lists
+            Dictionary with 'youtube' resource list (pdf/website empty for now)
         """
-        # Get study plan item
+        # 1. Get study plan item
         item = self.db.query(StudyPlanItem).filter(
             StudyPlanItem.id == study_plan_item_id
         ).first()
@@ -580,56 +587,105 @@ class ResourceService:
         if not item:
             return {"youtube": [], "pdf": [], "website": []}
 
-        # If item has recommendation_id, use existing curate_resources method
-        if item.recommendation_id:
-            return self.curate_resources(
-                recommendation_id=item.recommendation_id,
-                exclude_urls=exclude_urls
-            )
+        print(f"\n🎯 Curating resources for: {item.subject_name} - {item.topic}")
 
-        # Otherwise, curate based on subject and topic only
-        learning_outcome = None
-        category = None
-        subcategory = None
-
-        # Use Claude to curate resources
-        curated_data = self.curator_service.curate_resources(
-            subject=item.subject_name or "",
-            topic=item.topic or "",
-            learning_outcome=learning_outcome,
-            category=category,
-            subcategory=subcategory
+        # 2. Get/Discover trusted channels
+        print(f"📺 Finding trusted channels for {item.subject_name}...")
+        channels = self.channel_service.get_trusted_channels(
+            subject=item.subject_name,
+            min_trust_score=70.0,
+            limit=5
         )
 
-        # Filter out blacklisted URLs (YouTube only)
-        curated_data["youtube"] = self.filter_blacklisted_urls(curated_data.get("youtube", []))
+        # Auto-discover if no channels found
+        if not channels:
+            print(f"   No channels found, auto-discovering...")
+            channels = self.channel_service.discover_channels_for_subject(
+                subject=item.subject_name
+            )
 
-        # Filter out temporarily excluded URLs
-        if exclude_urls:
-            exclude_set = set(exclude_urls)
-            curated_data["youtube"] = [r for r in curated_data["youtube"] if r.get("url") not in exclude_set]
+        if not channels:
+            print("   ❌ No channels available")
+            return {"youtube": [], "pdf": [], "website": []}
 
-        # Since there's no recommendation_id, we need to create resources without linking
-        # We'll create them as standalone resources (YouTube only)
-        result = {
-            "youtube": [],
-            "pdf": [],
-            "website": []
-        }
+        print(f"   ✅ Found {len(channels)} channels")
 
-        # Process YouTube resources
-        for yt_data in curated_data.get("youtube", []):
-            resource = self._create_curated_resource(
-                resource_data=yt_data,
-                resource_type="youtube",
+        # 3. Generate search keywords using Claude
+        print(f"🔍 Generating search keywords with Claude...")
+        keywords = self.curator_service.generate_video_search_keywords(
+            subject=item.subject_name,
+            topic=item.topic,
+            description=item.description,
+            learning_outcome=self._get_learning_outcome_text(item)
+        )
+        print(f"   ✅ Generated {len(keywords)} keywords")
+
+        # 4. Search videos in each channel with each keyword
+        print(f"🎬 Searching videos in channels...")
+        all_videos = []
+        for channel in channels:
+            for keyword in keywords:
+                videos = self.youtube_service.search_videos_in_channel(
+                    channel_id=channel.channel_id,
+                    query=keyword,
+                    max_results=3
+                )
+
+                # Add channel trust score to each video
+                for video in videos:
+                    video['channel_trust_score'] = channel.trust_score
+                    video['channel_name_db'] = channel.channel_name
+
+                all_videos.extend(videos)
+
+        print(f"   Found {len(all_videos)} videos (before deduplication)")
+
+        # 5. Verify availability (already done in search_videos_in_channel filters)
+        # Videos are already filtered and verified
+
+        # 6. Remove duplicates by video_id
+        unique_videos = self._deduplicate_videos(all_videos)
+        print(f"   After deduplication: {len(unique_videos)} videos")
+
+        # 7. Score videos
+        scored_videos = []
+        for video in unique_videos:
+            score = self._calculate_video_score(
+                video=video,
+                topic=item.topic,
+                keywords=keywords
+            )
+            video['final_score'] = score
+            scored_videos.append(video)
+
+        # 8. Sort by score and filter
+        top_videos = sorted(
+            [v for v in scored_videos if v['final_score'] >= 55.0],
+            key=lambda x: x['final_score'],
+            reverse=True
+        )[:10]
+
+        print(f"   After scoring (>= 55): {len(top_videos)} videos")
+
+        # 9. Filter out blacklisted/excluded URLs
+        filtered_videos = self._filter_videos(top_videos, exclude_urls)
+        print(f"   After filtering: {len(filtered_videos)} videos")
+
+        # 10. Create Resource objects
+        resources = []
+        for video in filtered_videos:
+            resource = self._create_resource_from_video(
+                video_data=video,
                 subject=item.subject_name,
                 topic=item.topic,
                 learning_outcome_ids=None
             )
-            if resource and resource.quality_score >= 55.0:
-                result["youtube"].append(resource)
+            if resource:
+                resources.append(resource)
 
-        return result
+        print(f"   ✅ Created {len(resources)} resource objects\n")
+
+        return {"youtube": resources, "pdf": [], "website": []}
 
     def get_study_item_resources(self, study_plan_item_id: str) -> List[Resource]:
         """
@@ -654,3 +710,185 @@ class ResourceService:
 
         # Get resources via recommendation
         return self.get_recommendation_resources(item.recommendation_id)
+
+    def _calculate_video_score(
+        self,
+        video: Dict,
+        topic: str,
+        keywords: List[str]
+    ) -> float:
+        """
+        NEW SCORING ALGORITHM with engagement metrics
+
+        Base: 50
+        + Title relevance (keyword match): +15
+        + Description relevance (topic match): +10
+        + View count (5k-500k sweet spot): +10
+        + Duration (5-30 min): +5 (already filtered)
+        + Channel trust score: +15 (max)
+        + Engagement (like ratio + comments): +10
+        + Recency (< 3 years): +5
+
+        Max: 110 (capped at 100)
+        """
+        score = 50.0
+
+        # Title relevance
+        title_lower = video.get('title', '').lower()
+        topic_lower = topic.lower()
+        if any(kw.lower() in title_lower for kw in keywords):
+            score += 15
+        elif topic_lower in title_lower:
+            score += 10  # Partial credit
+
+        # Description relevance
+        desc_lower = video.get('description', '').lower()
+        if topic_lower in desc_lower:
+            score += 10
+        elif any(word in desc_lower for word in topic_lower.split()):
+            score += 5  # Partial credit
+
+        # View count sweet spot (5K-500K)
+        views = video.get('view_count', 0)
+        if 5000 <= views < 500000:
+            score += 10
+        elif views >= 500000:
+            score += 5  # Too viral might not be educational
+
+        # Duration already filtered (5-30 min), give bonus
+        score += 5
+
+        # Channel trust score (0-100 → 0-15 points)
+        channel_trust = video.get('channel_trust_score', 70.0)
+        score += (channel_trust / 100) * 15
+
+        # Engagement metrics
+        like_ratio = video.get('like_ratio', 0)
+        comment_count = video.get('comment_count', 0)
+
+        # Like ratio bonus (0.3%-5% is good, >5% is excellent)
+        if like_ratio >= 5.0:
+            score += 7
+        elif like_ratio >= 2.0:
+            score += 5
+        elif like_ratio >= 0.5:
+            score += 3
+
+        # Comment engagement
+        if comment_count >= 100:
+            score += 3
+        elif comment_count >= 20:
+            score += 2
+
+        # Recency (videos already filtered to < 3 years)
+        years_ago = video.get('published_years_ago', 1.5)
+        if years_ago <= 1.5:
+            score += 5
+        elif years_ago <= 2.5:
+            score += 3
+
+        return min(score, 100.0)
+
+    def _deduplicate_videos(self, videos: List[Dict]) -> List[Dict]:
+        """Remove duplicate videos by video_id"""
+        seen = set()
+        unique = []
+        for video in videos:
+            vid_id = video.get('video_id')
+            if vid_id and vid_id not in seen:
+                seen.add(vid_id)
+                unique.append(video)
+        return unique
+
+    def _filter_videos(
+        self,
+        videos: List[Dict],
+        exclude_urls: Optional[List[str]]
+    ) -> List[Dict]:
+        """Filter blacklisted and excluded URLs"""
+        # Get blacklisted URLs
+        blacklisted = self.db.query(ResourceBlacklist.url).all()
+        blacklisted_urls = {url[0] for url in blacklisted}
+
+        # Combine with exclude list
+        if exclude_urls:
+            blacklisted_urls.update(exclude_urls)
+
+        # Filter
+        return [
+            v for v in videos
+            if v.get('url') not in blacklisted_urls
+        ]
+
+    def _get_learning_outcome_text(self, item: StudyPlanItem) -> Optional[str]:
+        """Get learning outcome description if item has recommendation_id"""
+        if not item.recommendation_id:
+            return None
+
+        rec = self.db.query(Recommendation).filter(
+            Recommendation.id == item.recommendation_id
+        ).first()
+
+        if not rec or not rec.learning_outcome_ids:
+            return None
+
+        lo = self.db.query(LearningOutcome).filter(
+            LearningOutcome.id == rec.learning_outcome_ids[0]
+        ).first()
+
+        return lo.outcome_description if lo else None
+
+    def _create_resource_from_video(
+        self,
+        video_data: Dict,
+        subject: str,
+        topic: str,
+        learning_outcome_ids: Optional[List[str]]
+    ) -> Optional[Resource]:
+        """Create Resource object from video data (real YouTube API data)"""
+        url = video_data.get('url')
+        if not url:
+            return None
+
+        # Check if resource already exists
+        existing = self.db.query(Resource).filter(
+            Resource.url == url
+        ).first()
+
+        if existing:
+            return existing
+
+        # Create new resource with real YouTube data
+        resource = Resource(
+            id=str(uuid.uuid4()),
+            name=video_data.get('title', ''),
+            type='youtube',
+            url=url,
+            description=video_data.get('description', '')[:500],  # Limit description
+            subject_name=subject,
+            topic=topic,
+            thumbnail_url=video_data.get('thumbnail_url'),
+            extra_data={
+                "channel_name": video_data.get('channel_name'),
+                "channel_name_db": video_data.get('channel_name_db'),
+                "view_count": video_data.get('view_count', 0),
+                "like_count": video_data.get('like_count', 0),
+                "comment_count": video_data.get('comment_count', 0),
+                "like_ratio": video_data.get('like_ratio', 0),
+                "duration_seconds": video_data.get('duration_seconds', 0),
+                "published_at": video_data.get('published_at'),
+                "engagement_score": video_data.get('engagement_score', 0),
+                "channel_trust_score": video_data.get('channel_trust_score', 70.0)
+            },
+            learning_outcome_ids=learning_outcome_ids,
+            quality_score=video_data.get('final_score', 70.0),
+            education_level='lise',
+            curator_notes=f"Auto-curated via channel-based algorithm. Score: {video_data.get('final_score', 0):.1f}",
+            is_active=True
+        )
+
+        self.db.add(resource)
+        self.db.commit()
+        self.db.refresh(resource)
+
+        return resource
