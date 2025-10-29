@@ -81,3 +81,14 @@ tüm tabloyu claude API'ye göndermek ve rafine edilmiş halini almak mantıklı
   Toplam kalan iş: ~6-8 gün (aktif geliştirme ile)
 
 
+
+
+> https://www.youtube.com/@benimhocamlise
+  https://www.youtube.com/@SonerAkinciMatematik
+  https://www.youtube.com/@S%C4%B1f%C4%B1rdanSonsuzaMatematik
+  https://www.youtube.com/@fatihvural333
+  https://www.youtube.com/@AktifOgrenmeMatematik
+  https://www.youtube.com/@KAD%C4%B0RY%C4%B0%C4%9E%C4%B0TAKADEM%C4%B0 
+
+  youtube api si ile sadece kanalları arayıp, abone sayısı en yüksek 5 kanaldan videoları arayacağız ve  konu ile alakalı izlenme sayısı en yüksek 5 videoyu önereceğiz.
+  bunu bir test edelim, temp bir script ile "TYT AYT Fizik" aramasını gruplarda yapıp, top 5 kanalın herbirinin videoları içinde "Prizmalar" konusundaki top 5 videoyu tespit edelim
