@@ -3,7 +3,9 @@ YouTube service for resource recommendations
 Uses YouTube Data API v3 for dynamic video search
 """
 from typing import List, Dict, Optional
+from datetime import datetime, timedelta
 import requests
+import isodate
 from app.core.config import settings
 
 
@@ -175,3 +177,288 @@ class YouTubeService:
             }]
 
         return resources[:3]  # Return max 3 resources
+
+    def search_channels(self, query: str, max_results: int = 10) -> List[Dict]:
+        """
+        YouTube'da kanal ara, abone sayısına göre sırala
+
+        Args:
+            query: Arama kelimesi (örn: "Matematik AYT TYT")
+            max_results: Max kanal sayısı
+
+        Returns:
+            List of dicts with: channel_id, channel_name, subscriber_count,
+                               video_count, thumbnail_url, description
+        """
+        if not self.api_key:
+            return []
+
+        try:
+            # Search for channels
+            search_url = f"{self.base_url}/search"
+            search_params = {
+                "part": "snippet",
+                "type": "channel",
+                "q": query,
+                "regionCode": "TR",
+                "relevanceLanguage": "tr",
+                "order": "viewCount",  # Most viewed channels
+                "maxResults": max_results,
+                "key": self.api_key
+            }
+
+            response = requests.get(search_url, params=search_params, timeout=10)
+            response.raise_for_status()
+            search_data = response.json()
+
+            if not search_data.get("items"):
+                return []
+
+            # Get channel IDs
+            channel_ids = [item["id"]["channelId"] for item in search_data["items"]]
+
+            # Get detailed channel info (statistics)
+            channels_url = f"{self.base_url}/channels"
+            channels_params = {
+                "part": "statistics,snippet",
+                "id": ",".join(channel_ids),
+                "key": self.api_key
+            }
+
+            channels_response = requests.get(channels_url, params=channels_params, timeout=10)
+            channels_response.raise_for_status()
+            channels_data = channels_response.json()
+
+            # Format results
+            channels = []
+            for item in channels_data.get("items", []):
+                channel = {
+                    "channel_id": item["id"],
+                    "channel_name": item["snippet"]["title"],
+                    "subscriber_count": int(item["statistics"].get("subscriberCount", 0)),
+                    "video_count": int(item["statistics"].get("videoCount", 0)),
+                    "view_count": int(item["statistics"].get("viewCount", 0)),
+                    "thumbnail_url": item["snippet"]["thumbnails"]["medium"]["url"],
+                    "description": item["snippet"].get("description", ""),
+                    "custom_url": item["snippet"].get("customUrl", "")
+                }
+                channels.append(channel)
+
+            # Sort by subscriber count (highest first)
+            channels.sort(key=lambda x: x["subscriber_count"], reverse=True)
+
+            return channels
+
+        except Exception as e:
+            print(f"YouTube channel search error: {e}")
+            return []
+
+    def get_channel_details(self, channel_id: str) -> Optional[Dict]:
+        """
+        Kanal istatistiklerini getir
+
+        Returns: channel_name, subscriber_count, video_count, view_count,
+                 thumbnail_url, description, custom_url
+        """
+        if not self.api_key:
+            return None
+
+        try:
+            channels_url = f"{self.base_url}/channels"
+            params = {
+                "part": "statistics,snippet",
+                "id": channel_id,
+                "key": self.api_key
+            }
+
+            response = requests.get(channels_url, params=params, timeout=10)
+            response.raise_for_status()
+            data = response.json()
+
+            items = data.get("items", [])
+            if not items:
+                return None
+
+            item = items[0]
+            return {
+                "channel_id": item["id"],
+                "channel_name": item["snippet"]["title"],
+                "subscriber_count": int(item["statistics"].get("subscriberCount", 0)),
+                "video_count": int(item["statistics"].get("videoCount", 0)),
+                "view_count": int(item["statistics"].get("viewCount", 0)),
+                "thumbnail_url": item["snippet"]["thumbnails"]["medium"]["url"],
+                "description": item["snippet"].get("description", ""),
+                "custom_url": item["snippet"].get("customUrl", ""),
+                "published_at": item["snippet"].get("publishedAt", "")
+            }
+
+        except Exception as e:
+            print(f"YouTube channel details error: {e}")
+            return None
+
+    def search_videos_in_channel(
+        self,
+        channel_id: str,
+        query: str,
+        max_results: int = 3
+    ) -> List[Dict]:
+        """
+        Belirli bir kanalda video ara
+
+        Filters:
+            - Duration: 5-30 minutes
+            - View count: >5000
+            - Published: last 3 years
+
+        Returns: video_id, title, description, thumbnail_url, channel_name,
+                 view_count, like_count, duration, published_at
+        """
+        if not self.api_key:
+            return []
+
+        try:
+            # Calculate date 3 years ago
+            three_years_ago = datetime.utcnow() - timedelta(days=3*365)
+            published_after = three_years_ago.strftime("%Y-%m-%dT%H:%M:%SZ")
+
+            # Search for videos in the channel
+            search_url = f"{self.base_url}/search"
+            search_params = {
+                "part": "snippet",
+                "channelId": channel_id,
+                "q": query,
+                "type": "video",
+                "order": "relevance",
+                "publishedAfter": published_after,
+                "maxResults": max_results * 3,  # Get more to filter later
+                "key": self.api_key
+            }
+
+            response = requests.get(search_url, params=search_params, timeout=10)
+            response.raise_for_status()
+            search_data = response.json()
+
+            if not search_data.get("items"):
+                return []
+
+            # Get video IDs
+            video_ids = [item["id"]["videoId"] for item in search_data["items"]]
+
+            # Get video statistics and details
+            videos_url = f"{self.base_url}/videos"
+            videos_params = {
+                "part": "statistics,contentDetails,snippet",
+                "id": ",".join(video_ids),
+                "key": self.api_key
+            }
+
+            videos_response = requests.get(videos_url, params=videos_params, timeout=10)
+            videos_response.raise_for_status()
+            videos_data = videos_response.json()
+
+            # Format and filter results
+            videos = []
+            for item in videos_data.get("items", []):
+                try:
+                    # Parse duration
+                    duration_iso = item["contentDetails"]["duration"]
+                    duration = isodate.parse_duration(duration_iso)
+                    duration_seconds = int(duration.total_seconds())
+                    duration_minutes = duration_seconds / 60
+
+                    # Get view count
+                    view_count = int(item["statistics"].get("viewCount", 0))
+
+                    # Apply filters
+                    # Duration: 5-30 minutes
+                    if not (5 <= duration_minutes <= 30):
+                        continue
+
+                    # View count: >5000
+                    if view_count < 5000:
+                        continue
+
+                    # Calculate years ago
+                    published_at = datetime.fromisoformat(
+                        item["snippet"]["publishedAt"].replace("Z", "+00:00")
+                    )
+                    years_ago = (datetime.utcnow().replace(tzinfo=published_at.tzinfo) - published_at).days / 365
+
+                    video = {
+                        "video_id": item["id"],
+                        "title": item["snippet"]["title"],
+                        "description": item["snippet"].get("description", ""),
+                        "thumbnail_url": item["snippet"]["thumbnails"]["medium"]["url"],
+                        "channel_name": item["snippet"]["channelTitle"],
+                        "view_count": view_count,
+                        "like_count": int(item["statistics"].get("likeCount", 0)),
+                        "duration": duration_iso,
+                        "duration_seconds": duration_seconds,
+                        "published_at": item["snippet"]["publishedAt"],
+                        "published_years_ago": years_ago,
+                        "url": f"https://www.youtube.com/watch?v={item['id']}"
+                    }
+
+                    videos.append(video)
+
+                except Exception as e:
+                    print(f"Error processing video {item.get('id')}: {e}")
+                    continue
+
+            # Sort by view count and return top results
+            videos.sort(key=lambda x: x["view_count"], reverse=True)
+            return videos[:max_results]
+
+        except Exception as e:
+            print(f"YouTube video search in channel error: {e}")
+            return []
+
+    def verify_video_availability(self, video_id: str) -> bool:
+        """
+        Video var mı, oynatılabilir mi kontrol et
+
+        Checks:
+            - Video exists
+            - embeddable: true
+            - Not private/deleted
+
+        Returns: True if available and embeddable
+        """
+        if not self.api_key:
+            return False
+
+        try:
+            videos_url = f"{self.base_url}/videos"
+            params = {
+                "part": "status",
+                "id": video_id,
+                "key": self.api_key
+            }
+
+            response = requests.get(videos_url, params=params, timeout=10)
+            response.raise_for_status()
+            data = response.json()
+
+            items = data.get("items", [])
+            if not items:
+                return False
+
+            status = items[0].get("status", {})
+
+            # Check if video is available
+            if status.get("privacyStatus") not in ["public", "unlisted"]:
+                return False
+
+            # Check if embeddable
+            if not status.get("embeddable", False):
+                return False
+
+            # Check if uploadStatus is processed
+            if status.get("uploadStatus") != "processed":
+                return False
+
+            return True
+
+        except Exception as e:
+            print(f"YouTube video availability check error: {e}")
+            return False
