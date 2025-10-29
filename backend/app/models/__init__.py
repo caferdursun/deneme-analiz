@@ -15,6 +15,7 @@ from app.models.study_plan_item import StudyPlanItem
 from app.models.resource import Resource
 from app.models.recommendation_resource import RecommendationResource
 from app.models.resource_blacklist import ResourceBlacklist
+from app.models.youtube_channel import YouTubeChannel
 
 __all__ = [
     "Student",
@@ -31,4 +32,5 @@ __all__ = [
     "Resource",
     "RecommendationResource",
     "ResourceBlacklist",
+    "YouTubeChannel",
 ]
