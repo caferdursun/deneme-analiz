@@ -523,8 +523,37 @@ class AnalyticsService:
         """
         from app.models import Recommendation
 
-        # Get all learning outcomes
-        outcomes = self.get_all_learning_outcomes(student_id=student_id)
+        # Get all learning outcomes with detailed question stats
+        query = self.db.query(LearningOutcome)
+        if student_id:
+            query = query.join(Exam).filter(Exam.student_id == student_id)
+
+        all_learning_outcomes = query.all()
+
+        # Group by unique outcome identifier for aggregation
+        grouped_outcomes = {}
+        for lo in all_learning_outcomes:
+            key = (
+                lo.subject_name,
+                lo.category or "",
+                lo.subcategory or "",
+                lo.outcome_description or ""
+            )
+
+            if key not in grouped_outcomes:
+                grouped_outcomes[key] = {
+                    "subject_name": lo.subject_name,
+                    "category": lo.category,
+                    "subcategory": lo.subcategory,
+                    "outcome_description": lo.outcome_description,
+                    "total_questions": 0,
+                    "total_acquired": 0,
+                    "total_appearances": 0,
+                }
+
+            grouped_outcomes[key]["total_questions"] += lo.total_questions
+            grouped_outcomes[key]["total_acquired"] += lo.acquired
+            grouped_outcomes[key]["total_appearances"] += 1
 
         # Get recommendations for counting
         recommendations_query = self.db.query(Recommendation).filter(
@@ -546,13 +575,26 @@ class AnalyticsService:
         # Build tree structure
         tree = {}
 
-        for outcome in outcomes:
+        for key, outcome_data in grouped_outcomes.items():
             # Normalize subject name
-            raw_subject = outcome.subject_name if outcome.subject_name else 'Unknown'
+            raw_subject = outcome_data["subject_name"] if outcome_data["subject_name"] else 'Unknown'
             subject = self._normalize_subject(raw_subject)
 
-            category = outcome.category if outcome.category else 'Uncategorized'
-            subcategory = outcome.subcategory if outcome.subcategory else 'General'
+            category = outcome_data["category"] if outcome_data["category"] else 'Uncategorized'
+            subcategory = outcome_data["subcategory"] if outcome_data["subcategory"] else 'General'
+
+            # Calculate percentages for this outcome
+            total_q = outcome_data["total_questions"]
+            acquired = outcome_data["total_acquired"]
+
+            # Doğru cevap yüzdesi (correct answer percentage) = acquired / total_questions
+            correct_percentage = (acquired / total_q * 100) if total_q > 0 else 0
+
+            # Net yüzdesi: assuming "acquired" represents correct answers
+            # Net = correct - (wrong / 4), where wrong = total - acquired
+            # For learning outcomes, we use acquired as the metric, so net_percentage = correct_percentage
+            # (since we don't track wrong/blank separately at outcome level)
+            net_percentage = correct_percentage
 
             # Initialize subject if not exists
             if subject not in tree:
@@ -564,7 +606,11 @@ class AnalyticsService:
                         'total_outcomes': 0,
                         'total_questions': 0,
                         'total_acquired': 0,
+                        'total_correct': 0,
+                        'total_wrong': 0,
                         'average_success_rate': 0,
+                        'correct_percentage': 0,
+                        'net_percentage': 0,
                         'recommendation_count': 0
                     }
                 }
@@ -579,7 +625,11 @@ class AnalyticsService:
                         'total_outcomes': 0,
                         'total_questions': 0,
                         'total_acquired': 0,
+                        'total_correct': 0,
+                        'total_wrong': 0,
                         'average_success_rate': 0,
+                        'correct_percentage': 0,
+                        'net_percentage': 0,
                         'recommendation_count': 0
                     }
                 }
@@ -594,24 +644,31 @@ class AnalyticsService:
                         'total_outcomes': 0,
                         'total_questions': 0,
                         'total_acquired': 0,
+                        'total_correct': 0,
+                        'total_wrong': 0,
                         'average_success_rate': 0,
+                        'correct_percentage': 0,
+                        'net_percentage': 0,
                         'recommendation_count': 0
                     }
                 }
 
             # Get recommendation count for this outcome
-            # Note: Learning outcome doesn't have ID in the aggregated stats
             outcome_rec_count = 0  # We'll count at subject level instead
 
             # Add outcome as leaf node
             outcome_node = {
-                'name': outcome.outcome_description if outcome.outcome_description else 'No description',
+                'name': outcome_data["outcome_description"] if outcome_data["outcome_description"] else 'No description',
                 'type': 'outcome',
                 'stats': {
-                    'total_appearances': outcome.total_appearances,
-                    'total_questions': outcome.total_questions,
-                    'total_acquired': outcome.total_acquired,
-                    'average_success_rate': outcome.average_success_rate,
+                    'total_appearances': outcome_data["total_appearances"],
+                    'total_questions': total_q,
+                    'total_acquired': acquired,
+                    'total_correct': acquired,  # At outcome level, acquired = correct
+                    'total_wrong': total_q - acquired,
+                    'average_success_rate': correct_percentage,
+                    'correct_percentage': correct_percentage,
+                    'net_percentage': net_percentage,
                     'recommendation_count': outcome_rec_count
                 }
             }
@@ -625,27 +682,41 @@ class AnalyticsService:
                 tree[subject]
             ]:
                 node['stats']['total_outcomes'] += 1
-                node['stats']['total_questions'] += outcome.total_questions
-                node['stats']['total_acquired'] += outcome.total_acquired
+                node['stats']['total_questions'] += total_q
+                node['stats']['total_acquired'] += acquired
+                node['stats']['total_correct'] += acquired
+                node['stats']['total_wrong'] += (total_q - acquired)
                 node['stats']['recommendation_count'] += outcome_rec_count
 
-        # Calculate average success rates for parent nodes
-        def calculate_avg_success(node):
-            if node['stats']['total_questions'] > 0:
+        # Calculate average success rates and percentages for parent nodes
+        def calculate_percentages(node):
+            total_q = node['stats']['total_questions']
+            total_correct = node['stats']['total_correct']
+            total_wrong = node['stats']['total_wrong']
+
+            if total_q > 0:
+                # Correct percentage
+                node['stats']['correct_percentage'] = (total_correct / total_q) * 100
+
+                # Net percentage: net = correct - (wrong / 4)
+                net_score = total_correct - (total_wrong / 4.0)
+                node['stats']['net_percentage'] = (net_score / total_q) * 100
+
+                # Average success rate (based on acquired outcomes)
                 node['stats']['average_success_rate'] = (
-                    node['stats']['total_acquired'] / node['stats']['total_questions'] * 100
+                    node['stats']['total_acquired'] / total_q * 100
                 )
 
             if 'children' in node and isinstance(node['children'], dict):
                 for child in node['children'].values():
-                    calculate_avg_success(child)
+                    calculate_percentages(child)
             elif 'children' in node and isinstance(node['children'], list):
                 for child in node['children']:
                     if isinstance(child, dict) and 'children' in child:
-                        calculate_avg_success(child)
+                        calculate_percentages(child)
 
         for subject_node in tree.values():
-            calculate_avg_success(subject_node)
+            calculate_percentages(subject_node)
 
         # Convert to list format
         tree_list = list(tree.values())

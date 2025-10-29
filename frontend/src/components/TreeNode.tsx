@@ -10,6 +10,8 @@ export interface TreeNodeData {
     total_questions: number;
     total_acquired: number;
     average_success_rate: number;
+    correct_percentage?: number;
+    net_percentage?: number;
     recommendation_count: number;
   };
 }
@@ -94,6 +96,14 @@ export const TreeNode: React.FC<TreeNodeProps> = ({ node, level, onOutcomeClick 
               {node.stats.total_questions} soru
               {node.stats.total_outcomes && ` • ${node.stats.total_outcomes} kazanım`}
               {node.stats.total_appearances && ` • ${node.stats.total_appearances} sınav`}
+              {node.stats.correct_percentage !== undefined && (
+                <span className="block mt-1">
+                  <span className="font-medium">Doğru: %{node.stats.correct_percentage.toFixed(1)}</span>
+                  {node.stats.net_percentage !== undefined && (
+                    <> • <span className="font-medium">Net: %{node.stats.net_percentage.toFixed(1)}</span></>
+                  )}
+                </span>
+              )}
             </div>
           </div>
         </div>
