@@ -272,3 +272,129 @@ Eğer herhangi bir sorunun cevabı HAYIR ise, o kaynağı ÖNERME!
             score += 5.0
 
         return min(score, 100.0)
+
+    def generate_video_search_keywords(
+        self,
+        subject: str,
+        topic: str,
+        description: Optional[str] = None,
+        learning_outcome: Optional[str] = None
+    ) -> List[str]:
+        """
+        Çalışma kartı içeriğinden 3-5 akıllı search keyword üret
+
+        Args:
+            subject: Ders adı (örn: "Fizik", "Matematik")
+            topic: Konu başlığı (örn: "Prizmalar", "Türev")
+            description: Konu açıklaması (opsiyonel)
+            learning_outcome: Kazanım metni (opsiyonel)
+
+        Returns:
+            List of 3-5 search keywords optimized for YouTube
+
+        Example Input:
+            subject: "Fizik"
+            topic: "Prizmalar"
+            description: "Işık kırılması ve renk ayrışması"
+
+        Example Output:
+            ["prizmalar konu anlatımı",
+             "prizma ışık kırılması soru çözümü",
+             "fizik prizma örnekleri",
+             "ayt fizik prizmalar",
+             "ışık renk ayrışması prizma"]
+        """
+        # Build context
+        context_parts = [f"Ders: {subject}", f"Konu: {topic}"]
+
+        if description:
+            context_parts.append(f"Açıklama: {description}")
+
+        if learning_outcome:
+            context_parts.append(f"Kazanım: {learning_outcome}")
+
+        context = "\n".join(context_parts)
+
+        # Create prompt
+        prompt = f"""Sen bir TYT/AYT üniversite sınavı hazırlık uzmanısın. Görevin, öğrencilerin YouTube'da eğitim videoları ararken kullanacakları en etkili arama terimlerini önermek.
+
+Aşağıdaki konu için 3-5 farklı YouTube arama terimi öner:
+
+{context}
+
+ÖNEMLİ KURALLAR:
+1. Her keyword farklı bir bakış açısından olmalı (konu anlatımı, soru çözümü, örnek, özet, vb.)
+2. Türkçe eğitim içeriği için optimize edilmiş olmalı
+3. "TYT", "AYT", ders adı gibi bağlam kelimeler içermeli
+4. Gerçek öğrencilerin arama şekillerini taklit et
+5. Çok genel veya çok spesifik olma - orta seviyede tut
+
+Sadece JSON formatında yanıt ver:
+{{"keywords": ["keyword1", "keyword2", "keyword3", "keyword4", "keyword5"]}}
+
+Her keyword maksimum 6 kelime olmalı."""
+
+        try:
+            # Call Claude API
+            response = self.client.messages.create(
+                model=self.model,
+                max_tokens=1000,
+                temperature=0.7,  # Creativity için
+                messages=[
+                    {
+                        "role": "user",
+                        "content": prompt
+                    }
+                ]
+            )
+
+            # Parse response
+            content = response.content[0].text.strip()
+
+            # Extract JSON from response
+            if "```json" in content:
+                # Remove markdown code blocks
+                content = content.split("```json")[1].split("```")[0].strip()
+            elif "```" in content:
+                content = content.split("```")[1].split("```")[0].strip()
+
+            # Parse JSON
+            data = json.loads(content)
+            keywords = data.get("keywords", [])
+
+            # Validate keywords
+            if not keywords or len(keywords) < 3:
+                # Fallback to basic keywords
+                return self._generate_fallback_keywords(subject, topic)
+
+            # Return max 5 keywords
+            print(f"✅ Claude generated {len(keywords)} keywords for {subject}/{topic}")
+            return keywords[:5]
+
+        except Exception as e:
+            print(f"Claude keyword generation error: {e}")
+            # Fallback to basic keywords
+            return self._generate_fallback_keywords(subject, topic)
+
+    def _generate_fallback_keywords(self, subject: str, topic: str) -> List[str]:
+        """
+        Generate basic fallback keywords if Claude API fails
+
+        Args:
+            subject: Subject name
+            topic: Topic name
+
+        Returns:
+            List of 3-5 basic keywords
+        """
+        print(f"⚠️ Using fallback keywords for {subject}/{topic}")
+        # Basic keyword templates
+        keywords = [
+            f"{topic} konu anlatımı",
+            f"{topic} {subject} soru çözümü",
+            f"{subject} {topic} AYT",
+            f"{topic} TYT {subject}",
+            f"{subject} {topic} örnekleri"
+        ]
+
+        return keywords[:5]

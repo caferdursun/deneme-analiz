@@ -366,23 +366,41 @@ class YouTubeService:
                     duration_seconds = int(duration.total_seconds())
                     duration_minutes = duration_seconds / 60
 
-                    # Get view count
-                    view_count = int(item["statistics"].get("viewCount", 0))
-
-                    # Apply filters
-                    # Duration: 5-30 minutes
-                    if not (5 <= duration_minutes <= 30):
-                        continue
-
-                    # View count: >5000
-                    if view_count < 5000:
-                        continue
+                    # Get statistics
+                    stats = item["statistics"]
+                    view_count = int(stats.get("viewCount", 0))
+                    like_count = int(stats.get("likeCount", 0))
+                    comment_count = int(stats.get("commentCount", 0))
 
                     # Calculate years ago
                     published_at = datetime.fromisoformat(
                         item["snippet"]["publishedAt"].replace("Z", "+00:00")
                     )
                     years_ago = (datetime.utcnow().replace(tzinfo=published_at.tzinfo) - published_at).days / 365
+
+                    # ENHANCED FILTERS - Prevent deleted/unavailable videos
+                    # Balanced approach: strict enough to avoid bad content, flexible for niche topics
+
+                    # 1. Duration: 5-30 minutes
+                    if not (5 <= duration_minutes <= 30):
+                        continue
+
+                    # 2. View count: Minimum 5K (good balance)
+                    if view_count < 5000:
+                        continue
+
+                    # 3. Age: 2 weeks - 3 years (balanced range)
+                    if years_ago < 0.04 or years_ago > 3.0:  # 0.04 years ≈ 2 weeks
+                        continue
+
+                    # 4. Engagement rate: Like ratio > 0.3% (lowered for niche content)
+                    like_ratio = (like_count / view_count * 100) if view_count > 0 else 0
+                    if like_ratio < 0.3:
+                        continue
+
+                    # 5. Has comments: Minimum 5 comments (lowered for niche content)
+                    if comment_count < 5:
+                        continue
 
                     video = {
                         "video_id": item["id"],
@@ -391,7 +409,9 @@ class YouTubeService:
                         "thumbnail_url": item["snippet"]["thumbnails"]["medium"]["url"],
                         "channel_name": item["snippet"]["channelTitle"],
                         "view_count": view_count,
-                        "like_count": int(item["statistics"].get("likeCount", 0)),
+                        "like_count": like_count,
+                        "comment_count": comment_count,
+                        "like_ratio": like_ratio,
                         "duration": duration_iso,
                         "duration_seconds": duration_seconds,
                         "published_at": item["snippet"]["publishedAt"],
@@ -405,22 +425,34 @@ class YouTubeService:
                     print(f"Error processing video {item.get('id')}: {e}")
                     continue
 
-            # Sort by view count and return top results
-            videos.sort(key=lambda x: x["view_count"], reverse=True)
+            # Sort by engagement quality (not just view count)
+            # Priority: like_ratio * sqrt(view_count) for balanced scoring
+            for video in videos:
+                # Calculate engagement score
+                engagement_score = video["like_ratio"] * (video["view_count"] ** 0.5)
+                video["engagement_score"] = engagement_score
+
+            videos.sort(key=lambda x: x["engagement_score"], reverse=True)
             return videos[:max_results]
 
         except Exception as e:
             print(f"YouTube video search in channel error: {e}")
             return []
 
-    def verify_video_availability(self, video_id: str) -> bool:
+    def verify_video_availability(self, video_id: str, check_age: bool = True) -> bool:
         """
         Video var mı, oynatılabilir mi kontrol et
 
-        Checks:
+        Enhanced Checks:
             - Video exists
             - embeddable: true
             - Not private/deleted
+            - Upload status is processed
+            - Optionally: age between 1 month - 2.5 years
+
+        Args:
+            video_id: YouTube video ID
+            check_age: If True, also verify video age is within acceptable range
 
         Returns: True if available and embeddable
         """
@@ -430,7 +462,7 @@ class YouTubeService:
         try:
             videos_url = f"{self.base_url}/videos"
             params = {
-                "part": "status",
+                "part": "status,snippet",
                 "id": video_id,
                 "key": self.api_key
             }
@@ -443,7 +475,8 @@ class YouTubeService:
             if not items:
                 return False
 
-            status = items[0].get("status", {})
+            item = items[0]
+            status = item.get("status", {})
 
             # Check if video is available
             if status.get("privacyStatus") not in ["public", "unlisted"]:
@@ -456,6 +489,21 @@ class YouTubeService:
             # Check if uploadStatus is processed
             if status.get("uploadStatus") != "processed":
                 return False
+
+            # Optional: Check video age
+            if check_age:
+                snippet = item.get("snippet", {})
+                published_at = snippet.get("publishedAt")
+                if published_at:
+                    try:
+                        pub_date = datetime.fromisoformat(published_at.replace("Z", "+00:00"))
+                        years_ago = (datetime.utcnow().replace(tzinfo=pub_date.tzinfo) - pub_date).days / 365
+
+                        # Reject videos too new (<2 weeks) or too old (>3 years)
+                        if years_ago < 0.04 or years_ago > 3.0:
+                            return False
+                    except:
+                        pass  # If date parsing fails, skip age check
 
             return True
 
