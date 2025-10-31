@@ -5,7 +5,7 @@ from typing import List, Optional, Dict
 from sqlalchemy.orm import Session
 from sqlalchemy import and_
 
-from app.models import Resource, RecommendationResource, Recommendation, LearningOutcome, ResourceBlacklist, StudyPlanItem
+from app.models import Resource, RecommendationResource, Recommendation, LearningOutcome, StudyPlanItem
 from app.services.youtube_service import YouTubeService
 from app.services.claude_curator_service import ClaudeCuratorService
 from app.services.channel_service import ChannelService
@@ -514,11 +514,14 @@ class ResourceService:
         """
         Toggle pin status of a resource
 
+        If unpinning (is_pinned=True → False), deletes the resource from database.
+        If pinning (is_pinned=False → True), sets is_pinned=True.
+
         Args:
             resource_id: ID of the resource to pin/unpin
 
         Returns:
-            New pin status (True/False) or None if resource not found
+            New pin status (True if pinned, False if unpinned/deleted) or None if resource not found
         """
         resource = self.db.query(Resource).filter(
             Resource.id == resource_id
@@ -528,9 +531,26 @@ class ResourceService:
             return None
 
         try:
-            resource.is_pinned = not resource.is_pinned
-            self.db.commit()
-            return resource.is_pinned
+            # If currently pinned, unpin means DELETE from database
+            if resource.is_pinned:
+                print(f"🗑️  Unpinning and deleting resource: {resource.name}")
+
+                # Delete recommendation-resource links first
+                self.db.query(RecommendationResource).filter(
+                    RecommendationResource.resource_id == resource_id
+                ).delete()
+
+                # Delete the resource
+                self.db.delete(resource)
+                self.db.commit()
+                return False  # Unpinned (deleted)
+            else:
+                # If not pinned, pin it
+                print(f"📌 Pinning resource: {resource.name}")
+                resource.is_pinned = True
+                self.db.commit()
+                return True  # Pinned
+
         except Exception as e:
             self.db.rollback()
             print(f"Error toggling pin status: {e}")
@@ -610,13 +630,11 @@ class ResourceService:
 
         print(f"   ✅ Found {len(channels)} channels")
 
-        # 3. Generate search keywords using Claude
+        # 3. Generate search keywords using Claude (using only the title/topic)
         print(f"🔍 Generating search keywords with Claude...")
         keywords = self.curator_service.generate_video_search_keywords(
             subject=item.subject_name,
-            topic=item.topic,
-            description=item.description,
-            learning_outcome=self._get_learning_outcome_text(item)
+            topic=item.topic  # Only use the study item title
         )
         print(f"   ✅ Generated {len(keywords)} keywords")
 
@@ -891,4 +909,184 @@ class ResourceService:
         self.db.commit()
         self.db.refresh(resource)
 
+        return resource
+
+    def search_resources_for_study_item(
+        self,
+        study_plan_item_id: str,
+        exclude_urls: List[str] = None
+    ) -> Dict[str, List[dict]]:
+        """
+        Search for resources WITHOUT saving to database
+
+        Returns dict representations of resources, not ORM objects.
+        User must pin a resource to save it permanently.
+
+        Returns:
+            Dict with keys: youtube, pdf, website
+            Each contains list of dict (not ORM objects)
+        """
+        if exclude_urls is None:
+            exclude_urls = []
+
+        # Get the study plan item
+        item = self.db.query(StudyPlanItem).filter(StudyPlanItem.id == study_plan_item_id).first()
+        if not item:
+            raise ValueError(f"Study plan item with id {study_plan_item_id} not found")
+
+        print(f"🔍 Searching resources for: {item.subject_name} - {item.topic}")
+
+        # Get trusted channels for the subject
+        channels = self.channel_service.get_trusted_channels(item.subject_name)
+        print(f"📺 Found {len(channels)} trusted channels for {item.subject_name}")
+
+        if not channels:
+            print(f"⚠️  No channels found for {item.subject_name}, returning empty results")
+            return {"youtube": [], "pdf": [], "website": []}
+
+        # Generate search keywords
+        print(f"🤖 Generating search keywords with Claude...")
+        keywords = self.curator_service.generate_video_search_keywords(
+            subject=item.subject_name,
+            topic=item.topic
+        )
+        print(f"🔑 Generated keywords: {keywords}")
+
+        # Search videos WITHOUT saving to DB
+        all_videos = []
+        for channel in channels[:5]:  # Limit to top 5 channels
+            for keyword in keywords[:5]:  # Limit to top 5 keywords
+                print(f"   🔍 Searching in {channel.channel_name} for '{keyword}'...")
+
+                videos = self.youtube_service.search_videos_in_channel(
+                    channel_id=channel.channel_id,
+                    query=keyword,
+                    max_results=3
+                )
+
+                print(f"      → Found {len(videos)} videos")
+                all_videos.extend(videos)
+
+        if not all_videos:
+            print(f"❌ No videos found after searching {len(channels)} channels with {len(keywords)} keywords")
+            return {"youtube": []}
+
+        # Apply exclusion filter
+        if exclude_urls:
+            all_videos = [v for v in all_videos if v['url'] not in exclude_urls]
+
+        # Deduplicate by URL
+        seen_urls = set()
+        unique_videos = []
+        for video in all_videos:
+            if video['url'] not in seen_urls:
+                seen_urls.add(video['url'])
+                unique_videos.append(video)
+
+        # Sort by final_score
+        unique_videos.sort(key=lambda x: x.get('final_score', 0), reverse=True)
+
+        # Take top 3
+        top_videos = unique_videos[:3]
+
+        print(f"✅ Returning {len(top_videos)} video suggestions (NOT saved to DB)")
+
+        # Convert to dict format (add temporary ID for frontend tracking)
+        youtube_resources = []
+        for video in top_videos:
+            youtube_resources.append({
+                "id": None,  # No ID yet - will get one when pinned
+                "name": video['title'],
+                "type": "youtube",
+                "url": video['url'],
+                "description": video.get('description', ''),
+                "subject_name": item.subject_name,
+                "topic": item.topic,
+                "thumbnail_url": video.get('thumbnail_url'),
+                "is_pinned": False,  # Not pinned yet
+                "is_active": True,
+                "extra_data": {
+                    "video_id": video['video_id'],
+                    "channel_id": video.get('channel_id'),
+                    "channel_name": video.get('channel_name'),
+                    "view_count": video.get('view_count', 0),
+                    "like_count": video.get('like_count', 0),
+                    "duration_seconds": video.get('duration_seconds', 0),
+                    "engagement_score": video.get('engagement_score', 0),
+                    "final_score": video.get('final_score', 0),
+                },
+                "created_at": None,
+            })
+
+        return {
+            "youtube": youtube_resources
+        }
+
+    def create_and_pin_resource(
+        self,
+        name: str,
+        resource_type: str,
+        url: str,
+        description: Optional[str],
+        subject_name: Optional[str],
+        topic: Optional[str],
+        thumbnail_url: Optional[str],
+        extra_data: dict,
+        study_plan_item_id: Optional[str] = None
+    ) -> Resource:
+        """
+        Create a resource and immediately pin it
+
+        Used when user pins a resource from search results.
+        Also links to study plan item if provided.
+
+        Returns:
+            Created and pinned Resource object
+        """
+        # Check if resource with this URL already exists
+        existing = self.db.query(Resource).filter(Resource.url == url).first()
+        if existing:
+            # If exists, just pin it
+            existing.is_pinned = True
+            self.db.commit()
+            self.db.refresh(existing)
+            print(f"📌 Pinned existing resource: {existing.name}")
+            return existing
+
+        # Create new resource
+        resource = Resource(
+            id=str(uuid.uuid4()),
+            name=name,
+            type=resource_type,
+            url=url,
+            description=description,
+            subject_name=subject_name,
+            topic=topic,
+            thumbnail_url=thumbnail_url,
+            extra_data=extra_data,
+            is_pinned=True,  # Pinned from the start
+            is_active=True,
+            quality_score=extra_data.get('final_score', 70.0),
+            education_level='lise',
+            curator_notes=f"Pinned by user. Score: {extra_data.get('final_score', 0):.1f}"
+        )
+
+        self.db.add(resource)
+
+        # If study plan item provided, link it
+        if study_plan_item_id:
+            item = self.db.query(StudyPlanItem).filter(StudyPlanItem.id == study_plan_item_id).first()
+            if item and item.recommendation_id:
+                # Create recommendation-resource link
+                link = RecommendationResource(
+                    id=str(uuid.uuid4()),
+                    recommendation_id=item.recommendation_id,
+                    resource_id=resource.id
+                )
+                self.db.add(link)
+
+        self.db.commit()
+        self.db.refresh(resource)
+
+        print(f"📌 Created and pinned new resource: {resource.name}")
         return resource

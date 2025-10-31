@@ -281,13 +281,16 @@ Eğer herhangi bir sorunun cevabı HAYIR ise, o kaynağı ÖNERME!
         learning_outcome: Optional[str] = None
     ) -> List[str]:
         """
-        Çalışma kartı içeriğinden 3-5 akıllı search keyword üret
+        Çalışma kartı başlığından (topic) 3-5 akıllı search keyword üret
+
+        NOT: Sadece başlık (topic) kullanılır, description ve learning_outcome parametreleri
+        geriye dönük uyumluluk için tutulmuştur ama kullanılmaz.
 
         Args:
             subject: Ders adı (örn: "Fizik", "Matematik")
-            topic: Konu başlığı (örn: "Prizmalar", "Türev")
-            description: Konu açıklaması (opsiyonel)
-            learning_outcome: Kazanım metni (opsiyonel)
+            topic: Konu başlığı (örn: "Prizmalar", "Türev") - ANA PARAMETRE
+            description: KULLANILMAZ (geriye dönük uyumluluk için)
+            learning_outcome: KULLANILMAZ (geriye dönük uyumluluk için)
 
         Returns:
             List of 3-5 search keywords optimized for YouTube
@@ -295,25 +298,16 @@ Eğer herhangi bir sorunun cevabı HAYIR ise, o kaynağı ÖNERME!
         Example Input:
             subject: "Fizik"
             topic: "Prizmalar"
-            description: "Işık kırılması ve renk ayrışması"
 
         Example Output:
             ["prizmalar konu anlatımı",
-             "prizma ışık kırılması soru çözümü",
+             "prizma soru çözümü",
              "fizik prizma örnekleri",
              "ayt fizik prizmalar",
-             "ışık renk ayrışması prizma"]
+             "tyt prizma soruları"]
         """
-        # Build context
-        context_parts = [f"Ders: {subject}", f"Konu: {topic}"]
-
-        if description:
-            context_parts.append(f"Açıklama: {description}")
-
-        if learning_outcome:
-            context_parts.append(f"Kazanım: {learning_outcome}")
-
-        context = "\n".join(context_parts)
+        # Sadece ders ve konu başlığını kullan
+        context = f"Ders: {subject}\nKonu: {topic}"
 
         # Create prompt
         prompt = f"""Sen bir TYT/AYT üniversite sınavı hazırlık uzmanısın. Görevin, öğrencilerin YouTube'da eğitim videoları ararken kullanacakları en etkili arama terimlerini önermek.

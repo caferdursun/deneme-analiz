@@ -18,7 +18,7 @@ export default function StudyPlanPage() {
 
   // Resource states for each item
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
-  const [itemResources, setItemResources] = useState<{ [itemId: string]: { youtube: Resource[], pdf: Resource[], website: Resource[] } }>({});
+  const [itemResources, setItemResources] = useState<{ [itemId: string]: { youtube: Resource[] } }>({});
   const [loadingResources, setLoadingResources] = useState<Set<string>>(new Set());
 
   useEffect(() => {
@@ -61,6 +61,54 @@ export default function StudyPlanPage() {
       console.error('Progress yüklenirken hata:', err);
     }
   };
+
+  // Load existing resources for all study items when page loads
+  useEffect(() => {
+    const loadExistingResources = async () => {
+      if (!plan) {
+        console.log('⏳ Plan not loaded yet, skipping resource load');
+        return;
+      }
+
+      console.log('📦 Loading existing resources for all study items...');
+
+      // Collect all items from all days
+      const allItems = plan.days.flatMap(day => day.items);
+      console.log(`   Found ${allItems.length} items across ${plan.days.length} days`);
+
+      // Collect all resources first, then update state once
+      const resourcesMap: { [itemId: string]: { youtube: Resource[] } } = {};
+
+      // Load resources for each item
+      for (const item of allItems) {
+        try {
+          console.log(`   🔍 Loading resources for: ${item.subject_name} - ${item.topic}`);
+          const resources = await resourceAPI.getStudyItemResources(item.id);
+          console.log(`      → Received ${resources.length} resources`);
+
+          // Only add if resources exist
+          if (resources && resources.length > 0) {
+            // Filter only YouTube resources that are pinned
+            const youtubeResources = resources.filter(r => r.type === 'youtube' && r.is_pinned);
+
+            console.log(`      → Found: ${youtubeResources.length} pinned YouTube videos`);
+            if (youtubeResources.length > 0) {
+              resourcesMap[item.id] = { youtube: youtubeResources };
+            }
+          }
+        } catch (err) {
+          console.error(`❌ Failed to load resources for item ${item.id}:`, err);
+          // Continue loading other items even if one fails
+        }
+      }
+
+      // Update state ONCE with all resources
+      console.log(`✅ Finished loading existing resources - Total items with resources: ${Object.keys(resourcesMap).length}`);
+      setItemResources(resourcesMap);
+    };
+
+    loadExistingResources();
+  }, [plan]); // Re-run when plan changes
 
   const handleItemToggle = async (item: StudyPlanItem) => {
     if (!plan) return;
@@ -140,16 +188,19 @@ export default function StudyPlanPage() {
   };
 
   const handleCurateItemResources = async (item: StudyPlanItem) => {
-    const toastId = toast.loading('Kaynaklar öneriliyor...');
+    const toastId = toast.loading('Kaynaklar aranıyor...');
     setLoadingResources(prev => new Set(prev).add(item.id));
 
     try {
-      const resources = await resourceAPI.curateStudyItemResources(item.id);
+      // Use search instead of curate - doesn't save to DB
+      const resources = await resourceAPI.searchStudyItemResources(item.id);
+      console.log('📦 Received resources:', resources);
+      console.log('📦 YouTube count:', resources.youtube?.length || 0);
       setItemResources(prev => ({ ...prev, [item.id]: resources }));
       setExpandedItems(prev => new Set(prev).add(item.id));
-      toast.success('Kaynaklar başarıyla önerildi!', { id: toastId });
+      toast.success('Kaynak önerileri hazır! İstediğinizi kaydetmek için 💾 butonuna tıklayın.', { id: toastId, duration: 5000 });
     } catch (err: any) {
-      toast.error(err.response?.data?.detail || 'Kaynaklar önerilirken hata oluştu', { id: toastId });
+      toast.error(err.response?.data?.detail || 'Kaynaklar aranırken hata oluştu', { id: toastId });
     } finally {
       setLoadingResources(prev => {
         const newSet = new Set(prev);
@@ -166,19 +217,18 @@ export default function StudyPlanPage() {
 
     if (currentResources) {
       excludeUrls.push(...currentResources.youtube.map(r => r.url));
-      excludeUrls.push(...currentResources.pdf.map(r => r.url));
-      excludeUrls.push(...currentResources.website.map(r => r.url));
     }
 
     const toastId = toast.loading('Yeni kaynaklar aranıyor...');
     setLoadingResources(prev => new Set(prev).add(item.id));
 
     try {
-      const resources = await resourceAPI.curateStudyItemResources(item.id, excludeUrls);
+      // Use search - doesn't save to DB
+      const resources = await resourceAPI.searchStudyItemResources(item.id, excludeUrls);
       setItemResources(prev => ({ ...prev, [item.id]: resources }));
-      toast.success('Yeni kaynaklar önerildi!', { id: toastId });
+      toast.success('Yeni kaynak önerileri hazır!', { id: toastId });
     } catch (err: any) {
-      toast.error(err.response?.data?.detail || 'Yeni kaynaklar önerilirken hata oluştu', { id: toastId });
+      toast.error(err.response?.data?.detail || 'Yeni kaynaklar aranırken hata oluştu', { id: toastId });
     } finally {
       setLoadingResources(prev => {
         const newSet = new Set(prev);
@@ -188,30 +238,33 @@ export default function StudyPlanPage() {
     }
   };
 
-  const handleDeleteResource = async (resourceId: string, itemId: string, blacklist: boolean = true) => {
-    const toastId = toast.loading('Kaynak siliniyor...');
+
+  const handlePinResource = async (resource: Resource, itemId: string) => {
+    const toastId = toast.loading('Kaynak kaydediliyor...');
 
     try {
-      await resourceAPI.deleteResource(resourceId, blacklist);
+      // Save to DB and pin
+      const savedResource = await resourceAPI.pinResource(resource, itemId);
 
-      // Remove from local state
+      // Update local state - replace the temp resource with saved one
       setItemResources(prev => {
         const current = prev[itemId];
         if (!current) return prev;
 
+        const replaceResource = (r: Resource) =>
+          r.url === resource.url ? savedResource : r;
+
         return {
           ...prev,
           [itemId]: {
-            youtube: current.youtube.filter(r => r.id !== resourceId),
-            pdf: current.pdf.filter(r => r.id !== resourceId),
-            website: current.website.filter(r => r.id !== resourceId),
+            youtube: current.youtube.map(replaceResource),
           }
         };
       });
 
-      toast.success(blacklist ? 'Kaynak silindi ve kara listeye eklendi' : 'Kaynak silindi', { id: toastId });
+      toast.success('Kaynak kaydedildi ve sabitlendi!', { id: toastId });
     } catch (err: any) {
-      toast.error(err.response?.data?.detail || 'Kaynak silinirken hata oluştu', { id: toastId });
+      toast.error(err.response?.data?.detail || 'Kaynak kaydedilemedi', { id: toastId });
     }
   };
 
@@ -224,20 +277,31 @@ export default function StudyPlanPage() {
         const current = prev[itemId];
         if (!current) return prev;
 
-        const updateResource = (resource: Resource) =>
-          resource.id === resourceId ? { ...resource, is_pinned: result.is_pinned } : resource;
+        const updateResource = (resource: Resource) => {
+          if (resource.id === resourceId) {
+            // If unpinned (deleted from DB), keep in state but mark as unpinned with no ID
+            if (!result.is_pinned) {
+              return {
+                ...resource,
+                id: null as any, // Remove ID to indicate it's not in DB
+                is_pinned: false,
+              };
+            }
+            // If pinned, update the pin status
+            return { ...resource, is_pinned: result.is_pinned };
+          }
+          return resource;
+        };
 
         return {
           ...prev,
           [itemId]: {
             youtube: current.youtube.map(updateResource),
-            pdf: current.pdf.map(updateResource),
-            website: current.website.map(updateResource),
           }
         };
       });
 
-      toast.success(result.is_pinned ? 'Kaynak sabitlendi' : 'Kaynak sabitleme kaldırıldı', { duration: 2000 });
+      toast.success(result.is_pinned ? 'Kaynak sabitlendi' : 'Kaynak sabitleme kaldırıldı - tekrar kaydetmek için 💾 butonuna tıklayın', { duration: 4000 });
     } catch (err: any) {
       toast.error(err.response?.data?.detail || 'İşlem başarısız', { duration: 2000 });
     }
@@ -471,7 +535,14 @@ export default function StudyPlanPage() {
                     const isExpanded = expandedItems.has(item.id);
                     const isLoadingRes = loadingResources.has(item.id);
                     const resources = itemResources[item.id];
-                    const hasResources = resources && (resources.youtube.length > 0 || resources.pdf.length > 0 || resources.website.length > 0);
+                    const hasResources = resources && resources.youtube.length > 0;
+
+                    console.log(`🔍 Item ${item.id.slice(0,8)}:`, {
+                      isExpanded,
+                      hasResources,
+                      youtubeCount: resources?.youtube?.length || 0,
+                      resources
+                    });
 
                     return (
                       <div
@@ -552,12 +623,12 @@ export default function StudyPlanPage() {
                                   🎥 YouTube Videoları ({resources.youtube.length})
                                 </h4>
                                 <div className="space-y-2">
-                                  {resources.youtube.map((resource) => (
+                                  {resources.youtube.map((resource, index) => (
                                     <ResourceCard
-                                      key={resource.id}
+                                      key={resource.id || resource.url || index}
                                       resource={resource}
-                                      onDelete={(blacklist) => handleDeleteResource(resource.id, item.id, blacklist)}
-                                      onTogglePin={() => handleTogglePin(resource.id, item.id)}
+                                      onTogglePin={resource.id ? () => handleTogglePin(resource.id!, item.id) : undefined}
+                                      onPin={!resource.id ? (res) => handlePinResource(res, item.id) : undefined}
                                     />
                                   ))}
                                 </div>

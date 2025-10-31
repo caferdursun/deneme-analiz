@@ -92,3 +92,9 @@ tüm tabloyu claude API'ye göndermek ve rafine edilmiş halini almak mantıklı
 
   youtube api si ile sadece kanalları arayıp, abone sayısı en yüksek 5 kanaldan videoları arayacağız ve  konu ile alakalı izlenme sayısı en yüksek 5 videoyu önereceğiz.
   bunu bir test edelim, temp bir script ile "TYT AYT Fizik" aramasını gruplarda yapıp, top 5 kanalın herbirinin videoları içinde "Prizmalar" konusundaki top 5 videoyu tespit edelim
+
+kaynak önerme algoritmamız:
+ilgili dersin adını alalım "#dersin adı# AYT TYT" keyword'ü ile en çok abonesi olan youtube gruplarının listesini alalım.
+günlük çalışma kartının içeriğinden Claude api ile youtube video search keyword önerisi alalım.
+daha önce hazırladığımız youtube kanal listemizden, herbir kanaldan ilgi seviyesi yüksek 2-3 video listesi bulalım. Videoların yayından kaldırılmadığından emin olalım
+

@@ -274,8 +274,6 @@ export interface Resource {
 
 export interface CuratedResourcesResponse {
   youtube: Resource[];
-  pdf: Resource[];
-  website: Resource[];
 }
 
 export interface ResourceListResponse {

@@ -10,7 +10,6 @@ from app.services.analytics_service import AnalyticsService
 from app.schemas.analytics import (
     AnalyticsOverview,
     SubjectAnalytics,
-    TrendsAnalytics,
 )
 
 router = APIRouter()
@@ -60,42 +59,6 @@ async def get_subject_analytics(
         )
 
     return subject_analytics
-
-
-@router.get("/trends", response_model=TrendsAnalytics)
-async def get_trends(
-    student_id: Optional[str] = Query(None),
-    db: Session = Depends(get_db),
-):
-    """
-    Get trends and comparisons
-
-    - Score trends over time
-    - Comparison with class/school averages
-    - Subject-wise trends
-    """
-    analytics_service = AnalyticsService(db)
-    trends = analytics_service.get_trends(student_id=student_id)
-
-    return trends
-
-
-@router.get("/learning-outcomes")
-async def get_all_learning_outcomes(
-    student_id: Optional[str] = Query(None),
-    db: Session = Depends(get_db),
-):
-    """
-    Get all learning outcomes aggregated across all exams
-
-    - Returns all learning outcomes with aggregated statistics
-    - Grouped by unique outcome identifier
-    - Includes total questions, acquired, and success rate
-    """
-    analytics_service = AnalyticsService(db)
-    outcomes = analytics_service.get_all_learning_outcomes(student_id=student_id)
-
-    return outcomes
 
 
 @router.get("/learning-outcomes/tree")

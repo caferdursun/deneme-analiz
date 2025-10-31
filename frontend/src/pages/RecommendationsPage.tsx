@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { recommendationsAPI, resourceAPI } from '../api/client';
-import type { Recommendation, RefreshSummary, Resource, CuratedResourcesResponse } from '../types';
+import { recommendationsAPI } from '../api/client';
+import type { Recommendation, RefreshSummary } from '../types';
 import { RecommendationsSkeleton } from '../components/Skeleton';
-import ResourceCard from '../components/ResourceCard';
-import ResourceTabs from '../components/ResourceTabs';
 
 export const RecommendationsPage: React.FC = () => {
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
@@ -14,8 +12,6 @@ export const RecommendationsPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [refreshSummary, setRefreshSummary] = useState<RefreshSummary | null>(null);
   const [statusFilter, setStatusFilter] = useState<string>('all');
-  const [curatedResources, setCuratedResources] = useState<Record<string, CuratedResourcesResponse>>({});
-  const [curatingResourcesFor, setCuratingResourcesFor] = useState<Record<string, boolean>>({});
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -28,44 +24,11 @@ export const RecommendationsPage: React.FC = () => {
       setError(null);
       const data = await recommendationsAPI.getRecommendations();
       setRecommendations(data.recommendations);
-
-      // Load resources for each recommendation
-      loadResourcesForRecommendations(data.recommendations);
     } catch (err: any) {
       setError(err.response?.data?.detail || 'Öneriler yüklenirken hata oluştu');
     } finally {
       setLoading(false);
     }
-  };
-
-  const loadResourcesForRecommendations = async (recs: Recommendation[]) => {
-    const curatedMap: Record<string, CuratedResourcesResponse> = {};
-
-    for (const rec of recs) {
-      try {
-        const resources = await resourceAPI.getRecommendationResources(rec.id);
-        if (resources.length > 0) {
-          // Group resources by type
-          const youtubeResources = resources.filter(r => r.type === 'youtube');
-          const pdfResources = resources.filter(r => r.type === 'pdf');
-          const websiteResources = resources.filter(r => r.type === 'website');
-
-          // Only add to curated resources if at least one resource exists
-          if (youtubeResources.length > 0 || pdfResources.length > 0 || websiteResources.length > 0) {
-            curatedMap[rec.id] = {
-              youtube: youtubeResources,
-              pdf: pdfResources,
-              website: websiteResources,
-            };
-          }
-        }
-      } catch (err) {
-        // Silently fail for individual resource loading
-        console.error(`Failed to load resources for recommendation ${rec.id}`, err);
-      }
-    }
-
-    setCuratedResources(curatedMap);
   };
 
   const handleRefresh = async () => {
@@ -107,106 +70,6 @@ export const RecommendationsPage: React.FC = () => {
     }
   };
 
-  const handleCurateResources = async (recId: string) => {
-    // Check if we're refreshing or creating new
-    const isRefresh = !!curatedResources[recId];
-    const toastId = toast.loading(
-      isRefresh ? 'Kaynaklar yenileniyor...' : 'Claude AI ile kaynaklar öneriliyor...'
-    );
-
-    try {
-      setCuratingResourcesFor(prev => ({ ...prev, [recId]: true }));
-
-      // If refreshing, collect current URLs to exclude temporarily
-      let excludeUrls: string[] = [];
-      if (isRefresh && curatedResources[recId]) {
-        const currentResources = curatedResources[recId];
-        excludeUrls = [
-          ...currentResources.youtube.map(r => r.url),
-          ...currentResources.pdf.map(r => r.url),
-          ...currentResources.website.map(r => r.url),
-        ].filter(url => url); // Filter out any null/undefined
-      }
-
-      const resources = await resourceAPI.curateResources(recId, excludeUrls);
-      setCuratedResources(prev => ({ ...prev, [recId]: resources }));
-
-      const totalCount = resources.youtube.length + resources.pdf.length + resources.website.length;
-
-      if (isRefresh) {
-        toast.success(`✓ Kaynak listesi yenilendi (${totalCount} yeni kaynak)`, { id: toastId, duration: 3000 });
-      } else {
-        toast.success(`✓ ${totalCount} kaynak önerildi`, { id: toastId, duration: 3000 });
-      }
-    } catch (err: any) {
-      const errorMsg = err.response?.data?.detail || 'Kaynaklar önerilirken hata oluştu';
-      toast.error(errorMsg, { id: toastId });
-    } finally {
-      setCuratingResourcesFor(prev => ({ ...prev, [recId]: false }));
-    }
-  };
-
-  const handleTogglePin = async (resourceId: string) => {
-    try {
-      const response = await resourceAPI.togglePin(resourceId);
-
-      // Update pin status in state
-      setCuratedResources(prev => {
-        const updated = { ...prev };
-        Object.keys(updated).forEach(recId => {
-          updated[recId] = {
-            youtube: updated[recId].youtube.map(r =>
-              r.id === resourceId ? { ...r, is_pinned: response.is_pinned } : r
-            ),
-            pdf: updated[recId].pdf.map(r =>
-              r.id === resourceId ? { ...r, is_pinned: response.is_pinned } : r
-            ),
-            website: updated[recId].website.map(r =>
-              r.id === resourceId ? { ...r, is_pinned: response.is_pinned } : r
-            ),
-          };
-        });
-        return updated;
-      });
-
-      if (response.is_pinned) {
-        toast.success('📌 Kaynak sabitlendi', { duration: 2000 });
-      } else {
-        toast.success('✓ Sabitleme kaldırıldı', { duration: 2000 });
-      }
-    } catch (err: any) {
-      const errorMsg = err.response?.data?.detail || 'Pin durumu değiştirilirken hata oluştu';
-      toast.error(errorMsg);
-    }
-  };
-
-  const handleDeleteResource = async (resourceId: string, blacklist: boolean) => {
-    try {
-      const response = await resourceAPI.deleteResource(resourceId, blacklist);
-
-      // Remove from curated resources state
-      setCuratedResources(prev => {
-        const updated = { ...prev };
-        Object.keys(updated).forEach(recId => {
-          updated[recId] = {
-            youtube: updated[recId].youtube.filter(r => r.id !== resourceId),
-            pdf: updated[recId].pdf.filter(r => r.id !== resourceId),
-            website: updated[recId].website.filter(r => r.id !== resourceId),
-          };
-        });
-        return updated;
-      });
-
-      if (blacklist) {
-        toast.success('✓ Kaynak silindi ve kara listeye eklendi', { duration: 3000 });
-      } else {
-        toast.success('✓ Kaynak silindi', { duration: 3000 });
-      }
-    } catch (err: any) {
-      const errorMsg = err.response?.data?.detail || 'Kaynak silinirken hata oluştu';
-      toast.error(errorMsg);
-    }
-  };
 
   const getPriorityColor = (priority: number): string => {
     if (priority === 1) return 'bg-red-100 text-red-700 border-red-300';
@@ -533,68 +396,12 @@ export const RecommendationsPage: React.FC = () => {
                     </div>
                   )}
 
-                  {/* Curated Resources Section */}
-                  <div className="mb-4">
-                    {/* Curate Resources Button or Resource Tabs */}
-                    {!curatedResources[rec.id] ? (
-                      <button
-                        onClick={() => handleCurateResources(rec.id)}
-                        disabled={curatingResourcesFor[rec.id]}
-                        className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors text-sm font-medium"
-                      >
-                        {curatingResourcesFor[rec.id] ? (
-                          <>
-                            <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                            </svg>
-                            <span>Kaynaklar Öneriliyor...</span>
-                          </>
-                        ) : (
-                          <>
-                            📚 Kaynak Öner
-                          </>
-                        )}
-                      </button>
-                    ) : (
-                      <div>
-                        <div className="flex items-center justify-between mb-3">
-                          <h4 className="text-sm font-semibold text-gray-900 flex items-center gap-2">
-                            📚 Önerilen Kaynaklar
-                            <span className="text-xs font-normal text-gray-500">
-                              (Claude AI tarafından seçildi)
-                            </span>
-                          </h4>
-                          <button
-                            onClick={() => handleCurateResources(rec.id)}
-                            disabled={curatingResourcesFor[rec.id]}
-                            className="px-3 py-1.5 text-sm bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1.5"
-                            title="Kaynak listesini yenile"
-                          >
-                            {curatingResourcesFor[rec.id] ? (
-                              <>
-                                <svg className="animate-spin h-3.5 w-3.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                </svg>
-                                Yenileniyor...
-                              </>
-                            ) : (
-                              <>
-                                🔄 Yenile
-                              </>
-                            )}
-                          </button>
-                        </div>
-                        <ResourceTabs
-                          youtubeResources={curatedResources[rec.id].youtube}
-                          pdfResources={curatedResources[rec.id].pdf}
-                          websiteResources={curatedResources[rec.id].website}
-                          onDeleteResource={handleDeleteResource}
-                          onTogglePin={handleTogglePin}
-                        />
-                      </div>
-                    )}
+                  {/* Note: Resource curation has been moved to Study Plan pages */}
+                  <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                    <p className="text-sm text-blue-800">
+                      <strong>📚 Kaynak Önerileri</strong> artık Çalışma Programı sayfasında bulunmaktadır.
+                      Kaynakları görmek için çalışma programınıza gidin.
+                    </p>
                   </div>
 
                   {/* Footer */}

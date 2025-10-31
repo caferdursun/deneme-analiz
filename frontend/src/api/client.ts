@@ -6,7 +6,6 @@ import type {
   ExamConfirmResponse,
   AnalyticsOverview,
   SubjectAnalytics,
-  LearningOutcomeStats,
   RecommendationsListResponse,
   RecommendationRefreshResponse,
   StudyPlan,
@@ -14,7 +13,6 @@ import type {
   StudyPlanListResponse,
   StudyPlanProgress,
   Resource,
-  ResourceListResponse,
   CuratedResourcesResponse,
 } from '../types';
 
@@ -96,13 +94,6 @@ export const analyticsAPI = {
     return response.data;
   },
 
-  // Get all learning outcomes
-  getAllLearningOutcomes: async (studentId?: string): Promise<LearningOutcomeStats[]> => {
-    const params = studentId ? { student_id: studentId } : {};
-    const response = await apiClient.get<LearningOutcomeStats[]>('/analytics/learning-outcomes', { params });
-    return response.data;
-  },
-
   // Get learning outcomes tree
   getLearningOutcomesTree: async (studentId?: string): Promise<{ tree: any[] }> => {
     const params = studentId ? { student_id: studentId } : {};
@@ -146,20 +137,6 @@ export const learningOutcomesAPI = {
     const response = await apiClient.post('/learning-outcomes/cleanup', {
       merge_groups: mergeGroups,
       merged_by: mergedBy
-    });
-    return response.data;
-  },
-
-  // Undo a merge operation
-  undoMerge: async (mergeGroupId: string, undoneBy: string = 'user'): Promise<any> => {
-    const response = await apiClient.post(`/learning-outcomes/undo/${mergeGroupId}`, { undone_by: undoneBy });
-    return response.data;
-  },
-
-  // Get merge history
-  getMergeHistory: async (limit: number = 50, includeUndone: boolean = false): Promise<any> => {
-    const response = await apiClient.get('/learning-outcomes/merge-history', {
-      params: { limit, include_undone: includeUndone }
     });
     return response.data;
   },
@@ -221,55 +198,6 @@ export const studyPlansAPI = {
 
 // Resource API
 export const resourceAPI = {
-  // Get all resources
-  getAll: async (subject?: string): Promise<Resource[]> => {
-    const params = subject ? { subject } : {};
-    const response = await apiClient.get<ResourceListResponse>('/resources', { params });
-    return response.data.resources;
-  },
-
-  // Get resources for a recommendation
-  getRecommendationResources: async (recId: string): Promise<Resource[]> => {
-    const response = await apiClient.get<Resource[]>(`/resources/recommendations/${recId}`);
-    return response.data;
-  },
-
-  // Auto-link resources to a recommendation
-  autoLinkResources: async (recId: string, subject: string, topic: string, count: number = 3): Promise<Resource[]> => {
-    const response = await apiClient.post<Resource[]>(
-      `/resources/recommendations/${recId}/auto-link`,
-      null,
-      { params: { subject, topic, count } }
-    );
-    return response.data;
-  },
-
-  // Use Claude AI to curate resources for a recommendation
-  curateResources: async (recId: string, excludeUrls?: string[]): Promise<CuratedResourcesResponse> => {
-    const params = excludeUrls && excludeUrls.length > 0
-      ? { exclude_urls: excludeUrls.join(',') }
-      : {};
-    const response = await apiClient.post<CuratedResourcesResponse>(
-      `/resources/recommendations/${recId}/curate`,
-      null,
-      { params }
-    );
-    return response.data;
-  },
-
-  // Delete a resource with optional blacklisting
-  deleteResource: async (resourceId: string, blacklist: boolean = true, reason?: string): Promise<{ message: string; resource_id: string; blacklisted: boolean }> => {
-    const params: any = { blacklist };
-    if (reason) {
-      params.reason = reason;
-    }
-    const response = await apiClient.delete<{ message: string; resource_id: string; blacklisted: boolean }>(
-      `/resources/${resourceId}`,
-      { params }
-    );
-    return response.data;
-  },
-
   // Toggle pin status of a resource
   togglePin: async (resourceId: string): Promise<{ message: string; resource_id: string; is_pinned: boolean }> => {
     const response = await apiClient.put<{ message: string; resource_id: string; is_pinned: boolean }>(
@@ -284,15 +212,27 @@ export const resourceAPI = {
     return response.data;
   },
 
-  // Use Claude AI to curate resources for a study plan item
-  curateStudyItemResources: async (itemId: string, excludeUrls?: string[]): Promise<CuratedResourcesResponse> => {
+  // Search for resources (no DB save) for a study plan item
+  searchStudyItemResources: async (itemId: string, excludeUrls?: string[]): Promise<CuratedResourcesResponse> => {
     const params = excludeUrls && excludeUrls.length > 0
       ? { exclude_urls: excludeUrls.join(',') }
       : {};
     const response = await apiClient.post<CuratedResourcesResponse>(
-      `/resources/study-plan-items/${itemId}/curate`,
+      `/resources/study-plan-items/${itemId}/search`,
       null,
       { params }
+    );
+    return response.data;
+  },
+
+  // Pin a resource (creates it in DB if not exists)
+  pinResource: async (resource: Partial<Resource>, studyItemId?: string): Promise<Resource> => {
+    const response = await apiClient.post<Resource>(
+      `/resources/pin`,
+      {
+        ...resource,
+        study_plan_item_id: studyItemId,
+      }
     );
     return response.data;
   },
