@@ -12,8 +12,9 @@ import type {
   StudyPlanGenerateRequest,
   StudyPlanListResponse,
   StudyPlanProgress,
-  Resource,
-  CuratedResourcesResponse,
+  CurriculumFull,
+  CurriculumGrade,
+  CurriculumSubject,
 } from '../types';
 
 // Use relative URL to work with Vite proxy
@@ -196,44 +197,25 @@ export const studyPlansAPI = {
   },
 };
 
-// Resource API
-export const resourceAPI = {
-  // Toggle pin status of a resource
-  togglePin: async (resourceId: string): Promise<{ message: string; resource_id: string; is_pinned: boolean }> => {
-    const response = await apiClient.put<{ message: string; resource_id: string; is_pinned: boolean }>(
-      `/resources/${resourceId}/pin`
-    );
+// ============ Curriculum API ============
+export const curriculumAPI = {
+  // Get all curriculum (all subjects with all grades)
+  getAll: async (): Promise<CurriculumFull> => {
+    const response = await apiClient.get<CurriculumFull>('/curriculum/');
     return response.data;
   },
 
-  // Get resources for a study plan item
-  getStudyItemResources: async (itemId: string): Promise<Resource[]> => {
-    const response = await apiClient.get<Resource[]>(`/resources/study-plan-items/${itemId}`);
+  // Get a specific subject with all its grades
+  getSubject: async (subjectName: string): Promise<CurriculumSubject> => {
+    const response = await apiClient.get<CurriculumSubject>(`/curriculum/subject/${subjectName}`);
     return response.data;
   },
 
-  // Search for resources (no DB save) for a study plan item
-  searchStudyItemResources: async (itemId: string, excludeUrls?: string[]): Promise<CuratedResourcesResponse> => {
-    const params = excludeUrls && excludeUrls.length > 0
-      ? { exclude_urls: excludeUrls.join(',') }
-      : {};
-    const response = await apiClient.post<CuratedResourcesResponse>(
-      `/resources/study-plan-items/${itemId}/search`,
-      null,
-      { params }
-    );
-    return response.data;
-  },
-
-  // Pin a resource (creates it in DB if not exists)
-  pinResource: async (resource: Partial<Resource>, studyItemId?: string): Promise<Resource> => {
-    const response = await apiClient.post<Resource>(
-      `/resources/pin`,
-      {
-        ...resource,
-        study_plan_item_id: studyItemId,
-      }
-    );
+  // Search topics
+  search: async (query: string, grade?: string): Promise<any> => {
+    const params = new URLSearchParams({ q: query });
+    if (grade) params.append('grade', grade);
+    const response = await apiClient.get(`/curriculum/search?${params.toString()}`);
     return response.data;
   },
 };

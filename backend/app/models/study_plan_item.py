@@ -20,7 +20,6 @@ class StudyPlanItem(Base):
 
     subject_name = Column(String(50), nullable=False)  # e.g., "Matematik"
     topic = Column(String(255), nullable=False)  # e.g., "Permütasyon ve Kombinasyon"
-    description = Column(Text)  # Detailed description of what to study
 
     duration_minutes = Column(Integer, nullable=False)  # Duration for this specific item
     order = Column(Integer, nullable=False)  # Order within the day (1, 2, 3, ...)

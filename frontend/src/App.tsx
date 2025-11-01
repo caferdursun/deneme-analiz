@@ -18,7 +18,7 @@ const StudyPlanWizardPage = lazy(() => import('./pages/StudyPlanWizardPage'));
 const StudyPlanPage = lazy(() => import('./pages/StudyPlanPage'));
 const StudyPlanListPage = lazy(() => import('./pages/StudyPlanListPage'));
 const TopicTreePage = lazy(() => import('./pages/TopicTreePage'));
-const ResourceDemoPage = lazy(() => import('./pages/ResourceDemoPage'));
+const CurriculumPage = lazy(() => import('./pages/CurriculumPage'));
 
 // Loading component
 const PageLoader = () => (
@@ -75,7 +75,7 @@ function App() {
           <Route path="/study-plans" element={<StudyPlanListPage />} />
           <Route path="/study-plan/create" element={<StudyPlanWizardPage />} />
           <Route path="/study-plan/:planId" element={<StudyPlanPage />} />
-          <Route path="/resources-demo" element={<ResourceDemoPage />} />
+          <Route path="/curriculum" element={<CurriculumPage />} />
         </Routes>
       </Suspense>
     </Router>

@@ -40,7 +40,6 @@ class StudyPlanItemResponse(BaseModel):
     recommendation_id: Optional[str]
     subject_name: str
     topic: str
-    description: Optional[str]
     duration_minutes: int
     order: int
     completed: bool

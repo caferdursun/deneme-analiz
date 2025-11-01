@@ -98,3 +98,18 @@ ilgili dersin adını alalım "#dersin adı# AYT TYT" keyword'ü ile en çok abo
 günlük çalışma kartının içeriğinden Claude api ile youtube video search keyword önerisi alalım.
 daha önce hazırladığımız youtube kanal listemizden, herbir kanaldan ilgi seviyesi yüksek 2-3 video listesi bulalım. Videoların yayından kaldırılmadığından emin olalım
 
+
+aşağıdakileri temizleyebiliriz:
+getAllLearningOutcomes() → GET /api/analytics/learning-outcomes
+getAll() → GET /api/resources
+getRecommendationResources() → GET /api/resources/recommendations/{recId}
+autoLinkResources() → POST /api/resources/recommendations/{recId}/auto-link
+curateResources() → POST /api/resources/recommendations/{recId}/curate
+deleteResource() → DELETE /api/resources/{resourceId}
+curateStudyItemResources() → POST /api/resources/study-plan-items/{itemId}/curate
+POST /api/resources/recommendations/{recommendation_id}/link
+GET /api/resources/subject/{subject}
+
+
+/root/projects/deneme-analiz/backend/lise_mufredati.json dosyasından bir veritabanı oluşturalım ana sayfamıza "Müfredat" bir düğme koyalım ve kırılımlı biçimde müfredatı görebilelim.
+Türkçe, Matematik, Fen dersleri üstte görünsün 

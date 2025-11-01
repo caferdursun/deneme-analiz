@@ -178,6 +178,12 @@ export const DashboardPage: React.FC = () => {
           {/* Mobile: 2x3 grid, Desktop: horizontal */}
           <div className="grid grid-cols-2 sm:flex gap-2 sm:gap-3">
             <button
+              onClick={() => navigate('/curriculum')}
+              className="bg-teal-600 text-white py-2 px-3 sm:px-4 rounded-md hover:bg-teal-700 text-xs sm:text-sm font-medium whitespace-nowrap"
+            >
+              📚 Müfredat
+            </button>
+            <button
               onClick={() => navigate('/upload')}
               className="bg-blue-600 text-white py-2 px-3 sm:px-4 rounded-md hover:bg-blue-700 text-xs sm:text-sm font-medium whitespace-nowrap"
             >
@@ -213,7 +219,7 @@ export const DashboardPage: React.FC = () => {
             </button>
             <button
               onClick={() => navigate('/study-plans')}
-              className="bg-indigo-600 text-white py-2 px-3 sm:px-4 rounded-md hover:bg-indigo-700 text-xs sm:text-sm font-medium col-span-2 sm:col-span-1 whitespace-nowrap"
+              className="bg-indigo-600 text-white py-2 px-3 sm:px-4 rounded-md hover:bg-indigo-700 text-xs sm:text-sm font-medium whitespace-nowrap"
             >
               📅 Çalışma Planları
             </button>

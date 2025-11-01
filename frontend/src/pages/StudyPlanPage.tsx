@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { studyPlansAPI, resourceAPI } from '../api/client';
-import type { StudyPlan, StudyPlanDay, StudyPlanItem, StudyPlanProgress, Resource } from '../types';
+import { studyPlansAPI } from '../api/client';
+import type { StudyPlan, StudyPlanDay, StudyPlanItem, StudyPlanProgress } from '../types';
 import { StudyPlanSkeleton } from '../components/Skeleton';
-import ResourceCard from '../components/ResourceCard';
 
 export default function StudyPlanPage() {
   const { planId } = useParams<{ planId: string }>();
@@ -15,11 +14,6 @@ export default function StudyPlanPage() {
   const [selectedDay, setSelectedDay] = useState<StudyPlanDay | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  // Resource states for each item
-  const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
-  const [itemResources, setItemResources] = useState<{ [itemId: string]: { youtube: Resource[] } }>({});
-  const [loadingResources, setLoadingResources] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     if (planId) {
@@ -61,54 +55,6 @@ export default function StudyPlanPage() {
       console.error('Progress yüklenirken hata:', err);
     }
   };
-
-  // Load existing resources for all study items when page loads
-  useEffect(() => {
-    const loadExistingResources = async () => {
-      if (!plan) {
-        console.log('⏳ Plan not loaded yet, skipping resource load');
-        return;
-      }
-
-      console.log('📦 Loading existing resources for all study items...');
-
-      // Collect all items from all days
-      const allItems = plan.days.flatMap(day => day.items);
-      console.log(`   Found ${allItems.length} items across ${plan.days.length} days`);
-
-      // Collect all resources first, then update state once
-      const resourcesMap: { [itemId: string]: { youtube: Resource[] } } = {};
-
-      // Load resources for each item
-      for (const item of allItems) {
-        try {
-          console.log(`   🔍 Loading resources for: ${item.subject_name} - ${item.topic}`);
-          const resources = await resourceAPI.getStudyItemResources(item.id);
-          console.log(`      → Received ${resources.length} resources`);
-
-          // Only add if resources exist
-          if (resources && resources.length > 0) {
-            // Filter only YouTube resources that are pinned
-            const youtubeResources = resources.filter(r => r.type === 'youtube' && r.is_pinned);
-
-            console.log(`      → Found: ${youtubeResources.length} pinned YouTube videos`);
-            if (youtubeResources.length > 0) {
-              resourcesMap[item.id] = { youtube: youtubeResources };
-            }
-          }
-        } catch (err) {
-          console.error(`❌ Failed to load resources for item ${item.id}:`, err);
-          // Continue loading other items even if one fails
-        }
-      }
-
-      // Update state ONCE with all resources
-      console.log(`✅ Finished loading existing resources - Total items with resources: ${Object.keys(resourcesMap).length}`);
-      setItemResources(resourcesMap);
-    };
-
-    loadExistingResources();
-  }, [plan]); // Re-run when plan changes
 
   const handleItemToggle = async (item: StudyPlanItem) => {
     if (!plan) return;
@@ -173,138 +119,6 @@ export default function StudyPlanPage() {
     const date = new Date(dateStr);
     const days = ['Paz', 'Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt'];
     return `${days[date.getDay()]} ${date.getDate()}`;
-  };
-
-  const toggleItemResources = (itemId: string) => {
-    setExpandedItems(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(itemId)) {
-        newSet.delete(itemId);
-      } else {
-        newSet.add(itemId);
-      }
-      return newSet;
-    });
-  };
-
-  const handleCurateItemResources = async (item: StudyPlanItem) => {
-    const toastId = toast.loading('Kaynaklar aranıyor...');
-    setLoadingResources(prev => new Set(prev).add(item.id));
-
-    try {
-      // Use search instead of curate - doesn't save to DB
-      const resources = await resourceAPI.searchStudyItemResources(item.id);
-      console.log('📦 Received resources:', resources);
-      console.log('📦 YouTube count:', resources.youtube?.length || 0);
-      setItemResources(prev => ({ ...prev, [item.id]: resources }));
-      setExpandedItems(prev => new Set(prev).add(item.id));
-      toast.success('Kaynak önerileri hazır! İstediğinizi kaydetmek için 💾 butonuna tıklayın.', { id: toastId, duration: 5000 });
-    } catch (err: any) {
-      toast.error(err.response?.data?.detail || 'Kaynaklar aranırken hata oluştu', { id: toastId });
-    } finally {
-      setLoadingResources(prev => {
-        const newSet = new Set(prev);
-        newSet.delete(item.id);
-        return newSet;
-      });
-    }
-  };
-
-  const handleRefreshItemResources = async (item: StudyPlanItem) => {
-    // Exclude currently displayed resources
-    const currentResources = itemResources[item.id];
-    const excludeUrls: string[] = [];
-
-    if (currentResources) {
-      excludeUrls.push(...currentResources.youtube.map(r => r.url));
-    }
-
-    const toastId = toast.loading('Yeni kaynaklar aranıyor...');
-    setLoadingResources(prev => new Set(prev).add(item.id));
-
-    try {
-      // Use search - doesn't save to DB
-      const resources = await resourceAPI.searchStudyItemResources(item.id, excludeUrls);
-      setItemResources(prev => ({ ...prev, [item.id]: resources }));
-      toast.success('Yeni kaynak önerileri hazır!', { id: toastId });
-    } catch (err: any) {
-      toast.error(err.response?.data?.detail || 'Yeni kaynaklar aranırken hata oluştu', { id: toastId });
-    } finally {
-      setLoadingResources(prev => {
-        const newSet = new Set(prev);
-        newSet.delete(item.id);
-        return newSet;
-      });
-    }
-  };
-
-
-  const handlePinResource = async (resource: Resource, itemId: string) => {
-    const toastId = toast.loading('Kaynak kaydediliyor...');
-
-    try {
-      // Save to DB and pin
-      const savedResource = await resourceAPI.pinResource(resource, itemId);
-
-      // Update local state - replace the temp resource with saved one
-      setItemResources(prev => {
-        const current = prev[itemId];
-        if (!current) return prev;
-
-        const replaceResource = (r: Resource) =>
-          r.url === resource.url ? savedResource : r;
-
-        return {
-          ...prev,
-          [itemId]: {
-            youtube: current.youtube.map(replaceResource),
-          }
-        };
-      });
-
-      toast.success('Kaynak kaydedildi ve sabitlendi!', { id: toastId });
-    } catch (err: any) {
-      toast.error(err.response?.data?.detail || 'Kaynak kaydedilemedi', { id: toastId });
-    }
-  };
-
-  const handleTogglePin = async (resourceId: string, itemId: string) => {
-    try {
-      const result = await resourceAPI.togglePin(resourceId);
-
-      // Update local state
-      setItemResources(prev => {
-        const current = prev[itemId];
-        if (!current) return prev;
-
-        const updateResource = (resource: Resource) => {
-          if (resource.id === resourceId) {
-            // If unpinned (deleted from DB), keep in state but mark as unpinned with no ID
-            if (!result.is_pinned) {
-              return {
-                ...resource,
-                id: null as any, // Remove ID to indicate it's not in DB
-                is_pinned: false,
-              };
-            }
-            // If pinned, update the pin status
-            return { ...resource, is_pinned: result.is_pinned };
-          }
-          return resource;
-        };
-
-        return {
-          ...prev,
-          [itemId]: {
-            youtube: current.youtube.map(updateResource),
-          }
-        };
-      });
-
-      toast.success(result.is_pinned ? 'Kaynak sabitlendi' : 'Kaynak sabitleme kaldırıldı - tekrar kaydetmek için 💾 butonuna tıklayın', { duration: 4000 });
-    } catch (err: any) {
-      toast.error(err.response?.data?.detail || 'İşlem başarısız', { duration: 2000 });
-    }
   };
 
   const isToday = (dateStr: string): boolean => {
@@ -531,20 +345,7 @@ export default function StudyPlanPage() {
                 </div>
 
                 <div className="space-y-2 sm:space-y-3">
-                  {selectedDay.items.map((item) => {
-                    const isExpanded = expandedItems.has(item.id);
-                    const isLoadingRes = loadingResources.has(item.id);
-                    const resources = itemResources[item.id];
-                    const hasResources = resources && resources.youtube.length > 0;
-
-                    console.log(`🔍 Item ${item.id.slice(0,8)}:`, {
-                      isExpanded,
-                      hasResources,
-                      youtubeCount: resources?.youtube?.length || 0,
-                      resources
-                    });
-
-                    return (
+                  {selectedDay.items.map((item) => (
                       <div
                         key={item.id}
                         className={`p-3 sm:p-4 border-2 rounded-lg ${
@@ -568,11 +369,6 @@ export default function StudyPlanPage() {
                             <div className={`text-sm sm:text-base font-semibold mb-1 ${item.completed ? 'line-through text-gray-500' : 'text-gray-900'}`}>
                               {item.topic}
                             </div>
-                            {item.description && (
-                              <div className={`text-xs sm:text-sm ${item.completed ? 'text-gray-400' : 'text-gray-600'}`}>
-                                {item.description}
-                              </div>
-                            )}
                             {item.completed && item.completed_at && (
                               <div className="text-xs text-green-600 mt-2">
                                 ✓ {new Date(item.completed_at).toLocaleString('tr-TR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
@@ -580,65 +376,9 @@ export default function StudyPlanPage() {
                             )}
                           </div>
                         </label>
-
-                        {/* Resource button */}
-                        <div className="mt-3 pt-3 border-t border-gray-200 flex gap-2 items-center">
-                          <button
-                            onClick={() => hasResources ? toggleItemResources(item.id) : handleCurateItemResources(item)}
-                            disabled={isLoadingRes}
-                            className="px-3 py-1.5 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
-                          >
-                            {isLoadingRes ? (
-                              <>
-                                <div className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full" />
-                                <span>Yükleniyor...</span>
-                              </>
-                            ) : hasResources ? (
-                              <>
-                                📚 <span>{isExpanded ? 'Kaynakları Gizle' : 'Kaynakları Göster'}</span>
-                              </>
-                            ) : (
-                              <>
-                                📚 <span>Kaynak Öner</span>
-                              </>
-                            )}
-                          </button>
-                          {hasResources && !isLoadingRes && (
-                            <button
-                              onClick={() => handleRefreshItemResources(item)}
-                              className="px-3 py-1.5 bg-gray-200 text-gray-700 text-sm rounded-lg hover:bg-gray-300 flex items-center gap-1"
-                              title="Yeni kaynaklar öner"
-                            >
-                              🔄 <span>Yenile</span>
-                            </button>
-                          )}
-                        </div>
-
-                        {/* Collapsible Resources Section (YouTube only) */}
-                        {isExpanded && hasResources && (
-                          <div className="mt-3 pt-3 border-t border-gray-300 space-y-3">
-                            {resources.youtube.length > 0 && (
-                              <div>
-                                <h4 className="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-1">
-                                  🎥 YouTube Videoları ({resources.youtube.length})
-                                </h4>
-                                <div className="space-y-2">
-                                  {resources.youtube.map((resource, index) => (
-                                    <ResourceCard
-                                      key={resource.id || resource.url || index}
-                                      resource={resource}
-                                      onTogglePin={resource.id ? () => handleTogglePin(resource.id!, item.id) : undefined}
-                                      onPin={!resource.id ? (res) => handlePinResource(res, item.id) : undefined}
-                                    />
-                                  ))}
-                                </div>
-                              </div>
-                            )}
-                          </div>
-                        )}
                       </div>
-                    );
-                  })}
+                    )
+                  )}
                 </div>
 
                 {selectedDay.notes && (

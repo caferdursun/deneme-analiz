@@ -110,7 +110,6 @@ class StudyPlanService:
                     recommendation_id=item_data.get('recommendation_id'),
                     subject_name=item_data['subject'],
                     topic=item_data['topic'],
-                    description=item_data.get('description'),
                     duration_minutes=item_data['duration_minutes'],
                     order=item_data['order'],
                     completed=False,
@@ -143,7 +142,6 @@ class StudyPlanService:
                 "priority": rec.priority,
                 "subject": rec.subject_name,
                 "topic": rec.topic,
-                "description": rec.description,
                 "impact_score": float(rec.impact_score) if rec.impact_score else 0,
                 "action_items": rec.action_items or [],
             })
@@ -200,7 +198,6 @@ class StudyPlanService:
         "recommendation_id": "rec_id_here",
         "subject": "Subject Name",
         "topic": "Topic Name",
-        "description": "What to study specifically",
         "duration_minutes": 60,
         "order": 1
       }}

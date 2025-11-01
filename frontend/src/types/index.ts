@@ -248,39 +248,6 @@ export interface RecommendationRefreshResponse {
   summary: RefreshSummary;  // Detailed change summary
 }
 
-// Resource types
-export interface Resource {
-  id: string;
-  name: string;
-  type: 'youtube' | 'pdf' | 'website';
-  url: string;
-  description: string | null;
-  subject_name: string | null;
-  topic: string | null;
-  thumbnail_url: string | null;
-  extra_data: {
-    channel_name?: string;
-    view_count?: number;
-    like_count?: number;
-  } | null;
-  learning_outcome_ids: string[] | null;
-  quality_score: number | null;
-  education_level: string | null;
-  curator_notes: string | null;
-  is_active: boolean;
-  is_pinned: boolean;
-  created_at: string;
-}
-
-export interface CuratedResourcesResponse {
-  youtube: Resource[];
-}
-
-export interface ResourceListResponse {
-  resources: Resource[];
-  total: number;
-}
-
 // Study Plan types
 export interface StudyPlanItem {
   id: string;
@@ -288,7 +255,6 @@ export interface StudyPlanItem {
   recommendation_id: string | null;
   subject_name: string;
   topic: string;
-  description: string | null;
   duration_minutes: number;
   order: number;
   completed: boolean;
@@ -345,4 +311,43 @@ export interface StudyPlanProgress {
   completed_days: number;
   days_remaining: number;
   on_track: boolean;
+}
+
+// ============ Curriculum Types ============
+// New hierarchy: Subject (Ders) -> Grade (Sınıf) -> Unit (Ünite) -> Topic (Konu)
+
+export interface CurriculumTopic {
+  id: string;
+  unit_id: string;
+  topic_name: string;
+  order: number;
+}
+
+export interface CurriculumUnit {
+  id: string;
+  grade_id: string;
+  unit_no: number;
+  unit_name: string;
+  topics: CurriculumTopic[];
+}
+
+export interface CurriculumGrade {
+  id: string;
+  subject_id: string;
+  grade: string;
+  units: CurriculumUnit[];
+}
+
+export interface CurriculumSubject {
+  id: string;
+  subject_name: string;
+  order: number;
+  grades: CurriculumGrade[];
+}
+
+export interface CurriculumFull {
+  subjects: CurriculumSubject[];
+  total_subjects: number;
+  total_units: number;
+  total_topics: number;
 }
