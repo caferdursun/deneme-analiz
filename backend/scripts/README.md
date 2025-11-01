@@ -23,6 +23,20 @@ This directory contains utility scripts for database maintenance and data manage
   - Source: `lise_mufredati.json`
   - Run this after database initialization or to refresh curriculum data
 
+### Data Export
+
+- **`export_curriculum.py`** - Exports curriculum data to JSON file
+  - Usage: `python scripts/export_curriculum.py`
+  - Output: `../../temp/curriculum_export.json`
+  - Exports hierarchical structure: Subjects → Grades → Units → Topics
+  - Includes: subject_id, subject_name, grade_id, grade, unit_id, unit_no, unit_name, topic_id, topic_name
+
+- **`export_learning_outcomes.py`** - Exports learning outcomes data to JSON file
+  - Usage: `python scripts/export_learning_outcomes.py`
+  - Output: `../../temp/learning_outcomes_export.json`
+  - Exports unique learning outcomes (excluding merged ones)
+  - Includes: id, subject_name, category, subcategory
+
 ### Data Normalization
 
 - **`normalize_subjects_db.py`** - One-time script to normalize subject names in the database

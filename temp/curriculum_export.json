@@ -1,0 +1,3740 @@
+[
+  {
+    "id": "56836dbb-96e5-4b65-bd9b-349a99db23f0",
+    "subject_name": "Türk Dili ve Edebiyatı",
+    "grades": [
+      {
+        "id": "48738311-8717-4516-b838-cfa3a544e961",
+        "grade": "10",
+        "units": [
+          {
+            "id": "77bfc0eb-5155-4993-adf3-f42346d55619",
+            "unit_no": 1,
+            "unit_name": "İslamiyet Öncesi Türk Edebiyatı",
+            "topics": [
+              {
+                "id": "ff638236-dc69-4ab7-a36a-e0561612eedb",
+                "topic_name": "Sözlü edebiyat dönemi"
+              },
+              {
+                "id": "dada481e-8ace-4c75-990a-c5cfef657ab2",
+                "topic_name": "Destanlar (Oğuz Kağan, Ergenekon)"
+              },
+              {
+                "id": "338a2e5d-bbcc-46a7-9465-7b537372052f",
+                "topic_name": "Koşuk ve sagu"
+              },
+              {
+                "id": "deb78232-3901-4858-a160-c4446af7e61e",
+                "topic_name": "Orhun Yazıtları"
+              },
+              {
+                "id": "d9cdc548-ba18-4862-96be-9b0a022da593",
+                "topic_name": "Göktürkler dönemi"
+              },
+              {
+                "id": "f2227f3c-dfcd-40c5-afd2-00c1581e1fc2",
+                "topic_name": "Uygur edebiyatı"
+              }
+            ]
+          },
+          {
+            "id": "b7312857-cd4f-4169-bda0-a12f8ee15bfe",
+            "unit_no": 2,
+            "unit_name": "İslami Dönem Türk Edebiyatı",
+            "topics": [
+              {
+                "id": "23a01711-067b-4099-bb4c-daeddf9ee307",
+                "topic_name": "Karahanlılar dönemi edebiyatı"
+              },
+              {
+                "id": "b2b3ba56-a41e-42d2-8475-9bfd34aa3928",
+                "topic_name": "Kutadgu Bilig"
+              },
+              {
+                "id": "7bc14849-8228-4f7d-a8dd-3ebb93d6ed64",
+                "topic_name": "Divan-ü Lügat-it Türk"
+              },
+              {
+                "id": "8ef946a0-e688-4b1a-b8e0-5997eeeefa7f",
+                "topic_name": "Atabetü'l Hakayık"
+              },
+              {
+                "id": "dbe907ae-a5e7-4591-b3d9-f74c7b082219",
+                "topic_name": "Halk edebiyatının başlangıcı"
+              },
+              {
+                "id": "2bfe9b12-8685-4a74-873d-3739ae1a5202",
+                "topic_name": "Yunus Emre"
+              }
+            ]
+          },
+          {
+            "id": "424b33a3-dd5e-4f7c-bd44-8a34f4f326da",
+            "unit_no": 3,
+            "unit_name": "Divan Edebiyatı",
+            "topics": [
+              {
+                "id": "e8eeb3c0-48e8-415d-bb13-1b376100eaa0",
+                "topic_name": "Divan edebiyatının özellikleri"
+              },
+              {
+                "id": "6f567368-639f-4ffa-8201-a1809fe7f243",
+                "topic_name": "Nazım şekilleri (gazel, kaside, mesnevi)"
+              },
+              {
+                "id": "e2b9f263-abf7-45de-964f-c7ae2faeb23b",
+                "topic_name": "Önemli şairler (Fuzuli, Baki, Nedim)"
+              },
+              {
+                "id": "18aed10d-9552-47bb-9aa9-4dca7ce5b404",
+                "topic_name": "Edebî sanatlar"
+              },
+              {
+                "id": "b56bc05c-e9f6-4653-94c9-f804ae24cc00",
+                "topic_name": "Aruz ölçüsü"
+              },
+              {
+                "id": "9f5e026f-4268-425a-823b-0ed68b183801",
+                "topic_name": "Mazmun ve sembolizm"
+              }
+            ]
+          },
+          {
+            "id": "a9bcf07b-249a-434d-9e85-ba23e71d02e5",
+            "unit_no": 4,
+            "unit_name": "Halk Edebiyatı",
+            "topics": [
+              {
+                "id": "9936fa01-f337-4ae4-b15d-2a8ea1663cd6",
+                "topic_name": "Halk edebiyatının özellikleri"
+              },
+              {
+                "id": "79f61521-6e2f-45eb-9152-f935d90364e4",
+                "topic_name": "Âşık edebiyatı"
+              },
+              {
+                "id": "9b7d361c-4f7c-48a7-a06b-559f349ea066",
+                "topic_name": "Halk şiiri türleri (türkü, koşma, semai)"
+              },
+              {
+                "id": "c81f7865-2fa9-4c3d-a32b-b86a3d03f86f",
+                "topic_name": "Hece ölçüsü"
+              },
+              {
+                "id": "da9a484d-5c60-440e-a3cf-b9dc742b01cc",
+                "topic_name": "Atasözleri ve deyimler"
+              },
+              {
+                "id": "29da1b41-c535-497b-a705-e8bf857df44b",
+                "topic_name": "Masallar ve hikayeler"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "f5be34f7-9ec0-4d1c-a5b4-fdb0991ce823",
+        "grade": "11",
+        "units": [
+          {
+            "id": "245db2da-f7f2-4629-9c0a-bea71302a5d0",
+            "unit_no": 1,
+            "unit_name": "Tanzimat Dönemi Edebiyatı",
+            "topics": [
+              {
+                "id": "0fd330b9-25b9-4814-9fb9-2a29af264a81",
+                "topic_name": "Tanzimat edebiyatının özellikleri"
+              },
+              {
+                "id": "ae1c89a8-5610-4b24-8fdc-0e32bfa8ae57",
+                "topic_name": "Şinasi ve Namık Kemal"
+              },
+              {
+                "id": "a8a30932-0cdc-4ae1-a706-1c9e17918969",
+                "topic_name": "Ziya Paşa, Abdülhak Hamid"
+              },
+              {
+                "id": "6da69013-b4ff-4295-a2f6-5ca969a9b6f8",
+                "topic_name": "Batılı edebiyat türleri"
+              },
+              {
+                "id": "4065c947-fa86-4434-8e40-585bde344058",
+                "topic_name": "Tanzimat dönemi tiyatro ve roman"
+              },
+              {
+                "id": "156e3420-47b3-4c49-8824-d0e71496cc3f",
+                "topic_name": "Gazetecilik"
+              }
+            ]
+          },
+          {
+            "id": "48bc3ee4-6b7f-401c-a653-a2c8fdf7e06e",
+            "unit_no": 2,
+            "unit_name": "Servet-i Fünun Edebiyatı",
+            "topics": [
+              {
+                "id": "63083466-309a-4d3e-ba8d-7a5af8f87569",
+                "topic_name": "Servet-i Fünun dergisi"
+              },
+              {
+                "id": "825c6d26-a389-406b-aaba-a3ee5733484a",
+                "topic_name": "Edebiyat-ı Cedide akımı"
+              },
+              {
+                "id": "b0ce9137-6cbc-4f55-a40a-59321586e449",
+                "topic_name": "Tevfik Fikret"
+              },
+              {
+                "id": "72263d95-1027-4204-93c7-02f47bfa1ecf",
+                "topic_name": "Halit Ziya Uşaklıgil"
+              },
+              {
+                "id": "6028e45f-d970-4f47-80e3-3ee3521782a8",
+                "topic_name": "Mehmet Rauf"
+              },
+              {
+                "id": "4546aae2-57be-496b-b40d-0b962a29007c",
+                "topic_name": "Sanat için sanat anlayışı"
+              }
+            ]
+          },
+          {
+            "id": "2a6dcb8f-0fd8-4333-b4a1-0898740a2da6",
+            "unit_no": 3,
+            "unit_name": "Millî Edebiyat Dönemi",
+            "topics": [
+              {
+                "id": "a3e5240e-f66e-4913-b0a3-e66ac8883c38",
+                "topic_name": "Millî edebiyat akımı"
+              },
+              {
+                "id": "3afd0cce-3da9-468c-9f55-24598689714e",
+                "topic_name": "Mehmet Emin Yurdakul"
+              },
+              {
+                "id": "41431f01-9723-4d72-b2fd-219ad3ba4197",
+                "topic_name": "Ziya Gökalp"
+              },
+              {
+                "id": "a5e24d34-390f-4c31-8710-4aa598bdb24e",
+                "topic_name": "Ömer Seyfettin"
+              },
+              {
+                "id": "70f0c34e-8716-4c8c-b9fe-a18ff26ed6a7",
+                "topic_name": "Millî dil ve millî kültür"
+              },
+              {
+                "id": "1bb6aa4e-f3be-4c52-bcaa-154f8bb981e5",
+                "topic_name": "Türkçe şiir ve hikaye"
+              }
+            ]
+          },
+          {
+            "id": "9f786490-9287-4b4b-a469-8df271d2814e",
+            "unit_no": 4,
+            "unit_name": "Cümle Bilgisi ve Fiilimsiler",
+            "topics": [
+              {
+                "id": "f404e3b1-85a1-4d77-a560-78e288fd72c5",
+                "topic_name": "Cümle türleri"
+              },
+              {
+                "id": "a65a12af-6362-43f5-aa9d-cbbffd7e1bb6",
+                "topic_name": "Cümlede öğeler"
+              },
+              {
+                "id": "ac1f9144-6a22-4bd2-bfa3-a6bf088629b5",
+                "topic_name": "Fiilimsiler (isim-fiil, sıfat-fiil, zarf-fiil)"
+              },
+              {
+                "id": "0d612009-59d7-4864-9759-51cebd7a59db",
+                "topic_name": "Birleşik cümleler"
+              },
+              {
+                "id": "a728c181-b7d3-4b1e-8eb7-0bb2a48571ad",
+                "topic_name": "Cümle çözümlemesi"
+              },
+              {
+                "id": "34d87176-8b80-4485-8f9b-b2c6a9ed5856",
+                "topic_name": "Anlatım bozuklukları"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "85f94b99-fb57-4f14-b8ea-a1e954c6f3a6",
+        "grade": "12",
+        "units": [
+          {
+            "id": "cb833dc4-122c-4670-8b56-89ab40d1c6a5",
+            "unit_no": 1,
+            "unit_name": "Cumhuriyet Dönemi Türk Edebiyatı",
+            "topics": [
+              {
+                "id": "edb4221a-8c19-41ab-8766-06f694283aa6",
+                "topic_name": "Cumhuriyet dönemi edebiyatının özellikleri"
+              },
+              {
+                "id": "43a4af01-1342-41a5-96c0-72d208ef5ec4",
+                "topic_name": "Millî Edebiyat'tan Cumhuriyet Edebiyatı'na geçiş"
+              },
+              {
+                "id": "ed106f92-3a9a-4c16-8318-7f9eeb9b2040",
+                "topic_name": "Yedi Meşaleciler"
+              },
+              {
+                "id": "d023d2fb-3305-4872-a0af-ce40c0221ce4",
+                "topic_name": "Beş Hececiler"
+              },
+              {
+                "id": "1b88cb70-8d4c-4269-b610-3e038c7d7a61",
+                "topic_name": "Garip akımı"
+              },
+              {
+                "id": "ee98a59d-3e08-418b-9c11-8c2c89a6fcd9",
+                "topic_name": "İkinci Yeni akımı"
+              }
+            ]
+          },
+          {
+            "id": "74911ac8-ba73-41a2-8360-4294f798371b",
+            "unit_no": 2,
+            "unit_name": "Modern Türk Şiiri",
+            "topics": [
+              {
+                "id": "e7a58fec-756d-4439-9733-4c34dafd569c",
+                "topic_name": "Nazım Hikmet"
+              },
+              {
+                "id": "9b8ead55-eb96-47f2-a61e-f8872b7e6543",
+                "topic_name": "Orhan Veli, Oktay Rifat, Melih Cevdet"
+              },
+              {
+                "id": "4ed03962-a548-48f0-95fe-4c16c391bd49",
+                "topic_name": "Necip Fazıl Kısakürek"
+              },
+              {
+                "id": "1a905e23-2dae-43ff-9edf-65b6749ebf3a",
+                "topic_name": "Behçet Necatigil"
+              },
+              {
+                "id": "1d63d93e-802c-4bd2-9276-451c0c7e5d60",
+                "topic_name": "İlhan Berk, Edip Cansever"
+              },
+              {
+                "id": "1bc2968b-9a27-4e2a-a4c2-eb1e0169e9bf",
+                "topic_name": "Cemal Süreya, Turgut Uyar"
+              }
+            ]
+          },
+          {
+            "id": "5e8e9c72-188e-4e0d-948f-09a09daeefd4",
+            "unit_no": 3,
+            "unit_name": "Modern Türk Romanı ve Hikayesi",
+            "topics": [
+              {
+                "id": "99a0d288-d7b8-4b18-8559-5961a8506212",
+                "topic_name": "Cumhuriyet dönemi romanı"
+              },
+              {
+                "id": "332fd33d-3ede-4f22-b0b2-a4f9d8625da8",
+                "topic_name": "Reşat Nuri Güntekin"
+              },
+              {
+                "id": "3045a127-93b3-4999-8c15-69aa53596615",
+                "topic_name": "Yakup Kadri Karaosmanoğlu"
+              },
+              {
+                "id": "4572b5a7-0de5-4d09-85f9-ead2cb1cd99e",
+                "topic_name": "Halide Edib Adıvar"
+              },
+              {
+                "id": "87a05778-51e9-493d-93cc-59f5792bc00f",
+                "topic_name": "Orhan Kemal, Yaşar Kemal"
+              },
+              {
+                "id": "a3d404dc-5dc8-4389-9c8e-868574af33e5",
+                "topic_name": "Sait Faik Abasıyanık"
+              },
+              {
+                "id": "79523e05-b3f9-4ff1-b025-b7d5a83e6213",
+                "topic_name": "Modern hikaye ve örnekleri"
+              }
+            ]
+          },
+          {
+            "id": "9b2acdcc-b006-450f-864a-216f10f4a8d9",
+            "unit_no": 4,
+            "unit_name": "Tiyatro ve Deneme",
+            "topics": [
+              {
+                "id": "09b0e28b-ad4a-4bd0-84fc-1bb330a8edcb",
+                "topic_name": "Cumhuriyet dönemi tiyatrosu"
+              },
+              {
+                "id": "768bf6dc-4d64-4c57-b5a1-2898752b064b",
+                "topic_name": "Haldun Taner"
+              },
+              {
+                "id": "9bd248c0-f022-4ce8-9967-c013d6ef8e8d",
+                "topic_name": "Refik Erduran"
+              },
+              {
+                "id": "b955dd6e-4038-4db8-a8e4-138078fa8639",
+                "topic_name": "Deneme türü ve özellikleri"
+              },
+              {
+                "id": "69e6d822-0b18-49ec-823a-6ecd53495e7b",
+                "topic_name": "Nurullah Ataç"
+              },
+              {
+                "id": "51386781-8b67-4562-b1b9-e33cf4ba57cd",
+                "topic_name": "Cemil Meriç"
+              },
+              {
+                "id": "10935a79-daf0-4338-9879-4f1211154bf8",
+                "topic_name": "Eleştiri yazıları"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "2c391218-7ff7-450a-bb04-acdc9fa2593e",
+        "grade": "9",
+        "units": [
+          {
+            "id": "940db665-3b1c-4e9d-a91b-acc1e46eceda",
+            "unit_no": 1,
+            "unit_name": "Edebiyata Giriş",
+            "topics": [
+              {
+                "id": "ba2496f8-723b-4d46-b722-2ca488eec9be",
+                "topic_name": "Edebiyat nedir, edebiyatın tanımı"
+              },
+              {
+                "id": "c529a1b7-e704-49f6-9e46-333e6611f28d",
+                "topic_name": "Edebiyatın güzel sanatlarla ilişkisi"
+              },
+              {
+                "id": "591d2f78-1b8d-4c97-9776-8a79a7090827",
+                "topic_name": "Sanat ve edebiyat"
+              },
+              {
+                "id": "c9139566-7ba9-4cf5-b309-c8bed43f6f2c",
+                "topic_name": "Dilin tanımı ve işlevleri"
+              },
+              {
+                "id": "032f90bf-43b9-4b50-9098-1dd0150df9b8",
+                "topic_name": "Kültür ve dil ilişkisi"
+              },
+              {
+                "id": "938cf154-5d2e-4c2c-8091-0cc997e43339",
+                "topic_name": "Edebî sanatlar"
+              }
+            ]
+          },
+          {
+            "id": "ca017f7b-3daf-401f-a8cd-fcbdeebb0da5",
+            "unit_no": 2,
+            "unit_name": "Edebî Türler ve Metinler",
+            "topics": [
+              {
+                "id": "c1c318c3-e91a-425d-b93a-86a58eed22d6",
+                "topic_name": "Edebî metinlerin yapısı ve özellikleri"
+              },
+              {
+                "id": "894556ad-125b-4b75-8f2e-9ab834d3fe74",
+                "topic_name": "Anlatım biçimleri (öyküleme, betimleme, tartışma)"
+              },
+              {
+                "id": "179de016-8269-4524-8e0a-5608ba824bd5",
+                "topic_name": "Nazım ve nesir"
+              },
+              {
+                "id": "e76fef66-7f8e-425e-9313-92c0d94c4bdf",
+                "topic_name": "Şiir türleri"
+              },
+              {
+                "id": "ac8d18fe-4270-4b77-987b-12105fc5910f",
+                "topic_name": "Hikaye ve roman"
+              },
+              {
+                "id": "62294753-b820-468f-bd7f-9d91be4a8886",
+                "topic_name": "Tiyatro"
+              }
+            ]
+          },
+          {
+            "id": "6214a260-3e15-494b-95f4-93a8b91f39ed",
+            "unit_no": 3,
+            "unit_name": "Dil Bilgisi",
+            "topics": [
+              {
+                "id": "4154177c-c48a-4181-a5d8-09e8d3272b26",
+                "topic_name": "Ses bilgisi (ünlüler, ünsüzler)"
+              },
+              {
+                "id": "0b9c817e-a07b-43f1-8a1f-5f97a4ffeaa2",
+                "topic_name": "Ses olayları"
+              },
+              {
+                "id": "c4edad6c-055d-4c81-af79-34938329a44f",
+                "topic_name": "Sözcük türleri"
+              },
+              {
+                "id": "19f8a4ef-a055-4e1f-80b4-aa6ad06b04fb",
+                "topic_name": "İsimler ve çekim ekleri"
+              },
+              {
+                "id": "48cdba52-36f4-4ce9-8086-2d37d1b02617",
+                "topic_name": "Fiiller ve çekim ekleri"
+              },
+              {
+                "id": "2d07ac97-b929-4b0b-b9db-ef4b1e4143e1",
+                "topic_name": "Cümle bilgisi temelleri"
+              }
+            ]
+          },
+          {
+            "id": "290e2e05-671e-441e-94e0-618383f244de",
+            "unit_no": 4,
+            "unit_name": "Okuma ve Yazma Becerileri",
+            "topics": [
+              {
+                "id": "70bd2bf9-ac97-4154-b91f-a4667863634c",
+                "topic_name": "Etkili okuma teknikleri"
+              },
+              {
+                "id": "ae660087-7526-4835-b4b1-22a190241643",
+                "topic_name": "Metin türleri ve özellikleri"
+              },
+              {
+                "id": "72ea273e-3340-425b-a0a7-e15060f08680",
+                "topic_name": "Paragraf oluşturma"
+              },
+              {
+                "id": "8cad4048-f16d-4685-8bc3-d0f133c528ba",
+                "topic_name": "Kompozisyon yazma"
+              },
+              {
+                "id": "2ef84a1e-8820-4898-8ba8-9ffd737dfb33",
+                "topic_name": "Dilekçe, mektup, özgeçmiş yazma"
+              },
+              {
+                "id": "58b96163-d175-4565-a390-61e3c7d78913",
+                "topic_name": "Noktalama işaretleri"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "363ab330-03ad-4efd-8422-d19736f867b4",
+    "subject_name": "Matematik",
+    "grades": [
+      {
+        "id": "22b1d638-be44-4a0c-8735-da4be9433270",
+        "grade": "10",
+        "units": [
+          {
+            "id": "42f80cad-1b60-4d89-9e88-07fbdcc2bf6f",
+            "unit_no": 1,
+            "unit_name": "Sayma ve Olasılık",
+            "topics": [
+              {
+                "id": "c24bac66-9921-4509-8f5e-0c2228cb5343",
+                "topic_name": "Temel sayma ilkeleri"
+              },
+              {
+                "id": "0f4445f5-8e87-4112-90c3-5344b4139b20",
+                "topic_name": "Permütasyon"
+              },
+              {
+                "id": "c399bf7b-062a-4d19-9065-c77ddb129799",
+                "topic_name": "Kombinasyon"
+              },
+              {
+                "id": "48a51e31-ac50-4657-803b-f1998440f89b",
+                "topic_name": "Binom açılımı"
+              },
+              {
+                "id": "5fb1c618-a141-434c-9477-e19de2e4ef77",
+                "topic_name": "Olasılık kavramı"
+              },
+              {
+                "id": "7ba0c439-4186-4ebb-8ee8-f79b30256bb3",
+                "topic_name": "Koşullu olasılık"
+              }
+            ]
+          },
+          {
+            "id": "ee008288-842a-4a64-b9f9-28ceba74d9b8",
+            "unit_no": 2,
+            "unit_name": "İkinci Dereceden Denklemler",
+            "topics": [
+              {
+                "id": "541556af-0dfd-475e-9ca1-558c55340636",
+                "topic_name": "İkinci dereceden bir bilinmeyenli denklemler"
+              },
+              {
+                "id": "3711164e-be65-492c-bdb4-fc3aabb34dbe",
+                "topic_name": "Diskriminant ve köklerin durumu"
+              },
+              {
+                "id": "ca81af20-69fb-414a-afd6-53dc1b9a61ca",
+                "topic_name": "Kökler ve katsayılar ilişkisi"
+              },
+              {
+                "id": "0812841b-b33e-46f0-891d-6c8a785b258c",
+                "topic_name": "İkinci dereceden eşitsizlikler"
+              },
+              {
+                "id": "044067f0-b52f-4610-9f7b-9efbf000cf57",
+                "topic_name": "Parabol ve grafik çizimi"
+              }
+            ]
+          },
+          {
+            "id": "5b4da1cc-c0cc-46e2-af0a-26f654dc65aa",
+            "unit_no": 3,
+            "unit_name": "Fonksiyonlar",
+            "topics": [
+              {
+                "id": "1e2c610a-4df5-4480-8f3b-9b8be7a1977e",
+                "topic_name": "Fonksiyon tanımı ve gösterim"
+              },
+              {
+                "id": "56e31750-0971-4eea-a2bc-12513d291f45",
+                "topic_name": "Fonksiyon çeşitleri"
+              },
+              {
+                "id": "11fb5e0f-90f1-4516-a45b-af5c0cb5db9f",
+                "topic_name": "Fonksiyonlarda işlemler"
+              },
+              {
+                "id": "c79a517e-52c0-43f0-bf33-e707ede53fec",
+                "topic_name": "Bileşke fonksiyon"
+              },
+              {
+                "id": "acdec95e-2e7f-4ca4-a2c9-d957452a2703",
+                "topic_name": "Ters fonksiyon"
+              },
+              {
+                "id": "3236006f-1ca9-422f-9800-7d3a705ad331",
+                "topic_name": "Fonksiyon grafikleri"
+              }
+            ]
+          },
+          {
+            "id": "d4ed7024-b267-42da-b2a8-2f6588eb26aa",
+            "unit_no": 4,
+            "unit_name": "Polinomlar",
+            "topics": [
+              {
+                "id": "b86448d0-d41c-4f2a-8130-210d6f188f10",
+                "topic_name": "Polinom kavramı"
+              },
+              {
+                "id": "57f0f7df-795d-4b28-be12-dbd28b2f9b75",
+                "topic_name": "Polinomlarda işlemler"
+              },
+              {
+                "id": "8a9a04d5-dd6b-4981-92f3-624f33b740ca",
+                "topic_name": "Polinomların çarpanlara ayrılması"
+              },
+              {
+                "id": "f994f95c-c732-4ae3-a16e-846e29fddbd9",
+                "topic_name": "Horner şeması"
+              },
+              {
+                "id": "03f80bd9-3d2e-4519-affd-8dcb88ddc2b5",
+                "topic_name": "Polinom denklemleri"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "5af39eb0-88e6-4814-9288-0179bab29080",
+        "grade": "11",
+        "units": [
+          {
+            "id": "de62fe05-b67a-461a-8d65-982cf1e1b679",
+            "unit_no": 1,
+            "unit_name": "Trigonometri",
+            "topics": [
+              {
+                "id": "cc4e895e-a7bb-4d0d-b508-898769c17b6e",
+                "topic_name": "Trigonometrik fonksiyonlar"
+              },
+              {
+                "id": "c7f36014-ea96-4246-baf9-5e784a237e76",
+                "topic_name": "Trigonometrik özdeşlikler"
+              },
+              {
+                "id": "5a97c6bb-48e2-484b-8660-217dbc395985",
+                "topic_name": "Trigonometrik denklemler"
+              },
+              {
+                "id": "ac95878e-6bff-45f0-b4d4-46239127697a",
+                "topic_name": "Toplam-fark formülleri"
+              },
+              {
+                "id": "dd471beb-3a3f-4c52-903b-3e7796c8f96f",
+                "topic_name": "İki kat açı formülleri"
+              },
+              {
+                "id": "da29ddbe-9924-4309-b21d-a8d43a685cab",
+                "topic_name": "Yarım açı formülleri"
+              }
+            ]
+          },
+          {
+            "id": "a786c9d6-760a-4d05-83a9-5a8e166c4e16",
+            "unit_no": 2,
+            "unit_name": "Fonksiyonlar ve Özellikleri",
+            "topics": [
+              {
+                "id": "f8f6f3b8-700a-4ca5-a909-5449dab8e1c6",
+                "topic_name": "Fonksiyon tanımı ve gösterim"
+              },
+              {
+                "id": "eade61e6-5329-4ddb-a33c-2137b43f62ad",
+                "topic_name": "Fonksiyon türleri"
+              },
+              {
+                "id": "ff0c8530-8a79-469f-a1cb-af51810109ca",
+                "topic_name": "Bileşke ve ters fonksiyon"
+              },
+              {
+                "id": "ccfb6004-047c-46f1-982f-e2fd56460c9a",
+                "topic_name": "Özel fonksiyonlar"
+              },
+              {
+                "id": "7ba95d23-cef1-4bc3-920a-51af7b983c3b",
+                "topic_name": "Fonksiyonların grafikleri"
+              },
+              {
+                "id": "35e12cf9-e49b-45c5-b77d-82acd98c6596",
+                "topic_name": "Fonksiyonlarda dönüşümler"
+              }
+            ]
+          },
+          {
+            "id": "a54a13f3-9723-4fb4-b264-de31eaf04a79",
+            "unit_no": 3,
+            "unit_name": "Diziler ve Seriler",
+            "topics": [
+              {
+                "id": "307db333-71db-4b5a-ba6b-54d3f868ae90",
+                "topic_name": "Aritmetik diziler"
+              },
+              {
+                "id": "31c2a263-a2e4-4744-9351-e302ee143c63",
+                "topic_name": "Geometrik diziler"
+              },
+              {
+                "id": "826a96d4-ba59-4d49-80d3-85346685c9df",
+                "topic_name": "Aritmetik seriler"
+              },
+              {
+                "id": "dd6d31a6-16fe-4469-b45b-b13549c8d6b0",
+                "topic_name": "Geometrik seriler"
+              },
+              {
+                "id": "7416ad78-7d26-48c3-a2ff-e3df8d12f726",
+                "topic_name": "Harmonik diziler"
+              },
+              {
+                "id": "c0a7b0ae-477d-4e3f-be90-d4e47721931f",
+                "topic_name": "Sonsuz geometrik seriler"
+              }
+            ]
+          },
+          {
+            "id": "e18ae186-e219-45d7-9ec4-685c041649c9",
+            "unit_no": 4,
+            "unit_name": "Limit ve Süreklilik",
+            "topics": [
+              {
+                "id": "e382e580-688b-4138-9447-94723eaa0f88",
+                "topic_name": "Limit kavramı"
+              },
+              {
+                "id": "9374cce9-e87c-42e4-b1a8-2dd4b7b75c2f",
+                "topic_name": "Limit hesaplama"
+              },
+              {
+                "id": "d3733194-284c-46d4-abd6-7736aab59c2a",
+                "topic_name": "Belirsizlik durumları"
+              },
+              {
+                "id": "8d4b7d6c-5b46-42de-b06e-53c7952b5e89",
+                "topic_name": "Süreklilik kavramı"
+              },
+              {
+                "id": "fdbf3ba5-5214-4e9b-9057-cb5355d6ddc1",
+                "topic_name": "Sürekliliğin özellikleri"
+              },
+              {
+                "id": "cbaf0212-4d52-4311-b80b-0bcb9eba5ef9",
+                "topic_name": "Limit teoremleri"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "4b50c641-e6e2-48e6-8756-839ff46bfe20",
+        "grade": "12",
+        "units": [
+          {
+            "id": "2bb6c60a-2e52-4b78-927a-629404597b77",
+            "unit_no": 1,
+            "unit_name": "Türev ve Uygulamaları",
+            "topics": [
+              {
+                "id": "dc2782bd-5d17-4dee-8c9d-7d556a21c0e0",
+                "topic_name": "Türev kavramı"
+              },
+              {
+                "id": "7b29e5d9-ef48-4060-9b43-3481185f1fab",
+                "topic_name": "Türev alma kuralları"
+              },
+              {
+                "id": "3070deb4-9e5a-4725-8247-2c2c7983324a",
+                "topic_name": "Zincir kuralı"
+              },
+              {
+                "id": "829944c6-6cb4-43b7-a7e4-9aa6ca22685c",
+                "topic_name": "İkinci türev"
+              },
+              {
+                "id": "c207b53c-72d4-4fb1-97b8-6559fe72ac05",
+                "topic_name": "Artan ve azalan fonksiyonlar"
+              },
+              {
+                "id": "b7b75554-d3d6-4b72-bc5e-99ff94f25357",
+                "topic_name": "Ekstremum noktaları"
+              },
+              {
+                "id": "9527bd40-67cc-4c20-b2bc-f02fc9c081ba",
+                "topic_name": "Teğet ve normal denklemi"
+              }
+            ]
+          },
+          {
+            "id": "86a267aa-2d70-4445-8795-64414f607edd",
+            "unit_no": 2,
+            "unit_name": "İntegral",
+            "topics": [
+              {
+                "id": "e2b408c4-7ff0-4500-9b5d-cd5bfc847af3",
+                "topic_name": "Belirsiz integral"
+              },
+              {
+                "id": "7a87e51f-fe03-4b22-810c-3f5fec0aaf3f",
+                "topic_name": "İntegral alma teknikleri"
+              },
+              {
+                "id": "5eb8905b-a6c1-461c-8d4e-0bfc77fc978e",
+                "topic_name": "Belirli integral"
+              },
+              {
+                "id": "36a94629-fadd-4cd6-92bf-5067d7f6890e",
+                "topic_name": "Belirli integralin uygulamaları"
+              },
+              {
+                "id": "abe6ffde-f368-4b0a-95ce-1f121f38210c",
+                "topic_name": "Alan hesaplama"
+              },
+              {
+                "id": "4c45f392-75e2-46e6-a7ed-3c4c05946642",
+                "topic_name": "Hacim hesaplama"
+              }
+            ]
+          },
+          {
+            "id": "d7bcce25-07e9-4107-8447-70b8a3134270",
+            "unit_no": 3,
+            "unit_name": "Üstel ve Logaritmik Fonksiyonlar",
+            "topics": [
+              {
+                "id": "e45f0f91-eb0b-4018-b241-72bfd07464bd",
+                "topic_name": "Üstel fonksiyon ve özellikleri"
+              },
+              {
+                "id": "5e677702-45d3-46e6-ab2f-a90fe0a1a220",
+                "topic_name": "e sayısı"
+              },
+              {
+                "id": "9736d041-4cea-4d73-a7c2-78a0d698e0ec",
+                "topic_name": "Logaritma ve özellikleri"
+              },
+              {
+                "id": "bb5ad755-0303-44f5-a077-d7c4820c3cb2",
+                "topic_name": "Doğal logaritma"
+              },
+              {
+                "id": "74afa2ea-b383-4917-8ca8-8c4216d9e6dc",
+                "topic_name": "Üstel ve logaritmik denklemler"
+              },
+              {
+                "id": "66fa8615-6791-466e-9c18-0c737a1f5149",
+                "topic_name": "Üstel ve logaritmik eşitsizlikler"
+              }
+            ]
+          },
+          {
+            "id": "ffe60383-7b11-42aa-b749-b8a2399c1c81",
+            "unit_no": 4,
+            "unit_name": "Analitik Geometri",
+            "topics": [
+              {
+                "id": "bfdd28ab-bd5f-4ae0-82b7-37cd0dd1a932",
+                "topic_name": "Doğrunun analitik incelenmesi"
+              },
+              {
+                "id": "3e5a702e-41a1-4af6-bb18-0e390627b461",
+                "topic_name": "Çemberin analitik incelenmesi"
+              },
+              {
+                "id": "bfc32ce6-5a00-4bbd-80cd-59ffad8c7835",
+                "topic_name": "Elips"
+              },
+              {
+                "id": "4cbd9450-6abc-47d5-9055-6157ac28e153",
+                "topic_name": "Hiperbol"
+              },
+              {
+                "id": "68941e46-2d97-4127-a563-2cb9be1f5847",
+                "topic_name": "Parabol"
+              },
+              {
+                "id": "e422a9fa-fb01-45c9-bb5f-74d760d33838",
+                "topic_name": "Konikler"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "30d77f2c-355d-44ad-a312-8f040dedc47f",
+        "grade": "9",
+        "units": [
+          {
+            "id": "ffa455e3-ffea-4d07-8536-df6480ac2515",
+            "unit_no": 1,
+            "unit_name": "Sayılar ve Cebir",
+            "topics": [
+              {
+                "id": "9906df6f-60e8-4be4-92b6-0dbf68728f6d",
+                "topic_name": "Sayı kümeleri (Doğal, tam, rasyonel, irrasyonel, gerçek sayılar)"
+              },
+              {
+                "id": "08a983ee-2731-4cf4-9e3b-d016298cd91a",
+                "topic_name": "Üslü sayılar ve özellikleri"
+              },
+              {
+                "id": "0f5f982a-92c9-42a6-8f3b-f4071810a4f8",
+                "topic_name": "Köklü sayılar ve özellikleri"
+              },
+              {
+                "id": "2dd4bf6c-e8e5-4e36-bab1-25e7d27dc57d",
+                "topic_name": "Çarpanlara ayırma teknikleri"
+              },
+              {
+                "id": "559df6c4-26b2-4ea4-9cf3-60118e3c9d58",
+                "topic_name": "Cebirsel özdeşlikler"
+              },
+              {
+                "id": "14763293-1317-4eae-89f9-f10106d655e4",
+                "topic_name": "Rasyonel sayılarla işlemler"
+              }
+            ]
+          },
+          {
+            "id": "63f374bd-fbc3-4a1a-9c74-021bb7b35d48",
+            "unit_no": 2,
+            "unit_name": "Denklem ve Eşitsizlikler",
+            "topics": [
+              {
+                "id": "3e0114ce-435a-4728-affd-2c2a46023023",
+                "topic_name": "Birinci dereceden bir bilinmeyenli denklemler"
+              },
+              {
+                "id": "b3978ad0-71db-4d8c-819b-b9f9f2519a54",
+                "topic_name": "Denklem kurma ve çözme stratejileri"
+              },
+              {
+                "id": "655d55fb-751a-4639-9cb1-c84bd8abb725",
+                "topic_name": "Mutlak değerli ifadeler ve özellikleri"
+              },
+              {
+                "id": "881c9949-4b91-4012-b2d6-90bf244433dc",
+                "topic_name": "Birinci dereceden eşitsizlikler"
+              },
+              {
+                "id": "e5fe481f-796e-4041-a665-d3013ac17503",
+                "topic_name": "Eşitsizlik sistemleri"
+              }
+            ]
+          },
+          {
+            "id": "488f10c1-7128-4c5a-9997-464eb3574bcc",
+            "unit_no": 3,
+            "unit_name": "Üçgenler ve Geometri",
+            "topics": [
+              {
+                "id": "ac1ec7be-6e58-41c6-9101-115d99e1911c",
+                "topic_name": "Üçgende açılar"
+              },
+              {
+                "id": "2ba01bd4-74d4-4714-b0ec-133ee590b5cf",
+                "topic_name": "Üçgende kenar-açı ilişkileri"
+              },
+              {
+                "id": "2b08aa9e-4f84-45e4-b4c6-c9b054019590",
+                "topic_name": "Özel üçgenler (ikizkenar, eşkenar, dik üçgen)"
+              },
+              {
+                "id": "03f96519-b0c4-4b1e-9bf9-686630d26ade",
+                "topic_name": "Üçgende alan hesaplamaları"
+              },
+              {
+                "id": "5500a526-7f38-4b94-8019-07720f3fdf64",
+                "topic_name": "Pisagor teoremi ve uygulamaları"
+              }
+            ]
+          },
+          {
+            "id": "9549e7f8-00bd-4c4f-bda0-69dd4e9aca2a",
+            "unit_no": 4,
+            "unit_name": "Veri Analizi",
+            "topics": [
+              {
+                "id": "c35cd6ed-bea8-4289-881e-e9d21a45c2bb",
+                "topic_name": "Merkezi eğilim ölçüleri (ortalama, ortanca, tepe değer)"
+              },
+              {
+                "id": "16b20225-3c07-4636-b168-184b0a307cf3",
+                "topic_name": "Veri dağılımı ve grafikler"
+              },
+              {
+                "id": "7b8b163f-4e03-4e85-acc0-176a134a19ed",
+                "topic_name": "Çeyrekler ve kutu grafikleri"
+              },
+              {
+                "id": "de480740-551e-49a3-a822-b577f524daac",
+                "topic_name": "Standart sapma ve varyans"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "af434e72-5855-4aef-b387-839a142ebcc9",
+    "subject_name": "Fizik",
+    "grades": [
+      {
+        "id": "729f008b-bb22-41b7-8bd0-bc8b3b00a834",
+        "grade": "10",
+        "units": [
+          {
+            "id": "1b1c33d1-e7df-4232-b847-d3926e8c3208",
+            "unit_no": 1,
+            "unit_name": "Elektrik ve Manyetizma",
+            "topics": [
+              {
+                "id": "9652e818-0894-423a-8190-3656a83c213d",
+                "topic_name": "Elektriksel yükler"
+              },
+              {
+                "id": "ed3d000a-24ff-4fea-aa9f-53da2f043c6d",
+                "topic_name": "Coulomb yasası"
+              },
+              {
+                "id": "6163d40b-35b7-40b6-aacf-fdd9ce161db4",
+                "topic_name": "Elektrik alan"
+              },
+              {
+                "id": "2d25bf95-de04-4624-b4c3-7b5ce6ca2c13",
+                "topic_name": "Elektrik potansiyeli"
+              },
+              {
+                "id": "3dc39c3d-c5e0-4449-93dc-203316840b6b",
+                "topic_name": "Kondansatörler"
+              },
+              {
+                "id": "0ff851cb-9dc5-460b-a242-541ecd202a48",
+                "topic_name": "Sığa kavramı"
+              },
+              {
+                "id": "5e9d4b34-a05b-4c34-acfe-fd6baa93b866",
+                "topic_name": "Manyetik alan ve özellikleri"
+              },
+              {
+                "id": "ddfa554a-cd02-466a-861c-cff6add6c5fc",
+                "topic_name": "Elektromanyetik indüksiyon"
+              }
+            ]
+          },
+          {
+            "id": "3eacd76e-2a9f-4b4b-b6cf-ff4462437e46",
+            "unit_no": 2,
+            "unit_name": "Basınç ve Kaldırma Kuvveti",
+            "topics": [
+              {
+                "id": "7213ba6c-9937-454e-a59a-eedba96e258d",
+                "topic_name": "Basınç kavramı"
+              },
+              {
+                "id": "79ec9f01-4d09-4520-a424-79e6c4f752fe",
+                "topic_name": "Katılarda basınç"
+              },
+              {
+                "id": "6ed133cd-2966-4d84-ad8f-c92420b7f9e1",
+                "topic_name": "Sıvılarda basınç (Pascal prensibi)"
+              },
+              {
+                "id": "a0dfc689-c6ef-41a2-a109-560263deb430",
+                "topic_name": "Gazlarda basınç"
+              },
+              {
+                "id": "968d83cf-2e3f-4e39-a5ea-c53844f26040",
+                "topic_name": "Kaldırma kuvveti (Archimedes prensibi)"
+              },
+              {
+                "id": "e9723f8c-bc83-4681-8aae-787cf1b417b2",
+                "topic_name": "Yüzme, batma, asılı kalma"
+              }
+            ]
+          },
+          {
+            "id": "9be19c24-75ff-4479-8542-87ad03111492",
+            "unit_no": 3,
+            "unit_name": "Dalgalar",
+            "topics": [
+              {
+                "id": "a297ceb4-512f-4d82-8c37-369c30197e24",
+                "topic_name": "Dalga hareketi ve özellikleri"
+              },
+              {
+                "id": "d8f94a87-538d-414a-bc6c-58e7e74d173f",
+                "topic_name": "Dalga türleri (enine, boyuna)"
+              },
+              {
+                "id": "36d8ab99-8e51-4256-8be7-af131b43608f",
+                "topic_name": "Periyodik dalgalar"
+              },
+              {
+                "id": "34945e22-1d3b-46f3-b9f7-64d62ebd731b",
+                "topic_name": "Ses dalgaları"
+              },
+              {
+                "id": "3ca03dab-75ff-44ae-b5c8-039a73b74584",
+                "topic_name": "Işık ve özellikleri"
+              },
+              {
+                "id": "5d4af8db-b4d5-4ce5-b852-4d96d55eeef4",
+                "topic_name": "Yansıma ve kırılma"
+              },
+              {
+                "id": "57d2e86e-4b0b-4bac-9a9f-76a902ec39e0",
+                "topic_name": "Dalga olayları (girişim, kırınım)"
+              }
+            ]
+          },
+          {
+            "id": "2779b903-7b75-4075-973c-39a33fb83f58",
+            "unit_no": 4,
+            "unit_name": "Optik",
+            "topics": [
+              {
+                "id": "dffebd5b-d857-4340-8f95-0015f7801e42",
+                "topic_name": "Düzlem aynalar"
+              },
+              {
+                "id": "c53c149a-6696-4f0e-8abe-9929bbfd1474",
+                "topic_name": "Küresel aynalar"
+              },
+              {
+                "id": "e955f7ba-8d53-447f-97b4-c1cfc3ed9604",
+                "topic_name": "Mercekler"
+              },
+              {
+                "id": "6cbc71b6-35dd-432b-b6d2-06d6b8844913",
+                "topic_name": "Prizmalar"
+              },
+              {
+                "id": "ed675f23-f155-46c2-890d-8ad44fa92471",
+                "topic_name": "Görüntü oluşumu"
+              },
+              {
+                "id": "491e1f58-0110-46b9-b04a-1e3cc18f82cd",
+                "topic_name": "Optik aletler"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "1dd0a630-4c9a-4894-b42c-2d977bb93ee4",
+        "grade": "11",
+        "units": [
+          {
+            "id": "caebab67-bd41-4b7f-994b-446238adc2b3",
+            "unit_no": 1,
+            "unit_name": "Çembersel Hareket",
+            "topics": [
+              {
+                "id": "fe754cc3-c70e-4add-9639-1e6022061bc0",
+                "topic_name": "Açısal hız ve açısal ivme"
+              },
+              {
+                "id": "f7279921-fd35-4e18-b0d0-120dfc350eb3",
+                "topic_name": "Düzgün çembersel hareket"
+              },
+              {
+                "id": "03a31090-cc2f-402b-a6a7-a9f04ecfb29e",
+                "topic_name": "Merkezcil kuvvet"
+              },
+              {
+                "id": "1d08ca04-5226-4fd2-be54-fe591c994b52",
+                "topic_name": "Merkezcil ivme"
+              },
+              {
+                "id": "4242334a-2690-48e9-9d1a-579cf6123927",
+                "topic_name": "Yatay düzlemde daire hareketi"
+              },
+              {
+                "id": "856bfc68-af73-441a-be60-07ca71af2640",
+                "topic_name": "Düşey düzlemde daire hareketi"
+              },
+              {
+                "id": "63b66508-1477-454a-9d5e-cd8909c76571",
+                "topic_name": "Konik sarkaç"
+              }
+            ]
+          },
+          {
+            "id": "126edd1f-9183-42c6-8602-e180bba5a4ee",
+            "unit_no": 2,
+            "unit_name": "Kütle Çekim ve Kepler",
+            "topics": [
+              {
+                "id": "38c45278-763f-4b32-ad53-22cd0e288adf",
+                "topic_name": "Newton'un evrensel çekim yasası"
+              },
+              {
+                "id": "af4941c6-8d5f-4d41-8193-aef52cf3bf76",
+                "topic_name": "Kütle çekim kuvveti"
+              },
+              {
+                "id": "6b72a4a4-36d4-4fd5-9742-13ca3b66deca",
+                "topic_name": "Kepler yasaları"
+              },
+              {
+                "id": "66ec5b92-a8d6-4866-b9ee-e9db560969ad",
+                "topic_name": "Uydu hareketi"
+              },
+              {
+                "id": "1c7466e0-acee-4e03-87d5-a98e85bfcb6c",
+                "topic_name": "Gezegenlerin hareketi"
+              },
+              {
+                "id": "445fac15-ba7c-46bd-ae31-ddddd804ac1a",
+                "topic_name": "Kaçış hızı"
+              }
+            ]
+          },
+          {
+            "id": "514b748b-8329-41ae-97a7-02880cbcfecb",
+            "unit_no": 3,
+            "unit_name": "Basit Harmonik Hareket",
+            "topics": [
+              {
+                "id": "aed9be3f-c815-4191-b8d4-b466fc03b3c3",
+                "topic_name": "Periyodik hareket"
+              },
+              {
+                "id": "5c4d0737-5b2a-4e76-b3ef-ec80379363e1",
+                "topic_name": "Basit harmonik hareket özellikleri"
+              },
+              {
+                "id": "2b9635b9-7c35-4f82-95a4-204166e0a041",
+                "topic_name": "Yay-kütle sistemi"
+              },
+              {
+                "id": "abe03ab5-def6-4901-84bb-c8f135b7ff3b",
+                "topic_name": "Sarkaç hareketi"
+              },
+              {
+                "id": "1ceab55d-cb60-413c-8fc7-f5c9b0310812",
+                "topic_name": "Enerji dönüşümleri"
+              },
+              {
+                "id": "e333f7f2-96a9-4857-8e31-2e487ff4abb7",
+                "topic_name": "Sönümlü ve zorlanmış titreşimler"
+              }
+            ]
+          },
+          {
+            "id": "c0920a2c-37f1-471f-8006-8cda4efd4d7e",
+            "unit_no": 4,
+            "unit_name": "İmpuls ve Momentum",
+            "topics": [
+              {
+                "id": "929b909e-fa01-4c64-b5b1-eff6d8d65766",
+                "topic_name": "Momentum kavramı"
+              },
+              {
+                "id": "4666682f-f651-4952-94ca-586b8556f098",
+                "topic_name": "İmpuls kavramı"
+              },
+              {
+                "id": "8cd31f5b-f86b-4edb-a226-89484c7d7ced",
+                "topic_name": "Momentum korunumu"
+              },
+              {
+                "id": "e620e21c-c3af-40e0-bdfd-9795c5f63d91",
+                "topic_name": "Çarpışmalar (elastik, esnek olmayan)"
+              },
+              {
+                "id": "9509e1ca-c049-4489-ae1b-d60eebb9d1d2",
+                "topic_name": "Roket hareketi"
+              },
+              {
+                "id": "01c6e36e-9678-46a5-8db0-870ce561aa01",
+                "topic_name": "Geri tepme"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "2e4ef80c-7893-43eb-be5b-2f84d244361e",
+        "grade": "12",
+        "units": [
+          {
+            "id": "a5af6341-dbfc-414b-97bf-3b83ed763855",
+            "unit_no": 1,
+            "unit_name": "Çembersel Hareket ve Dönme Dinamiği",
+            "topics": [
+              {
+                "id": "0951a35c-a57a-45d8-9a8b-96bb3e573de9",
+                "topic_name": "Düzgün çembersel hareket"
+              },
+              {
+                "id": "0db228ed-ab8f-4621-aea7-b33335248cdf",
+                "topic_name": "Merkezcil kuvvet ve ivme"
+              },
+              {
+                "id": "af368c15-cebb-4bbe-ba99-3c7c73e1e97b",
+                "topic_name": "Virajlarda hareket"
+              },
+              {
+                "id": "1c833b90-04e8-4271-9e22-4590e96bd0ed",
+                "topic_name": "Dönen cisimlerde denge"
+              },
+              {
+                "id": "cd42d2cd-d10e-4eef-aba7-3877b80ba68c",
+                "topic_name": "Tork ve dönme momenti"
+              },
+              {
+                "id": "c6030386-5c89-4683-a0fa-7fa0eff996dc",
+                "topic_name": "Açısal momentum"
+              },
+              {
+                "id": "bade2571-0520-40ab-b24b-b26ad5672681",
+                "topic_name": "Eylemsizlik momenti"
+              }
+            ]
+          },
+          {
+            "id": "6c3388f3-c552-46e0-81da-7a8b2378b2d3",
+            "unit_no": 2,
+            "unit_name": "Kütle Çekim ve Uydu Hareketi",
+            "topics": [
+              {
+                "id": "c26e24cd-0c64-4c0c-92f6-94cf1c60c867",
+                "topic_name": "Newton'un evrensel çekim yasası"
+              },
+              {
+                "id": "7f496e22-14e1-4305-992b-e1ea006da0ac",
+                "topic_name": "Kütle çekim kuvveti"
+              },
+              {
+                "id": "8291c584-cc71-43c6-814a-6e0808a4c953",
+                "topic_name": "Kütle çekim potansiyel enerjisi"
+              },
+              {
+                "id": "2d6c6a4f-10b6-4727-a71b-e169c597e948",
+                "topic_name": "Kepler yasaları"
+              },
+              {
+                "id": "d7a543ef-673a-4179-8d39-996df553b624",
+                "topic_name": "Uydu hareketi ve yörüngeler"
+              },
+              {
+                "id": "e5dc850a-e698-47b8-91c3-6600decf547d",
+                "topic_name": "Kaçış hızı"
+              },
+              {
+                "id": "24f16f2c-dd09-4ee9-b722-3f591a6fa6a2",
+                "topic_name": "Gezegen ve yıldız hareketleri"
+              }
+            ]
+          },
+          {
+            "id": "5611ff43-48cb-463c-8693-b46462669b6f",
+            "unit_no": 3,
+            "unit_name": "Elektrik ve Manyetizma - İleri",
+            "topics": [
+              {
+                "id": "0f44b03f-149b-4319-8cf9-340c716fd11b",
+                "topic_name": "Elektrik akımı ve direnç"
+              },
+              {
+                "id": "28ead13c-28e4-4455-848c-49cdb8401e62",
+                "topic_name": "Ohm yasası"
+              },
+              {
+                "id": "82405916-b061-4f8a-9db0-18a2e904bbf8",
+                "topic_name": "Elektrik devreleri"
+              },
+              {
+                "id": "2c04f2fd-9794-4028-9da5-fc8bec98e700",
+                "topic_name": "Kirchhoff yasaları"
+              },
+              {
+                "id": "48063d83-0dfa-44cc-a238-52fe95b7bfeb",
+                "topic_name": "Elektrik enerjisi ve güç"
+              },
+              {
+                "id": "e4dad487-c7b3-4a08-a457-e2c01cdcac9c",
+                "topic_name": "Manyetik alan"
+              },
+              {
+                "id": "6badb2c9-ffd4-4521-ac00-03bd860e4387",
+                "topic_name": "Elektromanyetik indüksiyon"
+              },
+              {
+                "id": "73f13ae1-ba70-441e-87d0-131413b35e0e",
+                "topic_name": "Faraday ve Lenz yasaları"
+              }
+            ]
+          },
+          {
+            "id": "a15b28e9-02f6-4d33-8e90-1881a6fceeda",
+            "unit_no": 4,
+            "unit_name": "Modern Fizik",
+            "topics": [
+              {
+                "id": "d99eda52-0efb-406f-8e1f-ab188bdfa074",
+                "topic_name": "Atom modelleri"
+              },
+              {
+                "id": "317b0ba9-d744-4ff9-ae39-9e6c7ba83a56",
+                "topic_name": "Bohr atom modeli"
+              },
+              {
+                "id": "9e125b4c-1e7d-4a83-9323-824952fbd244",
+                "topic_name": "Enerji seviyeleri"
+              },
+              {
+                "id": "017fe52d-eb55-403d-bf76-418c5371bf64",
+                "topic_name": "Fotoelektrik olay"
+              },
+              {
+                "id": "d9c05a33-b736-47df-892b-0b502c1f871d",
+                "topic_name": "Radyoaktivite"
+              },
+              {
+                "id": "3b66731c-a897-499b-ac9d-6a052378044f",
+                "topic_name": "Nükleer reaksiyonlar"
+              },
+              {
+                "id": "15158523-57dc-4c23-bab8-aab7260e50bb",
+                "topic_name": "Özel görelilik teorisine giriş"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "19c53e10-7cad-472c-9bf0-cc3910a8bdf3",
+        "grade": "9",
+        "units": [
+          {
+            "id": "b60ce49b-7a5f-4bfe-ae8a-ff675310ee89",
+            "unit_no": 1,
+            "unit_name": "Fizik Bilimine Giriş",
+            "topics": [
+              {
+                "id": "ed570b26-d2dc-4576-8cc5-e74b0c9ac1d5",
+                "topic_name": "Fizik nedir, fiziğin alt dalları"
+              },
+              {
+                "id": "2f9eb979-1f76-4d00-b8e5-bec872a90ff1",
+                "topic_name": "Fiziksel büyüklükler ve birimler"
+              },
+              {
+                "id": "f3e3c6d7-970d-4e1e-a84a-7c0eb741a8e6",
+                "topic_name": "Uluslararası birim sistemi (SI)"
+              },
+              {
+                "id": "48f7126a-9de9-49ef-9e2e-6b6fdb12ae21",
+                "topic_name": "Vektörel ve skaler büyüklükler"
+              },
+              {
+                "id": "8c14d769-48da-4870-a6af-067e00d4bc63",
+                "topic_name": "Vektör işlemleri"
+              },
+              {
+                "id": "7f307350-a06b-4723-8e6e-96264e466bb5",
+                "topic_name": "Bilimsel gösterim ve hassasiyet"
+              }
+            ]
+          },
+          {
+            "id": "307153a3-7e77-46fd-a91a-8d2f555c668e",
+            "unit_no": 2,
+            "unit_name": "Madde ve Özellikleri",
+            "topics": [
+              {
+                "id": "c9edde58-d41c-46f4-a742-1ea2799e2bc4",
+                "topic_name": "Maddenin halleri (katı, sıvı, gaz)"
+              },
+              {
+                "id": "9eb0b8b4-71c4-48cb-a5ad-3b912cb48b67",
+                "topic_name": "Kütle, hacim ve özkütle"
+              },
+              {
+                "id": "e0d70a32-d206-4334-a2d0-42994e4fa27f",
+                "topic_name": "Hal değişimi ve ısı"
+              },
+              {
+                "id": "99c8f7f0-13a4-4fd4-a2a7-431b94f4fd75",
+                "topic_name": "Genleşme olayları (uzunluk, alan, hacim genleşmesi)"
+              },
+              {
+                "id": "9df50bdc-60ab-4126-ba68-447815c9e4df",
+                "topic_name": "Yoğunluk değişimi"
+              }
+            ]
+          },
+          {
+            "id": "d425d9af-eaf8-4bc2-bf26-359c10349f12",
+            "unit_no": 3,
+            "unit_name": "Hareket ve Kuvvet",
+            "topics": [
+              {
+                "id": "3b86056e-d38f-4261-9c27-efbe0c24b2e6",
+                "topic_name": "Konum ve yer değiştirme"
+              },
+              {
+                "id": "cf43eaca-7cfe-4572-8f90-363d6c8c6dd8",
+                "topic_name": "Hız ve sürat kavramları"
+              },
+              {
+                "id": "48c07195-1c91-4022-878d-05d861d60ce7",
+                "topic_name": "İvme ve ivmeli hareket"
+              },
+              {
+                "id": "4f70c18d-0c32-4c5c-a398-8d24b02b7a7f",
+                "topic_name": "Serbest düşme hareketi"
+              },
+              {
+                "id": "c3e3f8d0-ab21-4312-8877-95e750aa0f85",
+                "topic_name": "Newton'un hareket yasaları"
+              },
+              {
+                "id": "d1760627-cb7b-4263-b177-247ab4e9d2e8",
+                "topic_name": "Sürtünme kuvveti"
+              }
+            ]
+          },
+          {
+            "id": "805b4668-a453-468c-a80e-85d814215ccf",
+            "unit_no": 4,
+            "unit_name": "Enerji",
+            "topics": [
+              {
+                "id": "4d7f07fd-738d-4222-b1ac-82bb070797e2",
+                "topic_name": "İş kavramı ve hesaplanması"
+              },
+              {
+                "id": "d86625f9-dd52-4f9a-8562-057857bbaf6c",
+                "topic_name": "Enerji çeşitleri (kinetik, potansiyel)"
+              },
+              {
+                "id": "9659ea73-dc5d-4ad5-97b9-ebd86dbe955c",
+                "topic_name": "Mekanik enerji ve korunumu"
+              },
+              {
+                "id": "183934bb-9472-4d27-add6-e9cbd721cc87",
+                "topic_name": "Güç ve verim"
+              },
+              {
+                "id": "9242074d-415b-479b-ba35-f60d6f399ae8",
+                "topic_name": "Enerji dönüşümleri"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "7cea49f9-ebdd-4ece-bf41-fdcdb27c97be",
+    "subject_name": "Kimya",
+    "grades": [
+      {
+        "id": "e3f7f42c-9100-4e44-9934-796e6059b6d8",
+        "grade": "10",
+        "units": [
+          {
+            "id": "550cfc47-84cc-491c-b0bb-30b5ded3e8b4",
+            "unit_no": 1,
+            "unit_name": "Karışımlar",
+            "topics": [
+              {
+                "id": "f5b9e076-3090-4f7e-8966-591c118bbbc3",
+                "topic_name": "Homojen ve heterojen karışımlar"
+              },
+              {
+                "id": "0904dd09-34e0-442b-8809-c80ceb776e96",
+                "topic_name": "Çözeltiler ve özellikleri"
+              },
+              {
+                "id": "b62a3137-8836-4ef7-acf4-52e1ae56b93b",
+                "topic_name": "Derişim ifadeleri"
+              },
+              {
+                "id": "82a4a4f3-561a-4e1b-a58f-50a45ec54da7",
+                "topic_name": "Çözünürlük"
+              },
+              {
+                "id": "bbe3cdee-0f62-466d-a707-8c18da8b5421",
+                "topic_name": "Ayırma ve saflaştırma yöntemleri"
+              },
+              {
+                "id": "4fb155e1-a923-4565-aeef-5e683af011f0",
+                "topic_name": "Kolloidler"
+              }
+            ]
+          },
+          {
+            "id": "26ad29c4-ca1b-46b6-a888-f84e968e5919",
+            "unit_no": 2,
+            "unit_name": "Asitler, Bazlar ve Tuzlar",
+            "topics": [
+              {
+                "id": "8455f49f-3b5c-4ceb-9c78-6b945cd8933a",
+                "topic_name": "Asit ve baz tanımları"
+              },
+              {
+                "id": "84381a1f-0acb-433b-ae30-0e002c905cee",
+                "topic_name": "pH kavramı"
+              },
+              {
+                "id": "31091977-a4fb-4db4-baf3-5fb6cea54c4f",
+                "topic_name": "Kuvvetli ve zayıf asitler-bazlar"
+              },
+              {
+                "id": "8b2758f5-a9a0-4675-9dea-4e31cc5735a1",
+                "topic_name": "Nötralleşme tepkimeleri"
+              },
+              {
+                "id": "1a0b92ef-e597-4980-ae1b-7fd4ad201907",
+                "topic_name": "Tuzlar ve özellikleri"
+              },
+              {
+                "id": "47d9ca0a-5795-43ed-9de2-8b00b2edc76e",
+                "topic_name": "Hidroliz"
+              }
+            ]
+          },
+          {
+            "id": "ef3bed55-7e0e-4e4a-9734-763104437d74",
+            "unit_no": 3,
+            "unit_name": "Kimyasal Tepkimeler",
+            "topics": [
+              {
+                "id": "dee70ec2-1ad8-44cf-bfb1-ebd69bba681f",
+                "topic_name": "Kimyasal denklemler"
+              },
+              {
+                "id": "e54ab177-d508-4e23-9b71-279258a5d3e6",
+                "topic_name": "Tepkime türleri"
+              },
+              {
+                "id": "ad8200d7-862c-4f1f-8769-0f02f9cf3ed0",
+                "topic_name": "Tepkime hızı"
+              },
+              {
+                "id": "b2078db5-1f7b-4e74-a896-f0e063224868",
+                "topic_name": "Tepkime hızını etkileyen faktörler"
+              },
+              {
+                "id": "d400ca9c-11ee-4d34-b2ca-a791b6ec1991",
+                "topic_name": "Kimyasal denge"
+              },
+              {
+                "id": "3b2fb56c-a008-4808-80b9-a448a8809470",
+                "topic_name": "Denge sabiti"
+              }
+            ]
+          },
+          {
+            "id": "e5b9a492-e242-4908-9963-2ea05988cca2",
+            "unit_no": 4,
+            "unit_name": "Enerji ve Kimya",
+            "topics": [
+              {
+                "id": "5149b9b3-ca41-4105-9be6-cfc72f831034",
+                "topic_name": "Ekzotermik ve endotermik tepkimeler"
+              },
+              {
+                "id": "af8d7940-86c5-4d34-9776-3dd9c871ee30",
+                "topic_name": "Entalpi değişimi"
+              },
+              {
+                "id": "09eabc1f-faa9-4e50-b7ea-1a79ced9184f",
+                "topic_name": "Kalori ve enerji birimleri"
+              },
+              {
+                "id": "cb6764de-860e-41b2-8dbe-d4aad5663149",
+                "topic_name": "Hess yasası"
+              },
+              {
+                "id": "fcfd1368-b774-428e-8a52-7cf3e12a5f5f",
+                "topic_name": "Bağ enerjisi"
+              },
+              {
+                "id": "b633149e-0505-42df-98d7-6143262e6c88",
+                "topic_name": "Yakıtlar ve enerji"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "68baf8dc-0fe1-4117-9fea-ee2925ce2dd5",
+        "grade": "11",
+        "units": [
+          {
+            "id": "db581a7b-a039-43d4-876d-a1426e59cd2e",
+            "unit_no": 1,
+            "unit_name": "Modern Atom Teorisi",
+            "topics": [
+              {
+                "id": "bad32395-60a4-4e51-96f8-e66bdba02e86",
+                "topic_name": "Atomun yapısı - dalga-parçacık ikiliği"
+              },
+              {
+                "id": "c72f2c9a-d05c-4fe6-a28e-0ae6f231b66f",
+                "topic_name": "Kuantum mekaniği"
+              },
+              {
+                "id": "9f1229b9-881c-4211-bc0f-89c7a0abcfba",
+                "topic_name": "Atom orbitalleri (s, p, d, f)"
+              },
+              {
+                "id": "eaae7ddf-08fa-4646-92c6-df346616b837",
+                "topic_name": "Elektron dizilimi ve konfigürasyonu"
+              },
+              {
+                "id": "6a60e5d8-c40e-44fa-8fe0-45152edfed1f",
+                "topic_name": "Aufbau prensibi, Hund kuralı, Pauli ilkesi"
+              },
+              {
+                "id": "21a31551-a812-43ac-b7bd-c701e0c56e79",
+                "topic_name": "Periyodik sistem ve özellikler"
+              }
+            ]
+          },
+          {
+            "id": "9f2f4eb8-371d-44b6-b9d1-b27fbd5e4f14",
+            "unit_no": 2,
+            "unit_name": "Gazlar",
+            "topics": [
+              {
+                "id": "f20d6a29-60f1-42ab-992b-8c752257ca1c",
+                "topic_name": "Gazların genel özellikleri"
+              },
+              {
+                "id": "82348b8e-baa5-420f-aff0-3c3df1752346",
+                "topic_name": "Gaz yasaları (Boyle, Charles, Gay-Lussac)"
+              },
+              {
+                "id": "db82402b-c255-492b-8b08-6f6964909ad6",
+                "topic_name": "İdeal gaz denklemi"
+              },
+              {
+                "id": "61f9e95a-4d7d-4e2a-8fc1-2bb8fe0e8ba0",
+                "topic_name": "Kısmi basınç (Dalton yasası)"
+              },
+              {
+                "id": "fcf00ac5-6603-478b-9866-6fa44c8d5cbd",
+                "topic_name": "Graham'ın yayılma yasası"
+              },
+              {
+                "id": "5aba72c5-239f-4c09-9a60-e9d55d4dd995",
+                "topic_name": "Gerçek gazlar"
+              }
+            ]
+          },
+          {
+            "id": "73306e46-87e9-40c6-a0d2-7a2447f4f806",
+            "unit_no": 3,
+            "unit_name": "Sıvı Çözeltiler ve Çözünürlük",
+            "topics": [
+              {
+                "id": "a3405dcf-bb71-41f5-b1df-d05972f7c4e2",
+                "topic_name": "Çözünürlük ve faktörleri"
+              },
+              {
+                "id": "50b02ece-8110-454e-bed4-1ea9bd44c3ba",
+                "topic_name": "Derişim birimleri (molarite, molalite, normalite)"
+              },
+              {
+                "id": "ab1ac200-d231-461c-86f2-f3f42ce5b6a1",
+                "topic_name": "Seyreltme işlemleri"
+              },
+              {
+                "id": "528307c3-297b-4781-8399-f5a69790ebba",
+                "topic_name": "Henry yasası"
+              },
+              {
+                "id": "0a480601-9064-4052-9604-4e5bc4d56762",
+                "topic_name": "Raoult yasası"
+              },
+              {
+                "id": "a098e750-046e-4ac4-9d3f-8ffb7507fcca",
+                "topic_name": "Koligatif özellikler"
+              }
+            ]
+          },
+          {
+            "id": "4d9ce01b-b8b9-4227-8054-55621d31a6e7",
+            "unit_no": 4,
+            "unit_name": "Kimyasal Tepkimelerde Enerji",
+            "topics": [
+              {
+                "id": "04a6d82a-ce89-4284-a055-501a11831b2d",
+                "topic_name": "Termokimya"
+              },
+              {
+                "id": "c82e849d-5cc0-4230-870d-04352f28fa8a",
+                "topic_name": "Entalpi değişimi"
+              },
+              {
+                "id": "bd5d296d-3503-40e7-885e-c68d1b585e3b",
+                "topic_name": "Hess yasası ve uygulamaları"
+              },
+              {
+                "id": "c1bbb0fc-efd4-4fd8-a0b5-8671f8b8683f",
+                "topic_name": "Yanma entalpisi"
+              },
+              {
+                "id": "b8f03277-7770-4183-ab6e-ab7d4abae6d5",
+                "topic_name": "Oluşum entalpisi"
+              },
+              {
+                "id": "0b783d30-b852-4f1d-b450-fb88fb896d20",
+                "topic_name": "Bağ enerjisi"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "b1eb3d3e-81e0-450c-a711-31720b57c331",
+        "grade": "12",
+        "units": [
+          {
+            "id": "53d86783-e715-427c-8d5b-f6e8201b61f9",
+            "unit_no": 1,
+            "unit_name": "Kimya ve Elektrik (Elektrokimya)",
+            "topics": [
+              {
+                "id": "5080d99f-fc20-4e03-bb8f-2cca0bc3c8b4",
+                "topic_name": "Redoks tepkimeleri"
+              },
+              {
+                "id": "23cf4082-bd0f-4535-bbdd-e91a6bf7d843",
+                "topic_name": "İndirgenme-yükseltgenme"
+              },
+              {
+                "id": "1a7dd5c7-c756-4705-99c6-76d3a5729599",
+                "topic_name": "Elektrot potansiyelleri"
+              },
+              {
+                "id": "0d598f3a-362f-41d9-accb-600d81b0afe7",
+                "topic_name": "Elektrokimyasal hücreler"
+              },
+              {
+                "id": "ea311c11-f5e5-4cff-8c93-0d160a178a65",
+                "topic_name": "Galvanik piller"
+              },
+              {
+                "id": "f4198b3d-d56d-48da-8abe-d92a8cc23124",
+                "topic_name": "Lityum iyon piller"
+              },
+              {
+                "id": "b2520935-d695-49fb-a79d-0553e33e5a42",
+                "topic_name": "Elektroliz"
+              },
+              {
+                "id": "e7f09f35-3c6b-4cce-b564-9066db615e49",
+                "topic_name": "Korozyon ve korunma"
+              }
+            ]
+          },
+          {
+            "id": "4b5673b9-510a-4f8a-87a8-e4dc224266f5",
+            "unit_no": 2,
+            "unit_name": "Karbon Kimyasına Giriş",
+            "topics": [
+              {
+                "id": "66e96f4f-702d-4e9a-bade-5028a8acde32",
+                "topic_name": "Organik bileşikler"
+              },
+              {
+                "id": "37c77ca1-f435-4dd9-ae42-54954349d3b2",
+                "topic_name": "Hidrokarbonlar (alkanlar, alkenler, alkinler)"
+              },
+              {
+                "id": "36b31a0c-fd3b-4184-8350-8223c06a1d5d",
+                "topic_name": "Aromatik bileşikler"
+              },
+              {
+                "id": "76bd24d1-7285-4711-9c2d-9e349f6f7bc5",
+                "topic_name": "İzomeri"
+              },
+              {
+                "id": "fd91a949-8510-4837-a64b-6d5bfe615627",
+                "topic_name": "Fonksiyonel gruplar"
+              },
+              {
+                "id": "dbb34a8a-5665-49c7-9bf5-f8e869f43dc8",
+                "topic_name": "Organik tepkimeler"
+              }
+            ]
+          },
+          {
+            "id": "08939bbc-2f7d-4587-9be8-5c5ffb2364d3",
+            "unit_no": 3,
+            "unit_name": "Organik Bileşikler",
+            "topics": [
+              {
+                "id": "ef86ea20-ef94-4510-a3b9-77e08891f701",
+                "topic_name": "Alkoller ve eterler"
+              },
+              {
+                "id": "839ccc84-bc06-4eeb-80f2-b0322e4a4e4a",
+                "topic_name": "Aldehitler ve ketonlar"
+              },
+              {
+                "id": "e45c2247-60dd-483d-9459-9e1c97e6bfd4",
+                "topic_name": "Karboksilik asitler"
+              },
+              {
+                "id": "b5836425-6d1d-477d-b04c-c83d3d9145a0",
+                "topic_name": "Esterler"
+              },
+              {
+                "id": "de35ae06-5fe0-4a13-86df-dfc7e4bcc21b",
+                "topic_name": "Aminler ve amidler"
+              },
+              {
+                "id": "c19a86c3-e84e-4aec-b190-74910bbaa7c2",
+                "topic_name": "Organik reaksiyonlar"
+              }
+            ]
+          },
+          {
+            "id": "4f6dd508-5229-4109-890b-7b4b24d5a8aa",
+            "unit_no": 4,
+            "unit_name": "Biyokimya ve Yaşam",
+            "topics": [
+              {
+                "id": "8e09dd31-7089-45b1-9252-218808f817e0",
+                "topic_name": "Karbonhidratlar"
+              },
+              {
+                "id": "7b254099-727a-4462-86d6-4e8a264b31f1",
+                "topic_name": "Proteinler ve amino asitler"
+              },
+              {
+                "id": "c4e7a055-6abb-442e-943c-e66e42173081",
+                "topic_name": "Lipidler (yağlar)"
+              },
+              {
+                "id": "f38dbae5-5217-49af-85a0-87600e49df41",
+                "topic_name": "Nükleik asitler (DNA, RNA)"
+              },
+              {
+                "id": "28799c14-420d-4da9-a2ad-47ee8503a136",
+                "topic_name": "Enzimler"
+              },
+              {
+                "id": "c04da300-9730-4d93-bcc5-444796129c5e",
+                "topic_name": "Vitaminler ve mineraller"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "3ae0fd03-5f9a-40a3-9558-37ff6bd870c5",
+        "grade": "9",
+        "units": [
+          {
+            "id": "23256dd4-0c91-4570-9a8f-f9976b71f62e",
+            "unit_no": 1,
+            "unit_name": "Kimya Bilimi",
+            "topics": [
+              {
+                "id": "d57fd04a-59f2-4a74-8de8-df2ad6b037cb",
+                "topic_name": "Kimya nedir, kimyanın alt dalları"
+              },
+              {
+                "id": "9c3ea415-cc4c-428b-8d93-1ce58e4c1286",
+                "topic_name": "Kimyanın diğer bilimlerle ilişkisi"
+              },
+              {
+                "id": "af7f652a-a5f5-4bdd-a992-ba5dc369d814",
+                "topic_name": "Kimya ve teknoloji"
+              },
+              {
+                "id": "7d985be4-fce2-4b49-98fc-4d6cbba7851d",
+                "topic_name": "Kimyacıların çalışma alanları"
+              },
+              {
+                "id": "95fee9e4-6123-4579-873e-ccf87b7d91b9",
+                "topic_name": "Laboratuvar güvenliği"
+              },
+              {
+                "id": "77ce99a1-9117-46a4-b4b7-3b330950d189",
+                "topic_name": "Kimyasal maddeler ve semboller"
+              }
+            ]
+          },
+          {
+            "id": "87fb435e-35b7-4b64-bb46-4160cbcf0f90",
+            "unit_no": 2,
+            "unit_name": "Atom ve Periyodik Sistem",
+            "topics": [
+              {
+                "id": "adf5b0eb-d031-4315-b4e2-a83f7b548bcc",
+                "topic_name": "Atomun yapısı ve temel parçacıklar"
+              },
+              {
+                "id": "1cffab9f-399a-44ae-9779-a8a5b2bf240f",
+                "topic_name": "Atom modelleri (Dalton, Thomson, Rutherford, Bohr)"
+              },
+              {
+                "id": "bd544c7d-fcba-490e-8028-f16bdc5aed5f",
+                "topic_name": "Atom numarası ve kütle numarası"
+              },
+              {
+                "id": "d13d3820-be9c-4223-8ad3-8f86a06fa36f",
+                "topic_name": "İzotoplar"
+              },
+              {
+                "id": "a31049d6-2986-4d2e-9c6b-6ff86ce38818",
+                "topic_name": "Periyodik sistemin gelişimi"
+              },
+              {
+                "id": "e46184b0-5484-402d-b08a-b483a5af206d",
+                "topic_name": "Periyodik cetvel ve özellikleri"
+              }
+            ]
+          },
+          {
+            "id": "7abc53a5-46a1-4fd0-a087-bd308283dce7",
+            "unit_no": 3,
+            "unit_name": "Kimyasal Türler Arası Etkileşimler",
+            "topics": [
+              {
+                "id": "98021c8b-203e-4431-b288-3918acc1ab89",
+                "topic_name": "Kimyasal bağlar (iyonik, kovalent, metalik)"
+              },
+              {
+                "id": "9fa15e60-159c-4cdf-9878-82b47f7b537f",
+                "topic_name": "Moleküller arası kuvvetler"
+              },
+              {
+                "id": "7e403577-e0af-4ee0-9f65-76bbd4cfeb66",
+                "topic_name": "Elektron dizilimi ve Lewis yapıları"
+              },
+              {
+                "id": "16f40f4f-a78c-4939-98cf-d232c027dacf",
+                "topic_name": "Polar ve apolar moleküller"
+              },
+              {
+                "id": "35c751c7-5b6f-42f0-a6af-5f253cf6167a",
+                "topic_name": "Hidrojen bağı"
+              }
+            ]
+          },
+          {
+            "id": "33921cf4-7948-4a34-83d3-b6bf8bce9e51",
+            "unit_no": 4,
+            "unit_name": "Maddenin Halleri",
+            "topics": [
+              {
+                "id": "dfa90b28-dc23-4160-9c69-7f134ff7d876",
+                "topic_name": "Gazlar ve gaz yasaları"
+              },
+              {
+                "id": "e34cef5c-8962-4826-8a15-c1a4d8c87881",
+                "topic_name": "İdeal gaz denklemi"
+              },
+              {
+                "id": "3aaa82d7-93ee-48d0-ae7e-ffa7eebc1891",
+                "topic_name": "Sıvılar ve özellikleri"
+              },
+              {
+                "id": "e0fc5b80-95ef-4f1b-8e44-2c018421402b",
+                "topic_name": "Katılar ve kristal yapılar"
+              },
+              {
+                "id": "780d607c-ccc2-4147-9d58-9af19a32c5a1",
+                "topic_name": "Hal değişimleri ve faz diyagramları"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "ab4a55d0-18dd-4fc7-8e85-e8f407d9f296",
+    "subject_name": "Biyoloji",
+    "grades": [
+      {
+        "id": "4695fe82-194f-4502-8043-7c959d559979",
+        "grade": "10",
+        "units": [
+          {
+            "id": "a7aa99f4-f8ca-4079-9a24-a039e887b781",
+            "unit_no": 1,
+            "unit_name": "Hücre Bölünmeleri ve Kalıtım",
+            "topics": [
+              {
+                "id": "653ace96-98b2-4812-9d58-b52818a3e228",
+                "topic_name": "Hücre döngüsü"
+              },
+              {
+                "id": "4492d91d-8af1-4830-a6d6-728d204f58fd",
+                "topic_name": "Mitoz ve evre detayları"
+              },
+              {
+                "id": "818ee905-7754-479d-bad6-c013b3b69e96",
+                "topic_name": "Mayoz ve evre detayları"
+              },
+              {
+                "id": "df52bda6-9ae1-4abc-9773-aa76d1848ffd",
+                "topic_name": "Mitoz ve mayoz karşılaştırması"
+              },
+              {
+                "id": "77dc5335-29b5-4196-b9a8-3a223e30e321",
+                "topic_name": "Kalıtım kavramı"
+              },
+              {
+                "id": "763428c2-4baa-4f41-9a1b-e7ec9acebd80",
+                "topic_name": "Mendel'in çalışmaları ve yasaları"
+              }
+            ]
+          },
+          {
+            "id": "1dc23bf8-a771-41f2-b73e-501d4f24a049",
+            "unit_no": 2,
+            "unit_name": "Ekosistem Ekolojisi",
+            "topics": [
+              {
+                "id": "130eceff-0ba2-4644-9566-4ea525a9fce7",
+                "topic_name": "Ekosistem kavramı ve bileşenleri"
+              },
+              {
+                "id": "069d9a3a-6b87-4900-99ec-ab6c3bdb3822",
+                "topic_name": "Besin zincirleri ve ağları"
+              },
+              {
+                "id": "a040863b-641d-4165-93c4-b4732a976f95",
+                "topic_name": "Enerji akışı"
+              },
+              {
+                "id": "18ddca79-7b68-4238-bc41-fdf4a6f08ff5",
+                "topic_name": "Madde döngüleri (karbon, azot, su)"
+              },
+              {
+                "id": "0f97667b-0194-49a8-af6a-7116f3dc06b9",
+                "topic_name": "Ekolojik piramitler"
+              },
+              {
+                "id": "b5fa5de4-9b4c-4ac1-83ed-fa2213a16bec",
+                "topic_name": "Populasyon ekolojisi"
+              }
+            ]
+          },
+          {
+            "id": "8c162c3b-2624-4b56-9d95-f9a2642e8f46",
+            "unit_no": 3,
+            "unit_name": "Canlılarda Enerji Dönüşümleri",
+            "topics": [
+              {
+                "id": "4e38291d-a827-406d-896d-3c18bf8385c4",
+                "topic_name": "ATP ve enerji"
+              },
+              {
+                "id": "b550f3f6-3f0e-4bc1-8fad-9a76562acfc6",
+                "topic_name": "Fotosentez ve aşamaları"
+              },
+              {
+                "id": "02ebe26d-580c-4c20-a262-67cb84d22ab9",
+                "topic_name": "Kemosentez"
+              },
+              {
+                "id": "95c1bb21-00e4-4583-a666-d10e9f4f1a0c",
+                "topic_name": "Hücresel solunum (oksijenli ve oksijensiz)"
+              },
+              {
+                "id": "e831ec5c-4a3f-4232-8645-48dcf7f0dad8",
+                "topic_name": "Fermantasyon"
+              },
+              {
+                "id": "bde63bef-e3b6-453a-85f7-5bc61f95976c",
+                "topic_name": "Enerji metabolizması"
+              }
+            ]
+          },
+          {
+            "id": "e2e45723-a0c8-42ef-a67c-39c545e51314",
+            "unit_no": 4,
+            "unit_name": "Duyu Organları",
+            "topics": [
+              {
+                "id": "e41c2f25-2508-4295-adf1-1590fd19d6ed",
+                "topic_name": "Göz ve görme"
+              },
+              {
+                "id": "271c9a3b-08f6-4f1c-b6bc-af9068c5b986",
+                "topic_name": "Kulak ve işitme-denge"
+              },
+              {
+                "id": "2adf3be7-6001-48b6-9863-ff057bb471ed",
+                "topic_name": "Burun ve koklama"
+              },
+              {
+                "id": "c4aa2b00-e43d-4f01-8c19-4024adc3ef93",
+                "topic_name": "Dil ve tatma"
+              },
+              {
+                "id": "9e7f4d09-580d-4b42-8a25-484eac5e8c27",
+                "topic_name": "Deri ve dokunma"
+              },
+              {
+                "id": "3b4f7720-04c5-4eae-b885-56db75b946a8",
+                "topic_name": "Duyu organlarının sağlığı"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "c8839b45-aafb-4d62-880f-5bfcd6b58f2a",
+        "grade": "11",
+        "units": [
+          {
+            "id": "77770a7d-1fb7-418c-b3d0-4723206ec61c",
+            "unit_no": 1,
+            "unit_name": "Komünite ve Populasyon Ekolojisi",
+            "topics": [
+              {
+                "id": "ea189127-18b2-4c3c-b64f-fbd132335385",
+                "topic_name": "Populasyon özellikleri"
+              },
+              {
+                "id": "967d9f2f-93f9-4d12-8477-3eba49321966",
+                "topic_name": "Populasyon büyümesi"
+              },
+              {
+                "id": "f252bdc1-82e0-4a93-92b2-fdfe76d73fd1",
+                "topic_name": "Populasyon yoğunluğu ve dağılımı"
+              },
+              {
+                "id": "1696b89a-8a31-4dd1-8890-70a5394093d3",
+                "topic_name": "Komünite yapısı"
+              },
+              {
+                "id": "f5156f24-90c6-4ac9-bebe-2aefc01d43c4",
+                "topic_name": "Türler arası ilişkiler"
+              },
+              {
+                "id": "1af0c503-fc7b-494f-968e-7adb74eba524",
+                "topic_name": "Ekolojik süksesyon"
+              }
+            ]
+          },
+          {
+            "id": "b6946dac-5d81-456a-be7b-034da85b91b6",
+            "unit_no": 2,
+            "unit_name": "Canlılarda Enerji Dönüşümleri",
+            "topics": [
+              {
+                "id": "9ec1e124-262d-49f2-a23a-1dd2db13f991",
+                "topic_name": "Enzimler ve çalışma mekanizmaları"
+              },
+              {
+                "id": "03490b44-d993-4aab-a6eb-6ebf359ca8fc",
+                "topic_name": "Fotosentez ve aşamaları (ışık ve karanlık evresi)"
+              },
+              {
+                "id": "0b40d318-b5a1-48a9-b54a-04f3ce2a1ddf",
+                "topic_name": "Kemosentez"
+              },
+              {
+                "id": "4e191614-c94c-4c94-9052-f53f6ddb647d",
+                "topic_name": "Hücresel solunum (oksijenli ve oksijensiz)"
+              },
+              {
+                "id": "1f387e7f-a4ab-4d6f-85e0-472583c501b8",
+                "topic_name": "Fermantasyon türleri"
+              },
+              {
+                "id": "e71e8405-12ba-4073-b1cb-89730649add4",
+                "topic_name": "Enerji metabolizması karşılaştırma"
+              }
+            ]
+          },
+          {
+            "id": "c8241250-00d4-417a-a1d7-0fafe197502f",
+            "unit_no": 3,
+            "unit_name": "Bitkilerde Büyüme ve Gelişme",
+            "topics": [
+              {
+                "id": "28e3d21d-6ee5-44f2-acb1-1b44c7b3739c",
+                "topic_name": "Bitki hormonları (oksin, sitokinin, giberellin, etilen, absisik asit)"
+              },
+              {
+                "id": "9ccd9023-c268-4a1b-b030-defd8408f038",
+                "topic_name": "Hormonların etkileri"
+              },
+              {
+                "id": "79c0eebd-fe4c-45a1-ba80-48392f81ceaf",
+                "topic_name": "Tropizmalar (fototropizma, geotropizma, hidrotropizma)"
+              },
+              {
+                "id": "70860e40-81b9-4d40-a67f-b0c40e7a0d58",
+                "topic_name": "Nasti hareketleri"
+              },
+              {
+                "id": "2e1c8f73-2e13-4f83-922f-b1909762b84e",
+                "topic_name": "Çimlenme ve faktörleri"
+              },
+              {
+                "id": "f8ed4e7c-1a22-4ec6-8ec7-a2f7a9de32c6",
+                "topic_name": "Bitki gelişim evreleri"
+              }
+            ]
+          },
+          {
+            "id": "43365545-fd7a-45d4-bf92-7e0a0aa13e48",
+            "unit_no": 4,
+            "unit_name": "Canlılarda Homeostazi",
+            "topics": [
+              {
+                "id": "9f11e722-31b8-4dc0-91a6-d270179cbf3e",
+                "topic_name": "Homeostazi kavramı"
+              },
+              {
+                "id": "2fd71b73-9cf6-43a6-b81d-e1ba46dc9322",
+                "topic_name": "Geri bildirim mekanizmaları"
+              },
+              {
+                "id": "d4a4071b-d9a4-4c21-9ff9-003b2fb5f06d",
+                "topic_name": "Boşaltım sistemi ve özellikleri"
+              },
+              {
+                "id": "6b88c796-91b0-4a2e-9024-0977a11e5d52",
+                "topic_name": "Böbrek yapısı ve çalışması"
+              },
+              {
+                "id": "24baabc9-7238-42b8-93db-d5c6effe1ee2",
+                "topic_name": "Su dengesi"
+              },
+              {
+                "id": "fbc9a277-2e4b-4fec-97fa-8cf03fdc595b",
+                "topic_name": "Vücut ısısının düzenlenmesi"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "42fe3a5f-eca9-4039-8349-e555301f2221",
+        "grade": "12",
+        "units": [
+          {
+            "id": "f00ba5fa-3126-4945-a5ba-878d8b376d53",
+            "unit_no": 1,
+            "unit_name": "Genden Proteine",
+            "topics": [
+              {
+                "id": "d5082789-451b-4fba-ba4f-b2a61f861069",
+                "topic_name": "DNA yapısı ve keşfi"
+              },
+              {
+                "id": "dc635e9b-fd34-41e1-9663-f6b44380e3c0",
+                "topic_name": "DNA replikasyonu (kendini eşleme)"
+              },
+              {
+                "id": "450d1b3d-7ed9-451d-afbc-8ab6f9b233ea",
+                "topic_name": "Genetik şifre"
+              },
+              {
+                "id": "4c63805c-50f9-41bc-b0c6-8ef9526311a5",
+                "topic_name": "Protein sentezi (transkripsiyon ve translasyon)"
+              },
+              {
+                "id": "79f943a7-5a17-4c17-97b5-0c79723bcf31",
+                "topic_name": "RNA türleri (mRNA, tRNA, rRNA)"
+              },
+              {
+                "id": "aea05822-91c8-4626-95c7-407ae8f603fb",
+                "topic_name": "Mutasyonlar"
+              },
+              {
+                "id": "5a3a01c9-60ec-41c9-ba08-86fed91c5453",
+                "topic_name": "Genetik mühendisliği ve biyoteknoloji"
+              }
+            ]
+          },
+          {
+            "id": "c76f5126-39da-403e-a688-8033a10baacb",
+            "unit_no": 2,
+            "unit_name": "Canlılık ve Enerji İlişkileri",
+            "topics": [
+              {
+                "id": "0802a50f-870c-446b-aeda-0f594b9b229e",
+                "topic_name": "Fotosentez detaylı incelemesi"
+              },
+              {
+                "id": "d48a7cc8-bd2c-40b6-bfae-33672b2a4539",
+                "topic_name": "Işık ve karanlık evreleri"
+              },
+              {
+                "id": "1d113d7a-1d8b-430a-9fb4-b92a0fd0de8e",
+                "topic_name": "Fotosentezi etkileyen faktörler"
+              },
+              {
+                "id": "4828340c-b648-4d4e-9590-64b8baf20104",
+                "topic_name": "Hücresel solunum ve ATP üretimi"
+              },
+              {
+                "id": "bac5d84b-3ba8-4a43-8555-c483013c9b82",
+                "topic_name": "Glikoliz, Krebs döngüsü, elektron transport zinciri"
+              },
+              {
+                "id": "613d9033-ae75-4607-9124-9998396d67f9",
+                "topic_name": "Fermantasyon türleri"
+              }
+            ]
+          },
+          {
+            "id": "9d9f6f91-08cd-4c04-9f3c-8280e388070c",
+            "unit_no": 3,
+            "unit_name": "Populasyon Genetiği ve Evrim",
+            "topics": [
+              {
+                "id": "d733f0a6-f9d2-46f5-bfc5-fc66a9e253ae",
+                "topic_name": "Hardy-Weinberg dengesi"
+              },
+              {
+                "id": "36a10738-f0f5-4ff8-a6ec-9c7464bc3e98",
+                "topic_name": "Gen frekansları"
+              },
+              {
+                "id": "a39d3b58-a985-4eb9-87e8-392df6b43196",
+                "topic_name": "Evrim teorisi"
+              },
+              {
+                "id": "3ba57a4f-e7e5-4f47-8bf7-759eabf0ac15",
+                "topic_name": "Doğal seçilim"
+              },
+              {
+                "id": "69961b97-855d-4d1f-ba2b-540619f6a131",
+                "topic_name": "Genetik varyasyon"
+              },
+              {
+                "id": "bda748fc-6560-4899-85d0-aae1232f02b5",
+                "topic_name": "Türleşme (spesiyasyon)"
+              },
+              {
+                "id": "04bdbf85-f12e-4f48-b579-d93f62a4902c",
+                "topic_name": "Evrimin kanıtları"
+              }
+            ]
+          },
+          {
+            "id": "dfa2ecd4-7ec7-4cbc-8f74-90d2d5dbe0d6",
+            "unit_no": 4,
+            "unit_name": "Güncel Biyoloji ve Uygulamalar",
+            "topics": [
+              {
+                "id": "bf17161b-06a1-483b-ad65-0460099ca794",
+                "topic_name": "Biyoteknoloji uygulamaları"
+              },
+              {
+                "id": "bf6a3d22-65f7-44da-90fb-860724d12cbc",
+                "topic_name": "GDO (Genetiği Değiştirilmiş Organizmalar)"
+              },
+              {
+                "id": "0036e8be-8e5e-4380-be76-361a0de0ca17",
+                "topic_name": "Kök hücre araştırmaları"
+              },
+              {
+                "id": "4dd0f898-7351-4c0c-824e-c1137ddb8c7a",
+                "topic_name": "İnsan genom projesi"
+              },
+              {
+                "id": "6b943179-e845-4a15-9638-ff5cb7dd90dd",
+                "topic_name": "Biyoetik"
+              },
+              {
+                "id": "14219280-ceb1-4486-b670-4f54758da348",
+                "topic_name": "Çevre ve canlılar"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "66d8e348-d98b-4642-aa31-6a12f528436c",
+        "grade": "9",
+        "units": [
+          {
+            "id": "46bdabe9-3163-4b30-810c-393904b590c5",
+            "unit_no": 1,
+            "unit_name": "Biyoloji Bilimi",
+            "topics": [
+              {
+                "id": "c117d25a-265b-4a75-85d3-ecf52d6a9768",
+                "topic_name": "Biyolojinin tanımı ve kapsamı"
+              },
+              {
+                "id": "9bb53e95-cab0-4c7d-9b59-0ef7171c90d3",
+                "topic_name": "Biyolojinin alt dalları"
+              },
+              {
+                "id": "e02a5a56-1e99-4f70-b0a4-c651fa5080b8",
+                "topic_name": "Bilimsel yöntem ve araştırma"
+              },
+              {
+                "id": "97228af3-36c7-49b0-a9c8-b094417db01a",
+                "topic_name": "Canlı biliminin tarihsel gelişimi"
+              },
+              {
+                "id": "3c254809-d571-4781-a651-42e8ee6c298a",
+                "topic_name": "Günlük yaşamda biyolojinin önemi"
+              },
+              {
+                "id": "09a908c5-4f7c-4782-bd4c-456fa2f989d1",
+                "topic_name": "Mikroskop kullanımı"
+              }
+            ]
+          },
+          {
+            "id": "325dbf98-db08-461c-a8bd-fe700a1de495",
+            "unit_no": 2,
+            "unit_name": "Hücre",
+            "topics": [
+              {
+                "id": "97b22841-479e-4ab5-82a0-777b460285ae",
+                "topic_name": "Hücre teorisi"
+              },
+              {
+                "id": "8101131a-dce2-4c92-8edf-7a8294d0d91e",
+                "topic_name": "Prokaryot ve ökaryot hücreler"
+              },
+              {
+                "id": "3e191780-7f9d-4576-9740-8265081cade0",
+                "topic_name": "Hücre organelleri ve görevleri"
+              },
+              {
+                "id": "e94dddc9-2600-4d95-b4eb-d09b3fc48194",
+                "topic_name": "Bitki ve hayvan hücresi farklılıkları"
+              },
+              {
+                "id": "3af2ecb5-5fed-4d4c-876a-ea2379ae18a6",
+                "topic_name": "Hücre zarı ve madde geçişleri"
+              },
+              {
+                "id": "ee020d30-033f-47eb-bcd6-80de73391edc",
+                "topic_name": "Hücrede enerji dönüşümleri"
+              }
+            ]
+          },
+          {
+            "id": "49ba8529-c781-4e00-bbd0-865fe4525f2c",
+            "unit_no": 3,
+            "unit_name": "Canlıların Sınıflandırılması",
+            "topics": [
+              {
+                "id": "afac1af2-c83d-4c9b-ac73-5d85a9d93948",
+                "topic_name": "Sınıflandırmanın önemi ve yöntemleri"
+              },
+              {
+                "id": "45881168-8d7d-4801-96b4-56882efeb1c2",
+                "topic_name": "Taksonomik kategoriler"
+              },
+              {
+                "id": "7d9927da-ffe2-4019-bd16-6c53598a7a50",
+                "topic_name": "Canlılar alemi ve özellikleri"
+              },
+              {
+                "id": "4c953eb4-395a-4623-b0bf-4c931a86a803",
+                "topic_name": "Bakteriler, protistler, mantarlar"
+              },
+              {
+                "id": "c3341e6c-54d9-4d7f-ad4a-c57abde5ed53",
+                "topic_name": "Bitki ve hayvan aleminin genel özellikleri"
+              },
+              {
+                "id": "f2587143-5358-419f-b345-8cbd219b3ea3",
+                "topic_name": "Biyolojik çeşitlilik"
+              }
+            ]
+          },
+          {
+            "id": "f1a21a85-c88e-44ae-bfca-0f163ca07aa1",
+            "unit_no": 4,
+            "unit_name": "Canlılarda Üreme, Büyüme ve Gelişme",
+            "topics": [
+              {
+                "id": "c563811b-03d2-4ced-a4b2-6d4f6c8f8bcd",
+                "topic_name": "Eşeyli ve eşeysiz üreme"
+              },
+              {
+                "id": "ab326a7b-5e9e-48c5-8e1c-f008b8fcfbe7",
+                "topic_name": "Mitoz bölünme"
+              },
+              {
+                "id": "f8c7d089-6750-47f6-a6d0-bd670e708f71",
+                "topic_name": "Mayoz bölünme"
+              },
+              {
+                "id": "8c4a84da-7a0d-484f-8897-a5626962d505",
+                "topic_name": "Gametogenez"
+              },
+              {
+                "id": "3f9577ee-f5eb-4a88-9444-f35cd0a13c9a",
+                "topic_name": "Büyüme ve gelişme evreleri"
+              },
+              {
+                "id": "31065009-d54b-4761-86f6-a067edcf6624",
+                "topic_name": "Embriyonik gelişim"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "75acf46b-2825-4c3f-bd8b-49f4f004e285",
+    "subject_name": "Tarih",
+    "grades": [
+      {
+        "id": "1323a91a-3d5f-4774-b9aa-d2ff41997255",
+        "grade": "10",
+        "units": [
+          {
+            "id": "68de57b3-2474-4377-950f-f5986773dd0e",
+            "unit_no": 1,
+            "unit_name": "İlk ve Orta Çağlarda Türk Dünyası",
+            "topics": [
+              {
+                "id": "b204160d-0707-4b11-ae2d-754c007e4b72",
+                "topic_name": "Büyük Selçuklu Devleti"
+              },
+              {
+                "id": "9508407f-ad4f-4e8a-9e72-d67f1103d38d",
+                "topic_name": "Anadolu Selçuklu Devleti"
+              },
+              {
+                "id": "a268dbad-f592-4e70-bc7a-bf4cbf5baeee",
+                "topic_name": "Beylikler dönemi"
+              },
+              {
+                "id": "af936706-e970-4b24-92fa-24a124f0f087",
+                "topic_name": "Türklerin İslamiyeti kabul süreci"
+              },
+              {
+                "id": "d2037471-1189-4d79-9034-00cf17b33db6",
+                "topic_name": "Moğol istilası ve etkileri"
+              },
+              {
+                "id": "e7e8f602-281b-403d-a0af-f20e26ca379b",
+                "topic_name": "Türk-İslam medeniyeti"
+              }
+            ]
+          },
+          {
+            "id": "d2afb0ce-3b98-494f-838e-637e2e9b3a90",
+            "unit_no": 2,
+            "unit_name": "Osmanlı Devleti'nin Kuruluşu",
+            "topics": [
+              {
+                "id": "97c4d150-d867-4e19-b856-6d14432e4d0a",
+                "topic_name": "Osmanlı Beyliği'nin kuruluşu"
+              },
+              {
+                "id": "cbebd9fc-97bb-400a-95f0-a0a732c29732",
+                "topic_name": "İlk dönem Osmanlı hükümdarları"
+              },
+              {
+                "id": "73defb09-09c9-42fa-b38c-216e630f3ce9",
+                "topic_name": "Fetih hareketleri"
+              },
+              {
+                "id": "2d85cfca-d258-4aec-b2b1-8915839b51d7",
+                "topic_name": "Yıldırım Bayezid dönemi"
+              },
+              {
+                "id": "26020045-8f3a-4bbe-899f-4957b84c9355",
+                "topic_name": "Ankara Savaşı ve Fetret Devri"
+              },
+              {
+                "id": "081b51e1-b283-4a79-a89b-7df57be88ce4",
+                "topic_name": "Devlet teşkilatı"
+              }
+            ]
+          },
+          {
+            "id": "926e5a22-d056-42de-8230-638d3c541007",
+            "unit_no": 3,
+            "unit_name": "Osmanlı Devleti'nin Yükselişi",
+            "topics": [
+              {
+                "id": "798b6a6d-22d6-4290-8c89-17516186f485",
+                "topic_name": "II. Mehmed (Fatih) ve İstanbul'un Fethi"
+              },
+              {
+                "id": "5b549744-0527-4e63-b60a-ca5f7b6e7334",
+                "topic_name": "II. Bayezid dönemi"
+              },
+              {
+                "id": "dfa94c18-f279-4df2-95e5-606773b8a2ee",
+                "topic_name": "Yavuz Sultan Selim ve doğu seferleri"
+              },
+              {
+                "id": "8e659267-ec06-4926-8cc7-32bc43377354",
+                "topic_name": "Kanuni Sultan Süleyman dönemi"
+              },
+              {
+                "id": "23ac2498-0a8d-4c8c-bc97-ff21c73a4ded",
+                "topic_name": "Avrupa seferleri"
+              },
+              {
+                "id": "3c5ee72d-bbdd-4277-9d85-16e2a7625e02",
+                "topic_name": "Kültür ve medeniyet"
+              }
+            ]
+          },
+          {
+            "id": "a78878c8-1356-4eb4-bd0e-db0dbd3ac47d",
+            "unit_no": 4,
+            "unit_name": "Dünya Gücü Osmanlı",
+            "topics": [
+              {
+                "id": "f7b79cbd-dafc-4e68-877d-cbdab5c59f8c",
+                "topic_name": "Osmanlı coğrafyası ve sınırları"
+              },
+              {
+                "id": "f0e66cca-c8a0-439b-a7e6-a0cc8010f502",
+                "topic_name": "Askeri teşkilat"
+              },
+              {
+                "id": "4944d1f5-6b02-408c-a289-25cb7b876475",
+                "topic_name": "İdari yapı"
+              },
+              {
+                "id": "97a520ff-4f87-4330-a10e-68d9a9bf73bb",
+                "topic_name": "Ekonomik sistem"
+              },
+              {
+                "id": "b70c1880-72ea-490e-a085-561842ec1b9d",
+                "topic_name": "Toplum yapısı"
+              },
+              {
+                "id": "183acb52-9397-4f43-97c6-28d3abc0ae01",
+                "topic_name": "Kültür ve sanat"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "70ecff77-e0ae-4641-8dd0-ca11e58ef58a",
+        "grade": "11",
+        "units": [
+          {
+            "id": "f96d90b2-da88-46b5-b78b-1aa103eb4e3c",
+            "unit_no": 1,
+            "unit_name": "Avrupa'da Değişim ve Osmanlı",
+            "topics": [
+              {
+                "id": "2c559522-7d12-431b-bb0d-203b80d2a547",
+                "topic_name": "Coğrafi keşifler ve sonuçları"
+              },
+              {
+                "id": "6eaefa1f-f515-4a30-935e-d900f91f39ee",
+                "topic_name": "Rönesans hareketi"
+              },
+              {
+                "id": "703a7901-9494-4ccf-82af-2157cc23bfaa",
+                "topic_name": "Reform ve Protestanlık"
+              },
+              {
+                "id": "3dedb0b2-f683-45e8-b46f-98fcd5eca616",
+                "topic_name": "Aydınlanma Çağı"
+              },
+              {
+                "id": "839df95f-7ecd-4b40-8309-cba585ac3a0e",
+                "topic_name": "Bilimsel devrim"
+              },
+              {
+                "id": "22b71348-e442-41d2-a372-d948cdb8ce37",
+                "topic_name": "Osmanlı'ya etkileri"
+              }
+            ]
+          },
+          {
+            "id": "00636126-9c7d-48a4-8f5b-36a1067fa6ca",
+            "unit_no": 2,
+            "unit_name": "Değişim Çağında Osmanlı (17-18. Yüzyıl)",
+            "topics": [
+              {
+                "id": "252737d9-4797-4357-8ce1-d635e1d45db1",
+                "topic_name": "Duraklama dönemi"
+              },
+              {
+                "id": "f24d057a-ba3e-4605-8d2e-d4e6db62bde5",
+                "topic_name": "Gerileme sebepleri"
+              },
+              {
+                "id": "49b9388f-8a89-4be1-a8dc-0476e0da4949",
+                "topic_name": "17. yüzyıl olayları"
+              },
+              {
+                "id": "93682fdb-5d81-42e7-a1aa-8deaa99a28d5",
+                "topic_name": "Karlofça Antlaşması"
+              },
+              {
+                "id": "918c1ce6-f764-46c6-b6a0-aa0fd13e198f",
+                "topic_name": "Lale Devri"
+              },
+              {
+                "id": "aa378467-0abb-463d-9efb-3b619803e0c7",
+                "topic_name": "Islahat hareketleri"
+              }
+            ]
+          },
+          {
+            "id": "eb9edd52-c755-4e4c-b2de-046ef676aabe",
+            "unit_no": 3,
+            "unit_name": "Osmanlı'da Modernleşme (19. Yüzyıl)",
+            "topics": [
+              {
+                "id": "1b4781c9-9862-44ae-b485-6acdc9d10e57",
+                "topic_name": "III. Selim dönemi ve Nizam-ı Cedit"
+              },
+              {
+                "id": "ba6199d4-bba8-4e00-b078-1971601f536e",
+                "topic_name": "II. Mahmud dönemi ve Tanzimat öncesi"
+              },
+              {
+                "id": "9cdda2cb-0d65-4ad2-814b-2a80cc56d686",
+                "topic_name": "Tanzimat Fermanı ve reformlar"
+              },
+              {
+                "id": "b6857427-7132-4acf-8468-d59bcee28cbc",
+                "topic_name": "Islahat Fermanı"
+              },
+              {
+                "id": "97cfb3e1-dd38-470d-b8ca-6de893a723a0",
+                "topic_name": "I. Meşrutiyet"
+              },
+              {
+                "id": "ebd8604d-4b6b-4dbe-83c6-10ac190537a2",
+                "topic_name": "II. Abdülhamid dönemi"
+              }
+            ]
+          },
+          {
+            "id": "ff9a3da0-91a3-49d4-bdb7-16d146cd1a78",
+            "unit_no": 4,
+            "unit_name": "İmparatorluktan Ulus Devlete",
+            "topics": [
+              {
+                "id": "3977e777-f202-4331-8e0f-8821eac3c108",
+                "topic_name": "II. Meşrutiyet"
+              },
+              {
+                "id": "bea7f792-f2c3-4628-8fdc-185954369fde",
+                "topic_name": "İttihat ve Terakki"
+              },
+              {
+                "id": "92fc0db4-f6ee-4156-89a7-304e2e4741df",
+                "topic_name": "Balkan Savaşları"
+              },
+              {
+                "id": "defe2e0a-5d20-41fa-9272-c53784570467",
+                "topic_name": "I. Dünya Savaşı"
+              },
+              {
+                "id": "24e443c0-3e4e-492d-9750-fd2b783e31b7",
+                "topic_name": "Mondros Ateşkes Antlaşması"
+              },
+              {
+                "id": "700f71b7-661c-4920-a931-36536fde813c",
+                "topic_name": "Milli Mücadele'nin başlaması"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "88d1cf40-85bc-4a9f-8ce5-5d3e28a55df9",
+        "grade": "12",
+        "units": [
+          {
+            "id": "885aa9ff-ee6d-4aba-9bf9-6306bd19e8e4",
+            "unit_no": 1,
+            "unit_name": "20. Yüzyıl Başlarında Dünya",
+            "topics": [
+              {
+                "id": "421de172-ddfb-4016-a9b7-d585b2930068",
+                "topic_name": "20. yüzyıl başı siyasi durum"
+              },
+              {
+                "id": "a6c2028a-1dc3-44a6-b199-63e2d9559abd",
+                "topic_name": "Emperyalizm ve yarışı"
+              },
+              {
+                "id": "11026696-eb39-4752-ac7b-010900b7b8dc",
+                "topic_name": "I. Dünya Savaşı'nın sebepleri"
+              },
+              {
+                "id": "cd490dc6-4131-450e-af38-206e52de6955",
+                "topic_name": "Osmanlı'nın I. Dünya Savaşı'na girişi"
+              },
+              {
+                "id": "afadc9ef-6358-47e4-845c-2ab0a5437d29",
+                "topic_name": "Cepheler ve sonuçlar"
+              },
+              {
+                "id": "87567fd9-60ec-423b-a7b7-0ada8a94c0a9",
+                "topic_name": "Mondros Ateşkes Antlaşması"
+              }
+            ]
+          },
+          {
+            "id": "1b0f6373-b5f0-41e1-95cf-0a01661510b9",
+            "unit_no": 2,
+            "unit_name": "Millî Mücadele",
+            "topics": [
+              {
+                "id": "eed6756f-a593-4596-9626-36600ca59098",
+                "topic_name": "Mustafa Kemal'in Samsun'a çıkışı"
+              },
+              {
+                "id": "633887ac-15ee-41a2-9365-300ca0ef42a9",
+                "topic_name": "Kongreler dönemi (Erzurum, Sivas)"
+              },
+              {
+                "id": "82e18661-e916-478b-b46b-9071a38d9e3d",
+                "topic_name": "TBMM'nin açılması"
+              },
+              {
+                "id": "5bbcd15d-724e-427f-a1a8-b7295051b8c2",
+                "topic_name": "Düzenli ordu kurulması"
+              },
+              {
+                "id": "8d1b181e-a486-49c8-af86-c543f17d05d9",
+                "topic_name": "Doğu, Güney ve Batı cepheleri"
+              },
+              {
+                "id": "e2719414-f8cf-458d-9af0-f919f489fab2",
+                "topic_name": "Sakarya Meydan Muharebesi"
+              },
+              {
+                "id": "d3998e46-618d-4b4b-a625-a86d32858ada",
+                "topic_name": "Büyük Taarruz ve Başkomutanlık Meydan Muharebesi"
+              }
+            ]
+          },
+          {
+            "id": "78a4302c-b7de-409e-9d5a-4bdc7fdf333a",
+            "unit_no": 3,
+            "unit_name": "Atatürk Dönemi (1923-1938)",
+            "topics": [
+              {
+                "id": "fd16bdd3-48ad-4c82-9690-f7c2eb0e0106",
+                "topic_name": "Lozan Barış Antlaşması"
+              },
+              {
+                "id": "5e76706d-fd30-4ddc-8af0-376a113ce470",
+                "topic_name": "Cumhuriyetin ilanı"
+              },
+              {
+                "id": "056b1f82-b082-462b-b4d4-bb52d52ee57e",
+                "topic_name": "Atatürk ilke ve inkılapları"
+              },
+              {
+                "id": "2d09864e-a609-4ea5-847d-c95568ae7857",
+                "topic_name": "Siyasi alanda inkılaplar"
+              },
+              {
+                "id": "af02860e-fef3-4801-81c3-f7b7caf6d051",
+                "topic_name": "Sosyal ve kültürel inkılaplar"
+              },
+              {
+                "id": "93d5e4f1-6cd2-4c55-a760-e3f4a5193236",
+                "topic_name": "Ekonomik inkılaplar"
+              },
+              {
+                "id": "64c77d10-8f52-4b41-b2c3-4d94cd7a11b0",
+                "topic_name": "Eğitim alanında değişimler"
+              },
+              {
+                "id": "2dc147f1-9fc0-4742-b01c-cbfede7a90a1",
+                "topic_name": "Dış politika"
+              }
+            ]
+          },
+          {
+            "id": "8859aa68-3278-464e-a732-1d9bc770bcb5",
+            "unit_no": 4,
+            "unit_name": "II. Dünya Savaşı ve Sonrası Türkiye",
+            "topics": [
+              {
+                "id": "a26611a1-28c7-4565-b3d8-3ff5df824f52",
+                "topic_name": "II. Dünya Savaşı'nın sebepleri ve gelişimi"
+              },
+              {
+                "id": "ae72c546-0cce-46c3-a79b-08c63c1b8259",
+                "topic_name": "Türkiye'nin tarafsızlık politikası"
+              },
+              {
+                "id": "5d4c4a5d-2599-4598-9409-a31356816214",
+                "topic_name": "Savaş sonrası dünya düzeni"
+              },
+              {
+                "id": "0d86a6d3-13d5-4c04-9c97-ea15cbba13f3",
+                "topic_name": "Soğuk Savaş dönemi"
+              },
+              {
+                "id": "c7d626a1-51bd-4c21-acf6-c31195457f14",
+                "topic_name": "Çok partili hayata geçiş"
+              },
+              {
+                "id": "c72dd175-f7a8-4371-98d7-c434b4da2b0e",
+                "topic_name": "Demokrat Parti dönemi"
+              },
+              {
+                "id": "359886f2-a360-4334-b610-47cc65ffb5cd",
+                "topic_name": "Türkiye'nin NATO'ya girişi"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "4dcec488-569e-4d14-8612-892db3bfb003",
+        "grade": "9",
+        "units": [
+          {
+            "id": "5d67c0b8-706e-4a52-9216-a2014d88ac5f",
+            "unit_no": 1,
+            "unit_name": "Tarih ve Zaman",
+            "topics": [
+              {
+                "id": "aa1ef1bc-d4ef-4274-9081-288e6173fe73",
+                "topic_name": "Tarih nedir, tarih bilimi"
+              },
+              {
+                "id": "fb9172fa-e4c7-4b1b-98e7-ff99c551e597",
+                "topic_name": "Tarih biliminin yöntemi"
+              },
+              {
+                "id": "091cf69f-0010-4d26-bed4-86802245167c",
+                "topic_name": "Tarihî kaynaklar ve sınıflandırılması"
+              },
+              {
+                "id": "34056c4c-b6a0-49df-8de4-6069efab6cf1",
+                "topic_name": "Arkeolojik kaynaklar"
+              },
+              {
+                "id": "0f4af8a7-268e-4741-8f51-ebe15969e568",
+                "topic_name": "Zamanı ölçme yöntemleri"
+              },
+              {
+                "id": "8ba5675d-2bec-4f45-bbb6-ea1d53c1f629",
+                "topic_name": "Takvim sistemleri"
+              },
+              {
+                "id": "2c2c45f9-1315-4579-9707-c1ff3cc6e9bd",
+                "topic_name": "Tarihte neden-sonuç ilişkisi"
+              },
+              {
+                "id": "dea29a5a-f3fb-485e-aa16-237a67b29139",
+                "topic_name": "Kronoloji"
+              }
+            ]
+          },
+          {
+            "id": "ab09df8a-d2e1-4c6d-9990-72b0fd9d1747",
+            "unit_no": 2,
+            "unit_name": "İnsanlığın İlk Dönemleri",
+            "topics": [
+              {
+                "id": "10369bf4-2b32-4aa9-841d-f343935e4b4e",
+                "topic_name": "Tarih öncesi çağlar (Paleolitik, Mezolitik, Neolitik)"
+              },
+              {
+                "id": "58c6bc86-3a6e-48b8-86c9-c76407dd2314",
+                "topic_name": "Taş Devri ve özellikleri"
+              },
+              {
+                "id": "f33a930f-0d9b-4a03-af03-0806e3e42858",
+                "topic_name": "Maden Devri (Kalkolitik, Tunç, Demir çağları)"
+              },
+              {
+                "id": "37620f9c-caff-45cc-b91a-da25f57c65d1",
+                "topic_name": "İlk yerleşim yerleri"
+              },
+              {
+                "id": "f1ffb8b9-a8bc-4ca1-9347-8193d33fd784",
+                "topic_name": "Tarımın ve hayvancılığın başlaması"
+              },
+              {
+                "id": "08a9895a-28bb-48cc-ab3c-b78819b01092",
+                "topic_name": "İlk topluluklar ve sosyal yapı"
+              }
+            ]
+          },
+          {
+            "id": "fdfce19d-1210-47f7-a168-fc2cd443c674",
+            "unit_no": 3,
+            "unit_name": "İlk ve Orta Çağ Uygarlıkları",
+            "topics": [
+              {
+                "id": "de1fe830-c9da-4c5c-a77d-d0255fc67ea4",
+                "topic_name": "Mezopotamya uygarlıkları (Sümer, Akad, Babil, Asur)"
+              },
+              {
+                "id": "ad92dcff-7592-4733-a870-b8f019ffc008",
+                "topic_name": "Eski Mısır uygarlığı"
+              },
+              {
+                "id": "9546b0ee-a751-4f4c-b31b-227f6307cc7a",
+                "topic_name": "Anadolu'nun ilk uygarlıkları (Hititler, Frigler, Lidyalılar)"
+              },
+              {
+                "id": "83773e46-8db6-4a14-bc0a-f867930d77cf",
+                "topic_name": "Eski Yunan uygarlığı"
+              },
+              {
+                "id": "146f81cf-e0b8-4fea-9c66-b324e46afa19",
+                "topic_name": "Roma İmparatorluğu"
+              },
+              {
+                "id": "ec73d17e-c32b-4bbb-b078-363a076df7a0",
+                "topic_name": "Orta Çağ Avrupa'sı"
+              },
+              {
+                "id": "44e1e64f-f234-44c4-aaac-b057ba9da06f",
+                "topic_name": "Bizans İmparatorluğu"
+              }
+            ]
+          },
+          {
+            "id": "10b8addf-4928-4dc5-b4ab-55823c699085",
+            "unit_no": 4,
+            "unit_name": "İlk Türk Devletleri",
+            "topics": [
+              {
+                "id": "b80e25b4-6f92-4ed8-a5d1-043d70d84d00",
+                "topic_name": "Türklerin ana yurdu ve yayılışı"
+              },
+              {
+                "id": "a99591ec-4d23-4ec4-ad4d-e4fa82e6572f",
+                "topic_name": "Hun Devleti"
+              },
+              {
+                "id": "6b973e76-c22d-424b-a73b-02a4c3c36206",
+                "topic_name": "Göktürk Devleti"
+              },
+              {
+                "id": "3fdb10cd-b1f4-4c48-af7b-058c879c53b7",
+                "topic_name": "Uygur Devleti"
+              },
+              {
+                "id": "24441fc7-1d3f-43dd-8b3f-dc75056567ef",
+                "topic_name": "İslamiyet'in kabulü"
+              },
+              {
+                "id": "c2da696c-a3b5-45a6-b5ba-caa226bb6f53",
+                "topic_name": "Karahanlılar ve Gazneliler"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "a3deed02-a33a-4082-95b2-63ce46774847",
+    "subject_name": "Coğrafya",
+    "grades": [
+      {
+        "id": "9cfb47c9-22aa-49eb-9f0f-436721bedf00",
+        "grade": "10",
+        "units": [
+          {
+            "id": "3e52155a-d732-47a9-80c0-b74b91151638",
+            "unit_no": 1,
+            "unit_name": "Doğal Sistemler - İklim",
+            "topics": [
+              {
+                "id": "12360c28-8363-405e-88c2-534cf144d9fc",
+                "topic_name": "İklim elemanları (sıcaklık, basınç, rüzgar, nem, yağış)"
+              },
+              {
+                "id": "dd5ae330-f775-4d4e-9335-84498085574b",
+                "topic_name": "İklimi etkileyen faktörler"
+              },
+              {
+                "id": "7260589d-41ff-48ea-85e5-5e96b3f9cb62",
+                "topic_name": "Dünya iklim tipleri"
+              },
+              {
+                "id": "4b90a053-0288-4057-8521-5368915c7937",
+                "topic_name": "Türkiye'nin iklim özellikleri"
+              },
+              {
+                "id": "ec9540f6-1304-4bad-ba00-22677a64bf68",
+                "topic_name": "İklim değişikliği"
+              },
+              {
+                "id": "46b48f71-50e5-4971-acbd-80d365d98072",
+                "topic_name": "Kuraklık ve çölleşme"
+              }
+            ]
+          },
+          {
+            "id": "9fd4483c-7f06-46c6-a137-67c59164949c",
+            "unit_no": 2,
+            "unit_name": "Toprak ve Bitki Örtüsü",
+            "topics": [
+              {
+                "id": "80016a0a-f4a8-4ab3-a1ee-aff809a1be65",
+                "topic_name": "Toprak oluşumu"
+              },
+              {
+                "id": "fbe6dfa4-8598-41d6-948f-c828a0d9e647",
+                "topic_name": "Toprak türleri"
+              },
+              {
+                "id": "197950cd-3d6e-41b8-84ae-8b52d54bb2c6",
+                "topic_name": "Türkiye'de toprak dağılışı"
+              },
+              {
+                "id": "167fa2aa-82aa-4107-b75e-41b36ad6adb1",
+                "topic_name": "Bitki formasyonları"
+              },
+              {
+                "id": "64da5e72-71d8-451c-afd1-7a483cf46326",
+                "topic_name": "Ormanlar ve özellikleri"
+              },
+              {
+                "id": "77a38d84-a8ca-43af-87c0-af329c2ec5ca",
+                "topic_name": "Doğal bitki örtüsü"
+              }
+            ]
+          },
+          {
+            "id": "dfdc6fc7-9d7a-4652-b889-6393f0982101",
+            "unit_no": 3,
+            "unit_name": "Beşerî Sistemler - Nüfus",
+            "topics": [
+              {
+                "id": "702836da-c31c-4d30-be18-a9d3449abd10",
+                "topic_name": "Nüfus kavramı ve özellikleri"
+              },
+              {
+                "id": "c885322f-23ca-43ac-8f64-8a4f11a7cb29",
+                "topic_name": "Nüfus dağılışı"
+              },
+              {
+                "id": "956f9649-3284-4a5b-b899-ac4d9f7dfd45",
+                "topic_name": "Nüfus hareketleri (göçler)"
+              },
+              {
+                "id": "b199d080-2dee-4ea8-8f24-d93734847ef0",
+                "topic_name": "Nüfus politikaları"
+              },
+              {
+                "id": "27970601-6954-4ac5-876a-be0494d1e83b",
+                "topic_name": "Türkiye'nin nüfus özellikleri"
+              },
+              {
+                "id": "f9f96c4f-1346-4da4-95a0-8283da30a5d6",
+                "topic_name": "Demografik geçiş teorisi"
+              }
+            ]
+          },
+          {
+            "id": "29ab5218-b89f-4803-b496-2c0901bdf061",
+            "unit_no": 4,
+            "unit_name": "Yerleşme Coğrafyası",
+            "topics": [
+              {
+                "id": "808409d5-7346-4e09-bb34-8d6137657a17",
+                "topic_name": "Yerleşme türleri (kırsal, kentsel)"
+              },
+              {
+                "id": "f94b57be-2269-4ed7-af5c-d387de56f70d",
+                "topic_name": "Şehirleşme"
+              },
+              {
+                "id": "b627a6c3-9172-4929-947d-a07febab1c0e",
+                "topic_name": "Şehir planlaması"
+              },
+              {
+                "id": "9c30c23c-8d62-43b7-883f-c06477e66770",
+                "topic_name": "Türkiye'de kentleşme"
+              },
+              {
+                "id": "5c465fbe-67c2-4aea-8451-1026ee7b767f",
+                "topic_name": "Kırsal yerleşmeler"
+              },
+              {
+                "id": "0eb1020c-5d70-48ec-b102-a842a158af74",
+                "topic_name": "Konut tipleri"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "4c827d60-21f5-4d22-bd39-7e5c76d12a55",
+        "grade": "11",
+        "units": [
+          {
+            "id": "dd083cc7-a897-4fa3-a27e-c224bb1e07de",
+            "unit_no": 1,
+            "unit_name": "Türkiye'nin Doğal Sistemleri",
+            "topics": [
+              {
+                "id": "b6e044ac-b198-43ad-9ade-d82809653695",
+                "topic_name": "Türkiye'nin coğrafi konumu"
+              },
+              {
+                "id": "4764b1b4-4470-4f8e-8f08-f2d2388514f1",
+                "topic_name": "Türkiye'nin iklim özellikleri"
+              },
+              {
+                "id": "12f5580e-3ebc-4971-a013-b5a431cac1e2",
+                "topic_name": "İklim elemanları ve tipleri"
+              },
+              {
+                "id": "58ee8f68-7d80-4000-88a6-fcb3067c0f97",
+                "topic_name": "Toprak türleri ve dağılışı"
+              },
+              {
+                "id": "c59158ce-9f2c-4457-b2cb-0ac7f047435c",
+                "topic_name": "Bitki örtüsü"
+              },
+              {
+                "id": "d75296b9-d1e1-486a-ad7f-aa54599383c1",
+                "topic_name": "Doğal bölgeler"
+              }
+            ]
+          },
+          {
+            "id": "10aa4b66-887f-47f9-9cb6-33777d29285c",
+            "unit_no": 2,
+            "unit_name": "Türkiye'nin Fiziki Coğrafyası",
+            "topics": [
+              {
+                "id": "b16c7418-368b-4f8c-ba36-eb1b2a0178f1",
+                "topic_name": "Jeolojik yapı"
+              },
+              {
+                "id": "bbd08a3a-5d16-408e-ae8b-6810fbcb0552",
+                "topic_name": "Yer şekilleri (dağlar, ovalar, platolar)"
+              },
+              {
+                "id": "eea9b711-699f-47c9-bfd5-c2604b4615ca",
+                "topic_name": "Akarsu sistemleri"
+              },
+              {
+                "id": "b83923b1-e37c-403d-a157-ff6c2c2ea6cc",
+                "topic_name": "Göller"
+              },
+              {
+                "id": "86c0a580-f550-4a85-85a8-02eef0b07fc7",
+                "topic_name": "Kıyılar"
+              },
+              {
+                "id": "1eac1c11-0e90-4460-8759-de209103d15a",
+                "topic_name": "Depremsellik"
+              }
+            ]
+          },
+          {
+            "id": "b1a438ee-d3ce-4f3a-86b5-1b14747116f4",
+            "unit_no": 3,
+            "unit_name": "Türkiye'nin Beşerî Sistemleri",
+            "topics": [
+              {
+                "id": "7fd75906-443a-405c-9d2a-85de61355353",
+                "topic_name": "Nüfusun özellikleri ve dağılışı"
+              },
+              {
+                "id": "88ab6a9f-8c46-4909-9c67-727c0aca743e",
+                "topic_name": "Nüfus hareketleri (göçler)"
+              },
+              {
+                "id": "c7818e0b-2eca-40e2-a1b2-a17f8082664b",
+                "topic_name": "Yerleşme tipleri"
+              },
+              {
+                "id": "7dda4d06-230c-4a30-8a05-0dda055fa48e",
+                "topic_name": "Şehirleşme ve problemler"
+              },
+              {
+                "id": "52aa6c4d-839c-4e00-bc13-56bb8db7dd38",
+                "topic_name": "Ekonomik faaliyetler"
+              },
+              {
+                "id": "be639a16-02a8-46b1-8fc9-353c9682027c",
+                "topic_name": "Sektörel dağılım"
+              }
+            ]
+          },
+          {
+            "id": "385d1491-7dc8-4891-a8f9-a7236007b235",
+            "unit_no": 4,
+            "unit_name": "Türkiye'nin Coğrafi Bölgeleri",
+            "topics": [
+              {
+                "id": "660162b7-4eb8-460b-bd40-c6c45affd9de",
+                "topic_name": "Coğrafi bölgelerin belirlenmesi"
+              },
+              {
+                "id": "a67a72d5-58f9-4602-9ba2-78d6dcd32b3a",
+                "topic_name": "Marmara Bölgesi"
+              },
+              {
+                "id": "90649aed-eb40-40d1-8466-aa823e2af6dd",
+                "topic_name": "Ege Bölgesi"
+              },
+              {
+                "id": "0afd129b-fe16-4225-94cf-ddf02e574b51",
+                "topic_name": "Akdeniz Bölgesi"
+              },
+              {
+                "id": "107d07da-5b14-4d6a-b034-f33807cdfa65",
+                "topic_name": "İç Anadolu, Karadeniz, Doğu ve Güneydoğu Anadolu bölgeleri"
+              },
+              {
+                "id": "768feab1-b284-464a-8288-8aaf1c059704",
+                "topic_name": "Bölgesel farklılıklar"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "b77d3272-7ae4-4c1e-b312-65d4938578e8",
+        "grade": "12",
+        "units": [
+          {
+            "id": "7edb757b-d927-43a0-a8d2-6cb7be7e073e",
+            "unit_no": 1,
+            "unit_name": "Çevre ve Toplum",
+            "topics": [
+              {
+                "id": "b5d36a5b-63d9-4ace-bb4d-06452a5dbf1c",
+                "topic_name": "Çevre sorunları (küresel ısınma, hava kirliliği)"
+              },
+              {
+                "id": "02d65f84-48c6-451a-ad1a-0c99143110c0",
+                "topic_name": "Doğal afetler ve yönetimi"
+              },
+              {
+                "id": "e27d383c-d92d-484e-a39e-61e9b1868904",
+                "topic_name": "Sürdürülebilir kalkınma"
+              },
+              {
+                "id": "20279880-e5c3-4a81-a860-8a474fa24859",
+                "topic_name": "Ekolojik ayak izi"
+              },
+              {
+                "id": "20884bea-145f-48b5-a960-01affe9e3d6d",
+                "topic_name": "Çevre koruma politikaları"
+              },
+              {
+                "id": "9a555eaf-8e18-4681-9946-916332ee933b",
+                "topic_name": "Doğal kaynakların korunması"
+              }
+            ]
+          },
+          {
+            "id": "35342725-6383-4fcc-95e7-f4a291120901",
+            "unit_no": 2,
+            "unit_name": "Küresel Ortam ve Ülkeler",
+            "topics": [
+              {
+                "id": "93e4eb4e-0cfb-4e84-b98c-a9cde73da704",
+                "topic_name": "Dünya coğrafi bölgeleri"
+              },
+              {
+                "id": "d030208a-be90-4b85-93ec-2e0611ea0c0b",
+                "topic_name": "Gelişmiş ve gelişmekte olan ülkeler"
+              },
+              {
+                "id": "7faa49e3-1165-4632-87fb-e4a178ba178e",
+                "topic_name": "Ekonomik entegrasyonlar (AB, NAFTA)"
+              },
+              {
+                "id": "04376b3d-a85b-489a-a307-1845cb28cf34",
+                "topic_name": "Küreselleşme"
+              },
+              {
+                "id": "cb8b30e2-1953-41ad-898d-9be597820091",
+                "topic_name": "Uluslararası ticaret"
+              },
+              {
+                "id": "c76d5c59-1c40-4b04-9453-83a4386b0290",
+                "topic_name": "Coğrafi keşifler ve sonuçları"
+              }
+            ]
+          },
+          {
+            "id": "4ea90241-9347-4827-9558-c914ea5996fc",
+            "unit_no": 3,
+            "unit_name": "Türkiye'nin Ekonomik Coğrafyası",
+            "topics": [
+              {
+                "id": "ad3fae5c-5512-4895-9d8f-306ac22d3a74",
+                "topic_name": "Ekonomik faaliyetlerin dağılışı"
+              },
+              {
+                "id": "288a03ed-6674-4a32-8457-2e505c4c40f3",
+                "topic_name": "Tarım ve özellikleri"
+              },
+              {
+                "id": "cc9c2cc5-4673-415e-8f8a-8cca6be115ba",
+                "topic_name": "Sanayi ve gelişimi"
+              },
+              {
+                "id": "3b653f49-1e02-4387-a4e8-73df117bf2ad",
+                "topic_name": "Madencilik"
+              },
+              {
+                "id": "2d59d8eb-58ec-40bc-a801-85947a2d642b",
+                "topic_name": "Enerji kaynakları"
+              },
+              {
+                "id": "3487b78e-34f3-4125-9f0d-715a3f0cf38b",
+                "topic_name": "Turizm"
+              },
+              {
+                "id": "f0cc165c-051e-496f-9d34-64343d445348",
+                "topic_name": "Ulaşım ağları"
+              },
+              {
+                "id": "9be63d8e-2bba-4ee3-a95b-051643bbae7c",
+                "topic_name": "Dış ticaret"
+              }
+            ]
+          },
+          {
+            "id": "9fb793a8-a6b2-441e-ba10-e356a264ac9b",
+            "unit_no": 4,
+            "unit_name": "Bölgesel Kalkınma",
+            "topics": [
+              {
+                "id": "c9289612-3759-4086-ac80-7e61751625f7",
+                "topic_name": "Bölgesel kalkınma projeleri"
+              },
+              {
+                "id": "bbc46c2b-607c-45ec-870a-39ef1533f727",
+                "topic_name": "GAP, DAP, KOP gibi projeler"
+              },
+              {
+                "id": "644ca842-8f97-4314-92de-e92432788278",
+                "topic_name": "Şehirleşme ve sorunları"
+              },
+              {
+                "id": "080aca89-a85d-4cf6-ba0f-e3b88c1c55ef",
+                "topic_name": "Göç ve etkileri"
+              },
+              {
+                "id": "f0b83caa-342d-403a-887e-15debfc09c60",
+                "topic_name": "Çevre yönetimi"
+              },
+              {
+                "id": "7711b7c7-5733-4d92-a64d-c850ee4d33cf",
+                "topic_name": "Sürdürülebilir şehirler"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "40478177-04a4-4af6-958d-197c48523375",
+        "grade": "9",
+        "units": [
+          {
+            "id": "b2ce449d-cd8c-49ae-a39c-8304cae004c6",
+            "unit_no": 1,
+            "unit_name": "Coğrafyaya Giriş",
+            "topics": [
+              {
+                "id": "b9b85a63-2a89-4a7e-9a23-d3e8662f29e2",
+                "topic_name": "Coğrafya nedir, coğrafyanın konusu"
+              },
+              {
+                "id": "fd6b0749-d7be-49a1-a50e-62fd7c15ea90",
+                "topic_name": "Coğrafyanın bölümleri (fiziki, beşeri, bölgesel)"
+              },
+              {
+                "id": "b65f8f5f-4e25-48dc-acef-67d727eac0cf",
+                "topic_name": "Doğa ve insan etkileşimi"
+              },
+              {
+                "id": "74b62e8b-348d-4c2f-852d-3b36ac52a273",
+                "topic_name": "Coğrafi bilginin kaynakları"
+              },
+              {
+                "id": "0f4aa47a-c172-488c-bb37-b837804d9493",
+                "topic_name": "Coğrafya ve diğer bilimlerle ilişkisi"
+              }
+            ]
+          },
+          {
+            "id": "7c932313-26b5-4afb-b17c-5d1393491df2",
+            "unit_no": 2,
+            "unit_name": "Harita Bilgisi",
+            "topics": [
+              {
+                "id": "fff16250-d687-4631-8dbb-a349e2f78326",
+                "topic_name": "Harita türleri ve özellikleri"
+              },
+              {
+                "id": "392f2f87-528a-481c-9915-cc13a1c0d60e",
+                "topic_name": "Ölçek kavramı ve hesaplanması"
+              },
+              {
+                "id": "f843dcd0-3103-402c-8b27-7800a7f5b20b",
+                "topic_name": "Coğrafi koordinat sistemi (enlem, boylam)"
+              },
+              {
+                "id": "7d3ed687-a45c-4ecf-9e88-0d3cd6a2a164",
+                "topic_name": "Eş yükselti eğrileri"
+              },
+              {
+                "id": "cd45a288-ddaf-4b2b-a02c-5cf38dc3a36f",
+                "topic_name": "Yön bulma yöntemleri"
+              },
+              {
+                "id": "8627f006-c9ee-49ae-9c38-4c879215cece",
+                "topic_name": "Harita sembolleri ve gösterimleri"
+              }
+            ]
+          },
+          {
+            "id": "9c06c477-657d-4ade-8c60-5791458c844b",
+            "unit_no": 3,
+            "unit_name": "Dünya'nın Şekli ve Hareketleri",
+            "topics": [
+              {
+                "id": "8470fd2a-6f53-470a-9e41-82c901edc544",
+                "topic_name": "Dünya'nın şekli ve boyutları"
+              },
+              {
+                "id": "c4f49531-a646-43ba-89e1-5b5107d3b1e8",
+                "topic_name": "Dünya'nın dönme hareketi ve sonuçları"
+              },
+              {
+                "id": "6a08d7c6-1fea-407b-8cdf-0610fbd760bc",
+                "topic_name": "Dünya'nın dolanma hareketi ve sonuçları"
+              },
+              {
+                "id": "e4968c11-c600-482a-98b7-0b924da83657",
+                "topic_name": "Mevsimler ve oluşumu"
+              },
+              {
+                "id": "12706bdc-7047-4db8-8fa6-40017ee07a55",
+                "topic_name": "Saat dilimleri"
+              },
+              {
+                "id": "f9ce54d1-a5f5-4684-bf75-64d74aa58ce0",
+                "topic_name": "Gece-gündüz eşitsizliği"
+              }
+            ]
+          },
+          {
+            "id": "49c27f30-e471-4648-8b47-b32d20c0f946",
+            "unit_no": 4,
+            "unit_name": "İç Kuvvetler ve Yer Şekilleri",
+            "topics": [
+              {
+                "id": "14be4d64-ab46-44ef-8c3e-3c7a3d3c0b2b",
+                "topic_name": "Dünya'nın iç yapısı"
+              },
+              {
+                "id": "bb4091f3-e032-4866-98ad-135e6144f432",
+                "topic_name": "Levha tektoniği teorisi"
+              },
+              {
+                "id": "14ffccba-9f00-4942-8dac-0671e7a2a84d",
+                "topic_name": "Depremler ve oluşumu"
+              },
+              {
+                "id": "178845f0-cc51-4584-8fce-d0acfae46762",
+                "topic_name": "Volkanlar ve oluşumu"
+              },
+              {
+                "id": "d30c9839-e0a0-4a8a-a075-14b0b4c6f66f",
+                "topic_name": "Orojenik ve epirojenik hareketler"
+              },
+              {
+                "id": "9885e571-765c-4442-b2a2-46602981fc79",
+                "topic_name": "Yer şekillerinin oluşumu"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

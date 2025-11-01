@@ -12,10 +12,9 @@ from app.models.outcome_merge_history import OutcomeMergeHistory
 from app.models.study_plan import StudyPlan
 from app.models.study_plan_day import StudyPlanDay
 from app.models.study_plan_item import StudyPlanItem
-from app.models.curriculum_subject import CurriculumSubject
-from app.models.curriculum_grade import CurriculumGrade
-from app.models.curriculum_unit import CurriculumUnit
-from app.models.curriculum_topic import CurriculumTopic
+from app.models.exam_type import ExamType
+from app.models.subject import Subject
+from app.models.topic import Topic
 
 __all__ = [
     "Student",
@@ -29,8 +28,7 @@ __all__ = [
     "StudyPlan",
     "StudyPlanDay",
     "StudyPlanItem",
-    "CurriculumSubject",
-    "CurriculumGrade",
-    "CurriculumUnit",
-    "CurriculumTopic",
+    "ExamType",
+    "Subject",
+    "Topic",
 ]

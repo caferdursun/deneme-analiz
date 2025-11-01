@@ -113,3 +113,19 @@ GET /api/resources/subject/{subject}
 
 /root/projects/deneme-analiz/backend/lise_mufredati.json dosyasından bir veritabanı oluşturalım ana sayfamıza "Müfredat" bir düğme koyalım ve kırılımlı biçimde müfredatı görebilelim.
 Türkçe, Matematik, Fen dersleri üstte görünsün 
+
+
+------
+
+Kazanımlar analiz ediliyor
+
+
+topics tablosuna karşılık learning_outcomes tablosu oluştur. sınav analizinden elde ettiğimiz herbir outcome'ın topics tablosunda bir karşılığını bulmak zorundayız. 
+bu konu ile ilgili claude apiden destek alalım; bir paket outcame gönderelim o bize topic eşini göndersin, yanında da bir eşleme rating'i göndersin. hiç bir outcome açıkta kalmasın.
+sonuçları bir eşleme tablosunda tutalım. bunu şimdilik bir script ile yap ama test ve denemelerimiz bitince projede reuse edebilkeceğimiz şekilde olsun. batch requestler ile api costunu optimize etmeyi unutma.
+hazırladığın promt api mizin işini kolaylaştırırken false-positive ve false-negative ihtimali yüksek olmasın
+
+
+------
+
+şimdi büyük bir değişikliğe başlayacağız. 

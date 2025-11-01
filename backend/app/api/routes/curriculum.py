@@ -1,101 +1,178 @@
 """
-Curriculum API endpoints
+Curriculum API Routes
+Endpoints for accessing curriculum data (ExamType -> Subject -> Topic)
 """
-from fastapi import APIRouter, Depends, HTTPException, status, Query
-from sqlalchemy.orm import Session
-from typing import Optional
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session, joinedload
+from sqlalchemy import func
+from typing import List
 
 from app.core.database import get_db
-from app.services.curriculum_service import CurriculumService
+from app.models.exam_type import ExamType
+from app.models.subject import Subject
+from app.models.topic import Topic
 from app.schemas.curriculum import (
+    ExamTypeResponse,
+    SubjectResponse,
+    TopicResponse,
     CurriculumFullResponse,
-    CurriculumGradeResponse,
-    CurriculumSubjectResponse,
+    ExamTypeSummary,
+    SubjectSummary,
+    TopicSummary,
 )
 
 router = APIRouter()
 
 
-@router.get("/", response_model=CurriculumFullResponse)
-async def get_all_curriculum(db: Session = Depends(get_db)):
+@router.get("/curriculum", response_model=CurriculumFullResponse)
+async def get_full_curriculum(db: Session = Depends(get_db)):
     """
-    Get the complete high school curriculum
-
-    Returns curriculum organized by:
-    - Subject (Türkçe, Matematik, Fizik, etc.) - Top level
-    - Grade (9, 10, 11, 12) - Within each subject
-    - Unit (Üniteler) - Within each grade
-    - Topics (Konular) - Within each unit
-
-    Subjects are ordered with Türkçe, Matematik, and Sciences at the top.
+    Get the full curriculum hierarchy: ExamType -> Subject -> Topic
     """
-    service = CurriculumService(db)
-    return service.get_all_curriculum()
+    # Fetch all exam types with their subjects and topics (eager loading)
+    exam_types = (
+        db.query(ExamType)
+        .options(
+            joinedload(ExamType.subjects).joinedload(Subject.topics)
+        )
+        .order_by(ExamType.order)
+        .all()
+    )
+
+    # Count totals
+    total_exam_types = len(exam_types)
+    total_subjects = db.query(Subject).count()
+    total_topics = db.query(Topic).count()
+
+    return CurriculumFullResponse(
+        exam_types=exam_types,
+        total_exam_types=total_exam_types,
+        total_subjects=total_subjects,
+        total_topics=total_topics,
+    )
 
 
-@router.get("/subject/{subject_name}", response_model=CurriculumSubjectResponse)
-async def get_subject_by_name(
-    subject_name: str,
-    db: Session = Depends(get_db)
-):
+@router.get("/curriculum/exam-types", response_model=List[ExamTypeResponse])
+async def get_exam_types(db: Session = Depends(get_db)):
     """
-    Get a specific subject with all its grades, units, and topics
-
-    Args:
-        subject_name: Name of the subject (e.g., "Matematik", "Fizik")
-
-    Returns detailed curriculum for that subject across all grade levels.
+    Get all exam types with their subjects and topics
     """
-    service = CurriculumService(db)
-    subject = service.get_subject_by_name(subject_name)
+    exam_types = (
+        db.query(ExamType)
+        .options(
+            joinedload(ExamType.subjects).joinedload(Subject.topics)
+        )
+        .order_by(ExamType.order)
+        .all()
+    )
+    return exam_types
+
+
+@router.get("/curriculum/exam-types/{exam_type_id}", response_model=ExamTypeResponse)
+async def get_exam_type(exam_type_id: str, db: Session = Depends(get_db)):
+    """
+    Get a specific exam type with its subjects and topics
+    """
+    exam_type = (
+        db.query(ExamType)
+        .options(
+            joinedload(ExamType.subjects).joinedload(Subject.topics)
+        )
+        .filter(ExamType.id == exam_type_id)
+        .first()
+    )
+
+    if not exam_type:
+        raise HTTPException(status_code=404, detail="Exam type not found")
+
+    return exam_type
+
+
+@router.get("/curriculum/exam-types/{exam_type_id}/subjects", response_model=List[SubjectResponse])
+async def get_subjects_by_exam_type(exam_type_id: str, db: Session = Depends(get_db)):
+    """
+    Get all subjects for a specific exam type with their topics
+    """
+    subjects = (
+        db.query(Subject)
+        .options(joinedload(Subject.topics))
+        .filter(Subject.exam_type_id == exam_type_id)
+        .order_by(Subject.order)
+        .all()
+    )
+    return subjects
+
+
+@router.get("/curriculum/subjects/{subject_id}", response_model=SubjectResponse)
+async def get_subject(subject_id: str, db: Session = Depends(get_db)):
+    """
+    Get a specific subject with its topics
+    """
+    subject = (
+        db.query(Subject)
+        .options(joinedload(Subject.topics))
+        .filter(Subject.id == subject_id)
+        .first()
+    )
 
     if not subject:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Subject '{subject_name}' not found"
-        )
+        raise HTTPException(status_code=404, detail="Subject not found")
 
     return subject
 
 
-@router.get("/search")
-async def search_topics(
-    q: str = Query(..., min_length=2, description="Search query"),
-    grade: Optional[str] = Query(None, description="Filter by grade"),
-    db: Session = Depends(get_db)
-):
+@router.get("/curriculum/subjects/{subject_id}/topics", response_model=List[TopicResponse])
+async def get_topics_by_subject(subject_id: str, db: Session = Depends(get_db)):
     """
-    Search for topics by keyword
-
-    Args:
-        q: Search query (minimum 2 characters)
-        grade: Optional grade filter (9, 10, 11, or 12)
-
-    Returns matching topics with their context (grade, subject, unit).
+    Get all topics for a specific subject
     """
-    if grade and grade not in ["9", "10", "11", "12"]:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Grade must be 9, 10, 11, or 12"
+    topics = (
+        db.query(Topic)
+        .filter(Topic.subject_id == subject_id)
+        .order_by(Topic.order)
+        .all()
+    )
+    return topics
+
+
+@router.get("/curriculum/topics/{topic_id}", response_model=TopicResponse)
+async def get_topic(topic_id: str, db: Session = Depends(get_db)):
+    """
+    Get a specific topic
+    """
+    topic = db.query(Topic).filter(Topic.id == topic_id).first()
+
+    if not topic:
+        raise HTTPException(status_code=404, detail="Topic not found")
+
+    return topic
+
+
+@router.get("/curriculum/summary", response_model=List[ExamTypeSummary])
+async def get_curriculum_summary(db: Session = Depends(get_db)):
+    """
+    Get a summary of the curriculum with counts
+    """
+    exam_types = db.query(ExamType).order_by(ExamType.order).all()
+
+    result = []
+    for exam_type in exam_types:
+        subject_count = db.query(Subject).filter(Subject.exam_type_id == exam_type.id).count()
+        topic_count = (
+            db.query(Topic)
+            .join(Subject)
+            .filter(Subject.exam_type_id == exam_type.id)
+            .count()
         )
 
-    service = CurriculumService(db)
-    results = service.search_topics(q, grade)
+        result.append(
+            ExamTypeSummary(
+                id=exam_type.id,
+                name=exam_type.name,
+                display_name=exam_type.display_name,
+                subject_count=subject_count,
+                topic_count=topic_count,
+            )
+        )
 
-    return {
-        "query": q,
-        "grade_filter": grade,
-        "results": results,
-        "total": len(results)
-    }
-
-
-@router.get("/statistics")
-async def get_statistics(db: Session = Depends(get_db)):
-    """
-    Get curriculum statistics
-
-    Returns counts of subjects, units, and topics by grade.
-    """
-    service = CurriculumService(db)
-    return service.get_statistics()
+    return result

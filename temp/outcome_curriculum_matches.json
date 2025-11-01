@@ -1,0 +1,827 @@
+{
+  "total_matches": 47,
+  "matches": [
+    {
+      "outcome_id": "0e9e6f9a-8cbc-4a24-adfd-3cb5dcf5c9ff",
+      "outcome_category": "12. SINIF KURS EDEBİYAT YKS",
+      "outcome_subcategory": null,
+      "topic_id": "edb4221a-8c19-41ab-8766-06f694283aa6",
+      "topic_unit": "Cumhuriyet Dönemi Türk Edebiyatı",
+      "topic_name": "Cumhuriyet dönemi edebiyatının özellikleri",
+      "confidence": 95,
+      "reasoning": "12. sınıf YKS edebiyat kursu Cumhuriyet dönemi edebiyatının tüm özelliklerini kapsar",
+      "alternatives": [
+        {
+          "topic_index": 13,
+          "confidence": 75
+        },
+        {
+          "topic_index": 7,
+          "confidence": 70
+        }
+      ]
+    },
+    {
+      "outcome_id": "2201f472-f3da-4c4c-a2d4-d31c696b3608",
+      "outcome_category": "ANLATIM BİLGİSİ",
+      "outcome_subcategory": null,
+      "topic_id": "b955dd6e-4038-4db8-a8e4-138078fa8639",
+      "topic_unit": "Tiyatro ve Deneme",
+      "topic_name": "Deneme türü ve özellikleri",
+      "confidence": 45,
+      "reasoning": "Anlatım bilgisi edebiyat müfredatıyla doğrudan eşleşmiyor, deneme türüyle kısmi ilişki",
+      "alternatives": [
+        {
+          "topic_index": 26,
+          "confidence": 40
+        }
+      ]
+    },
+    {
+      "outcome_id": "bb3abc6c-f658-4918-94a4-5f450f50df75",
+      "outcome_category": "ANLATIM BİLGİSİ",
+      "outcome_subcategory": "ANLATIM BİÇİMLERİ",
+      "topic_id": "b955dd6e-4038-4db8-a8e4-138078fa8639",
+      "topic_unit": "Tiyatro ve Deneme",
+      "topic_name": "Deneme türü ve özellikleri",
+      "confidence": 45,
+      "reasoning": "Anlatım biçimleri deneme ve eleştiri yazılarıyla kısmi ilişkili",
+      "alternatives": [
+        {
+          "topic_index": 26,
+          "confidence": 40
+        }
+      ]
+    },
+    {
+      "outcome_id": "434e6fcc-bef8-4227-9b8a-ba03535a178c",
+      "outcome_category": "ANLATIM BİLGİSİ",
+      "outcome_subcategory": "ANLATIMIN İLKELERİ",
+      "topic_id": "b955dd6e-4038-4db8-a8e4-138078fa8639",
+      "topic_unit": "Tiyatro ve Deneme",
+      "topic_name": "Deneme türü ve özellikleri",
+      "confidence": 45,
+      "reasoning": "Anlatımın ilkeleri deneme türü özellikleriyle kısmi örtüşüyor",
+      "alternatives": [
+        {
+          "topic_index": 26,
+          "confidence": 40
+        }
+      ]
+    },
+    {
+      "outcome_id": "20f37a4a-cdb4-41da-ae5a-5a2381039d62",
+      "outcome_category": "ANLATIM BİLGİSİ",
+      "outcome_subcategory": "DÜŞÜNCEYİ GELİŞTİRME YOLLARI",
+      "topic_id": "b955dd6e-4038-4db8-a8e4-138078fa8639",
+      "topic_unit": "Tiyatro ve Deneme",
+      "topic_name": "Deneme türü ve özellikleri",
+      "confidence": 50,
+      "reasoning": "Düşünceyi geliştirme yolları deneme türünün temel özelliklerinden",
+      "alternatives": [
+        {
+          "topic_index": 24,
+          "confidence": 45
+        },
+        {
+          "topic_index": 25,
+          "confidence": 45
+        }
+      ]
+    },
+    {
+      "outcome_id": "2a4559f5-15f0-4e8b-ace2-a6a9a53d8e02",
+      "outcome_category": "BİÇİM BİLGİSİ (YAPI BİLGİSİ)",
+      "outcome_subcategory": null,
+      "topic_id": "edb4221a-8c19-41ab-8766-06f694283aa6",
+      "topic_unit": "Cumhuriyet Dönemi Türk Edebiyatı",
+      "topic_name": "Cumhuriyet dönemi edebiyatının özellikleri",
+      "confidence": 35,
+      "reasoning": "Biçim bilgisi dilbilgisi konusu, edebiyat müfredatıyla doğrudan eşleşmiyor",
+      "alternatives": []
+    },
+    {
+      "outcome_id": "d84962b3-35a7-4e57-ac3c-d7f8f5d9268a",
+      "outcome_category": "BİÇİM BİLGİSİ (YAPI BİLGİSİ)",
+      "outcome_subcategory": "GÖVDE",
+      "topic_id": "edb4221a-8c19-41ab-8766-06f694283aa6",
+      "topic_unit": "Cumhuriyet Dönemi Türk Edebiyatı",
+      "topic_name": "Cumhuriyet dönemi edebiyatının özellikleri",
+      "confidence": 30,
+      "reasoning": "Gövde yapısı dilbilgisi konusu, edebiyat müfredatı dışında",
+      "alternatives": []
+    },
+    {
+      "outcome_id": "9f959a8f-3f32-4033-8459-385f524f7317",
+      "outcome_category": "BİÇİM BİLGİSİ (YAPI BİLGİSİ)",
+      "outcome_subcategory": "GÖVDE",
+      "topic_id": "edb4221a-8c19-41ab-8766-06f694283aa6",
+      "topic_unit": "Cumhuriyet Dönemi Türk Edebiyatı",
+      "topic_name": "Cumhuriyet dönemi edebiyatının özellikleri",
+      "confidence": 30,
+      "reasoning": "Gövde yapısı dilbilgisi konusu, edebiyat müfredatı dışında",
+      "alternatives": []
+    },
+    {
+      "outcome_id": "5ff391ac-1672-4891-ac4f-b9b04f645f0b",
+      "outcome_category": "BİÇİM BİLGİSİ (YAPI BİLGİSİ)",
+      "outcome_subcategory": "GÖVDE",
+      "topic_id": "edb4221a-8c19-41ab-8766-06f694283aa6",
+      "topic_unit": "Cumhuriyet Dönemi Türk Edebiyatı",
+      "topic_name": "Cumhuriyet dönemi edebiyatının özellikleri",
+      "confidence": 30,
+      "reasoning": "Gövde yapısı dilbilgisi konusu, edebiyat müfredatı dışında",
+      "alternatives": []
+    },
+    {
+      "outcome_id": "e7f766ef-4715-46f3-bb52-a220efd4ff49",
+      "outcome_category": "BİÇİM BİLGİSİ (YAPI BİLGİSİ)",
+      "outcome_subcategory": "GÖVDE",
+      "topic_id": "edb4221a-8c19-41ab-8766-06f694283aa6",
+      "topic_unit": "Cumhuriyet Dönemi Türk Edebiyatı",
+      "topic_name": "Cumhuriyet dönemi edebiyatının özellikleri",
+      "confidence": 30,
+      "reasoning": "Gövde yapısı dilbilgisi konusu, edebiyat müfredatı dışında",
+      "alternatives": []
+    },
+    {
+      "outcome_id": "abeb1d95-05a0-414c-b77c-c95189c91456",
+      "outcome_category": "CÜMLE ANLAM",
+      "outcome_subcategory": "CÜMLE YAPISI",
+      "topic_id": "b955dd6e-4038-4db8-a8e4-138078fa8639",
+      "topic_unit": "Tiyatro ve Deneme",
+      "topic_name": "Deneme türü ve özellikleri",
+      "confidence": 45,
+      "reasoning": "Deneme türünde cümle yapısı analizi yapılabilir ancak doğrudan eşleşme zayıf",
+      "alternatives": [
+        {
+          "topic_index": 26,
+          "confidence": 40
+        },
+        {
+          "topic_index": 1,
+          "confidence": 35
+        }
+      ]
+    },
+    {
+      "outcome_id": "8d8ede9a-cebd-40c7-801e-90415a69b108",
+      "outcome_category": "CÜMLE ANLAM",
+      "outcome_subcategory": "Neden-Sonuç İlişkisi",
+      "topic_id": "b955dd6e-4038-4db8-a8e4-138078fa8639",
+      "topic_unit": "Tiyatro ve Deneme",
+      "topic_name": "Deneme türü ve özellikleri",
+      "confidence": 45,
+      "reasoning": "Deneme türünde neden-sonuç ilişkileri incelenebilir ancak dolaylı bağlantı",
+      "alternatives": [
+        {
+          "topic_index": 26,
+          "confidence": 42
+        },
+        {
+          "topic_index": 13,
+          "confidence": 38
+        }
+      ]
+    },
+    {
+      "outcome_id": "0bd2bc4f-af74-4d03-baf7-e9ffed5e86e0",
+      "outcome_category": "CÜMLE ANLAM",
+      "outcome_subcategory": "YARGILARINA GÖRE CÜMLELER",
+      "topic_id": "b955dd6e-4038-4db8-a8e4-138078fa8639",
+      "topic_unit": "Tiyatro ve Deneme",
+      "topic_name": "Deneme türü ve özellikleri",
+      "confidence": 40,
+      "reasoning": "Deneme türünde yargı cümleleri analizi yapılabilir ama zayıf ilişki",
+      "alternatives": [
+        {
+          "topic_index": 26,
+          "confidence": 38
+        }
+      ]
+    },
+    {
+      "outcome_id": "9d05d6cb-4a1b-43d5-98ae-ee1e2eba63b7",
+      "outcome_category": "CÜMLE ANLAM",
+      "outcome_subcategory": "YARGILARINA GÖRE CÜMLELER",
+      "topic_id": "b955dd6e-4038-4db8-a8e4-138078fa8639",
+      "topic_unit": "Tiyatro ve Deneme",
+      "topic_name": "Deneme türü ve özellikleri",
+      "confidence": 40,
+      "reasoning": "Deneme türünde yargı cümleleri analizi yapılabilir ama zayıf ilişki",
+      "alternatives": [
+        {
+          "topic_index": 26,
+          "confidence": 38
+        }
+      ]
+    },
+    {
+      "outcome_id": "d6ba01f3-7da2-4636-acc9-20c4d64495e4",
+      "outcome_category": "CÜMLE ANLAM",
+      "outcome_subcategory": "YARGILARINA GÖRE CÜMLELER",
+      "topic_id": "b955dd6e-4038-4db8-a8e4-138078fa8639",
+      "topic_unit": "Tiyatro ve Deneme",
+      "topic_name": "Deneme türü ve özellikleri",
+      "confidence": 40,
+      "reasoning": "Deneme türünde yargı cümleleri analizi yapılabilir ama zayıf ilişki",
+      "alternatives": [
+        {
+          "topic_index": 26,
+          "confidence": 38
+        }
+      ]
+    },
+    {
+      "outcome_id": "5676de89-411d-4041-aacd-f77b55f6f565",
+      "outcome_category": "CÜMLE ANLAM",
+      "outcome_subcategory": "YARGILARINA GÖRE CÜMLELER",
+      "topic_id": "b955dd6e-4038-4db8-a8e4-138078fa8639",
+      "topic_unit": "Tiyatro ve Deneme",
+      "topic_name": "Deneme türü ve özellikleri",
+      "confidence": 40,
+      "reasoning": "Deneme türünde yargı cümleleri analizi yapılabilir ama zayıf ilişki",
+      "alternatives": [
+        {
+          "topic_index": 26,
+          "confidence": 38
+        }
+      ]
+    },
+    {
+      "outcome_id": "e66154b6-0ab1-41b9-9208-35578fba0c45",
+      "outcome_category": "CÜMLE ANLAM",
+      "outcome_subcategory": "Üslup (Biçem)",
+      "topic_id": "b955dd6e-4038-4db8-a8e4-138078fa8639",
+      "topic_unit": "Tiyatro ve Deneme",
+      "topic_name": "Deneme türü ve özellikleri",
+      "confidence": 55,
+      "reasoning": "Deneme türü üslup analizi için uygun, yazarların biçemleri incelenebilir",
+      "alternatives": [
+        {
+          "topic_index": 24,
+          "confidence": 52
+        },
+        {
+          "topic_index": 25,
+          "confidence": 50
+        }
+      ]
+    },
+    {
+      "outcome_id": "07824bb8-447c-42bb-8373-4a626e434777",
+      "outcome_category": "CÜMLE ANLAM",
+      "outcome_subcategory": "İÇERDİKLERİ KAVRAMLARA GÖRE CÜMLELER",
+      "topic_id": "b955dd6e-4038-4db8-a8e4-138078fa8639",
+      "topic_unit": "Tiyatro ve Deneme",
+      "topic_name": "Deneme türü ve özellikleri",
+      "confidence": 42,
+      "reasoning": "Deneme türünde kavram analizi yapılabilir ancak dolaylı ilişki",
+      "alternatives": [
+        {
+          "topic_index": 25,
+          "confidence": 40
+        }
+      ]
+    },
+    {
+      "outcome_id": "05d58f2c-f3c8-4135-90d5-2ac872053a71",
+      "outcome_category": "CÜMLE ANLAM",
+      "outcome_subcategory": "İÇERDİKLERİ KAVRAMLARA GÖRE CÜMLELER",
+      "topic_id": "b955dd6e-4038-4db8-a8e4-138078fa8639",
+      "topic_unit": "Tiyatro ve Deneme",
+      "topic_name": "Deneme türü ve özellikleri",
+      "confidence": 42,
+      "reasoning": "Deneme türünde kavram analizi yapılabilir ancak dolaylı ilişki",
+      "alternatives": [
+        {
+          "topic_index": 25,
+          "confidence": 40
+        }
+      ]
+    },
+    {
+      "outcome_id": "065d8b0d-747d-4f8f-a5c8-622cf001fdb0",
+      "outcome_category": "CÜMLE ANLAM",
+      "outcome_subcategory": "İÇERİKLERİNE GÖRE CÜMLELER",
+      "topic_id": "b955dd6e-4038-4db8-a8e4-138078fa8639",
+      "topic_unit": "Tiyatro ve Deneme",
+      "topic_name": "Deneme türü ve özellikleri",
+      "confidence": 43,
+      "reasoning": "Deneme türünde içerik analizi yapılabilir ancak zayıf eşleşme",
+      "alternatives": [
+        {
+          "topic_index": 26,
+          "confidence": 40
+        }
+      ]
+    },
+    {
+      "outcome_id": "4b7ee7cb-3981-48bf-9b1c-46149d77ee3a",
+      "outcome_category": "PARAGRAF",
+      "outcome_subcategory": null,
+      "topic_id": "b955dd6e-4038-4db8-a8e4-138078fa8639",
+      "topic_unit": "Tiyatro ve Deneme",
+      "topic_name": "Deneme türü ve özellikleri",
+      "confidence": 45,
+      "reasoning": "Paragraf becerisi deneme türüyle ilişkili olabilir ancak doğrudan eşleşme zayıf",
+      "alternatives": [
+        {
+          "topic_index": 26,
+          "confidence": 40
+        },
+        {
+          "topic_index": 19,
+          "confidence": 35
+        }
+      ]
+    },
+    {
+      "outcome_id": "9391a29a-0d1c-4aab-b55c-3eca22e98c29",
+      "outcome_category": "PARAGRAF",
+      "outcome_subcategory": "Düşüncenin Akışını Bozan Cümle",
+      "topic_id": "b955dd6e-4038-4db8-a8e4-138078fa8639",
+      "topic_unit": "Tiyatro ve Deneme",
+      "topic_name": "Deneme türü ve özellikleri",
+      "confidence": 45,
+      "reasoning": "Düşünce akışı deneme yazılarında önemli ancak doğrudan eşleşme yok",
+      "alternatives": [
+        {
+          "topic_index": 26,
+          "confidence": 42
+        },
+        {
+          "topic_index": 24,
+          "confidence": 38
+        }
+      ]
+    },
+    {
+      "outcome_id": "9a23c24a-9c14-42ee-9301-bcaef6e68ced",
+      "outcome_category": "PARAGRAF",
+      "outcome_subcategory": "Paragraf Tamamlama",
+      "topic_id": "b955dd6e-4038-4db8-a8e4-138078fa8639",
+      "topic_unit": "Tiyatro ve Deneme",
+      "topic_name": "Deneme türü ve özellikleri",
+      "confidence": 48,
+      "reasoning": "Paragraf tamamlama deneme türü yapısıyla ilişkili olabilir",
+      "alternatives": [
+        {
+          "topic_index": 26,
+          "confidence": 43
+        },
+        {
+          "topic_index": 19,
+          "confidence": 38
+        }
+      ]
+    },
+    {
+      "outcome_id": "17ca1ce8-5224-45c4-b16d-011c056ecd3a",
+      "outcome_category": "PARAGRAF",
+      "outcome_subcategory": "Paragrafta Ana Düşünce",
+      "topic_id": "b955dd6e-4038-4db8-a8e4-138078fa8639",
+      "topic_unit": "Tiyatro ve Deneme",
+      "topic_name": "Deneme türü ve özellikleri",
+      "confidence": 50,
+      "reasoning": "Ana düşünce deneme türünün temel özelliği, orta düzey eşleşme",
+      "alternatives": [
+        {
+          "topic_index": 26,
+          "confidence": 45
+        },
+        {
+          "topic_index": 24,
+          "confidence": 40
+        }
+      ]
+    },
+    {
+      "outcome_id": "7d7ec7a3-842d-4f49-9d22-b6dc46103ff4",
+      "outcome_category": "PARAGRAF",
+      "outcome_subcategory": "Paragrafta Konu",
+      "topic_id": "b955dd6e-4038-4db8-a8e4-138078fa8639",
+      "topic_unit": "Tiyatro ve Deneme",
+      "topic_name": "Deneme türü ve özellikleri",
+      "confidence": 48,
+      "reasoning": "Konu belirleme deneme türü analizinde kullanılabilir",
+      "alternatives": [
+        {
+          "topic_index": 26,
+          "confidence": 44
+        },
+        {
+          "topic_index": 19,
+          "confidence": 38
+        }
+      ]
+    },
+    {
+      "outcome_id": "095dc834-9713-481e-9522-675a90ca8df4",
+      "outcome_category": "PARAGRAF",
+      "outcome_subcategory": "Paragrafta Yapısı",
+      "topic_id": "b955dd6e-4038-4db8-a8e4-138078fa8639",
+      "topic_unit": "Tiyatro ve Deneme",
+      "topic_name": "Deneme türü ve özellikleri",
+      "confidence": 52,
+      "reasoning": "Paragraf yapısı deneme türü özelliklerinde incelenebilir",
+      "alternatives": [
+        {
+          "topic_index": 26,
+          "confidence": 46
+        },
+        {
+          "topic_index": 19,
+          "confidence": 40
+        }
+      ]
+    },
+    {
+      "outcome_id": "04ec2c8e-9c70-4c20-841e-75414f69c179",
+      "outcome_category": "PARAGRAF",
+      "outcome_subcategory": "Paragrafta Yapısı",
+      "topic_id": "b955dd6e-4038-4db8-a8e4-138078fa8639",
+      "topic_unit": "Tiyatro ve Deneme",
+      "topic_name": "Deneme türü ve özellikleri",
+      "confidence": 52,
+      "reasoning": "Paragraf yapısı deneme türü özelliklerinde incelenebilir",
+      "alternatives": [
+        {
+          "topic_index": 26,
+          "confidence": 46
+        },
+        {
+          "topic_index": 19,
+          "confidence": 40
+        }
+      ]
+    },
+    {
+      "outcome_id": "0d8f42c0-f856-4a0b-9b9c-a928b7107bfa",
+      "outcome_category": "PARAGRAF",
+      "outcome_subcategory": "Paragrafta Yapısı",
+      "topic_id": "b955dd6e-4038-4db8-a8e4-138078fa8639",
+      "topic_unit": "Tiyatro ve Deneme",
+      "topic_name": "Deneme türü ve özellikleri",
+      "confidence": 52,
+      "reasoning": "Paragraf yapısı deneme türü özelliklerinde incelenebilir",
+      "alternatives": [
+        {
+          "topic_index": 26,
+          "confidence": 46
+        },
+        {
+          "topic_index": 19,
+          "confidence": 40
+        }
+      ]
+    },
+    {
+      "outcome_id": "3241d8b4-7221-4566-af1b-ca83849f457b",
+      "outcome_category": "PARAGRAF",
+      "outcome_subcategory": "Paragrafta Yapısı",
+      "topic_id": "b955dd6e-4038-4db8-a8e4-138078fa8639",
+      "topic_unit": "Tiyatro ve Deneme",
+      "topic_name": "Deneme türü ve özellikleri",
+      "confidence": 52,
+      "reasoning": "Paragraf yapısı deneme türü özelliklerinde incelenebilir",
+      "alternatives": [
+        {
+          "topic_index": 26,
+          "confidence": 46
+        },
+        {
+          "topic_index": 19,
+          "confidence": 40
+        }
+      ]
+    },
+    {
+      "outcome_id": "2ee2b7a6-55ec-4a27-be55-5b1d51ecbc88",
+      "outcome_category": "PARAGRAF",
+      "outcome_subcategory": "Paragrafta Yardımcı Düşünce",
+      "topic_id": "b955dd6e-4038-4db8-a8e4-138078fa8639",
+      "topic_unit": "Tiyatro ve Deneme",
+      "topic_name": "Deneme türü ve özellikleri",
+      "confidence": 50,
+      "reasoning": "Yardımcı düşünce deneme türü yapısında önemli unsur",
+      "alternatives": [
+        {
+          "topic_index": 26,
+          "confidence": 45
+        },
+        {
+          "topic_index": 24,
+          "confidence": 40
+        }
+      ]
+    },
+    {
+      "outcome_id": "a9224468-71a2-4082-909b-7e39c40f5847",
+      "outcome_category": "Biyoloji.10",
+      "outcome_subcategory": null,
+      "topic_id": "653ace96-98b2-4812-9d58-b52818a3e228",
+      "topic_unit": "Hücre Bölünmeleri ve Kalıtım",
+      "topic_name": "Hücre döngüsü",
+      "confidence": 45,
+      "reasoning": "Genel biyoloji kategorisi, spesifik konu belirsiz, tüm müfredatla ilişkili olabilir",
+      "alternatives": [
+        {
+          "topic_index": 7,
+          "confidence": 40
+        },
+        {
+          "topic_index": 13,
+          "confidence": 40
+        }
+      ]
+    },
+    {
+      "outcome_id": "07f8c8ef-8372-4057-ab3c-7ccbe0a665b4",
+      "outcome_category": "Hücre Bölünmeleri",
+      "outcome_subcategory": "Mayoz ve Eşeyli Üreme",
+      "topic_id": "818ee905-7754-479d-bad6-c013b3b69e96",
+      "topic_unit": "Hücre Bölünmeleri ve Kalıtım",
+      "topic_name": "Mayoz ve evre detayları",
+      "confidence": 95,
+      "reasoning": "Mayoz bölünme ve evre detayları ile doğrudan eşleşme",
+      "alternatives": [
+        {
+          "topic_index": 4,
+          "confidence": 75
+        },
+        {
+          "topic_index": 5,
+          "confidence": 60
+        }
+      ]
+    },
+    {
+      "outcome_id": "00ada5c3-9402-4c9c-98e9-2e0dcdbc6f0b",
+      "outcome_category": "Genden Proteine",
+      "outcome_subcategory": null,
+      "topic_id": "d5082789-451b-4fba-ba4f-b2a61f861069",
+      "topic_unit": "Genden Proteine",
+      "topic_name": "DNA yapısı ve keşfi",
+      "confidence": 95,
+      "reasoning": "Kazanım kategorisi doğrudan Genden Proteine ünitesiyle eşleşiyor, genel kapsam",
+      "alternatives": [
+        {
+          "topic_index": 4,
+          "confidence": 85
+        },
+        {
+          "topic_index": 3,
+          "confidence": 80
+        }
+      ]
+    },
+    {
+      "outcome_id": "18b5b250-f4ef-4d0a-ba54-c0c663e3063d",
+      "outcome_category": "OPTİK",
+      "outcome_subcategory": null,
+      "topic_id": "dffebd5b-d857-4340-8f95-0015f7801e42",
+      "topic_unit": "Optik",
+      "topic_name": "Düzlem aynalar",
+      "confidence": 95,
+      "reasoning": "Genel optik kategorisi tüm optik konularını kapsayan en geniş eşleşme",
+      "alternatives": [
+        {
+          "topic_index": 19,
+          "confidence": 75
+        },
+        {
+          "topic_index": 26,
+          "confidence": 70
+        }
+      ]
+    },
+    {
+      "outcome_id": "142613b4-8888-459b-9f5c-90b07c834631",
+      "outcome_category": "OPTİK",
+      "outcome_subcategory": "AYDINLANMA",
+      "topic_id": "3ca03dab-75ff-44ae-b5c8-039a73b74584",
+      "topic_unit": "Dalgalar",
+      "topic_name": "Işık ve özellikleri",
+      "confidence": 90,
+      "reasoning": "Işık ve özellikleri aydınlanma kavramını doğrudan içerir",
+      "alternatives": [
+        {
+          "topic_index": 26,
+          "confidence": 60
+        }
+      ]
+    },
+    {
+      "outcome_id": "4c249f3a-c87c-4b18-8f8f-6ad6311fe541",
+      "outcome_category": "OPTİK",
+      "outcome_subcategory": "DÜZLEM AYNA",
+      "topic_id": "dffebd5b-d857-4340-8f95-0015f7801e42",
+      "topic_unit": "Optik",
+      "topic_name": "Düzlem aynalar",
+      "confidence": 100,
+      "reasoning": "Düzlem aynalar konusu ile tam eşleşme",
+      "alternatives": []
+    },
+    {
+      "outcome_id": "0de050ad-2770-46ab-bd35-101e095af2f2",
+      "outcome_category": "OPTİK",
+      "outcome_subcategory": "GÖLGE",
+      "topic_id": "3ca03dab-75ff-44ae-b5c8-039a73b74584",
+      "topic_unit": "Dalgalar",
+      "topic_name": "Işık ve özellikleri",
+      "confidence": 85,
+      "reasoning": "Gölge oluşumu ışığın özelliklerinden kaynaklanır",
+      "alternatives": [
+        {
+          "topic_index": 26,
+          "confidence": 65
+        }
+      ]
+    },
+    {
+      "outcome_id": "28b75fef-4057-4b2f-a7eb-baef0d096f51",
+      "outcome_category": "OPTİK",
+      "outcome_subcategory": "KIRILMA",
+      "topic_id": "5d4af8db-b4d5-4ce5-b852-4d96d55eeef4",
+      "topic_unit": "Dalgalar",
+      "topic_name": "Yansıma ve kırılma",
+      "confidence": 100,
+      "reasoning": "Yansıma ve kırılma konusu ile tam eşleşme",
+      "alternatives": [
+        {
+          "topic_index": 25,
+          "confidence": 75
+        }
+      ]
+    },
+    {
+      "outcome_id": "1a50158b-3c0a-4769-b3db-54bf06539975",
+      "outcome_category": "OPTİK",
+      "outcome_subcategory": "RENK",
+      "topic_id": "3ca03dab-75ff-44ae-b5c8-039a73b74584",
+      "topic_unit": "Dalgalar",
+      "topic_name": "Işık ve özellikleri",
+      "confidence": 90,
+      "reasoning": "Renk ışığın temel özelliklerinden biridir",
+      "alternatives": [
+        {
+          "topic_index": 25,
+          "confidence": 70
+        }
+      ]
+    },
+    {
+      "outcome_id": "0ed83842-eee0-4013-87ca-57d05411d423",
+      "outcome_category": "KUVVET VE HAREKET",
+      "outcome_subcategory": "BİR BOYUTTA SABİT İVMELİ HAREKET",
+      "topic_id": "1d08ca04-5226-4fd2-be54-fe591c994b52",
+      "topic_unit": "Çembersel Hareket",
+      "topic_name": "Merkezcil ivme",
+      "confidence": 45,
+      "reasoning": "Merkezcil ivme sabit ivmeli hareketle kısmi ilişkili ancak çembersel hareket farklı",
+      "alternatives": [
+        {
+          "topic_index": 1,
+          "confidence": 35
+        },
+        {
+          "topic_index": 2,
+          "confidence": 30
+        }
+      ]
+    },
+    {
+      "outcome_id": "6d5dcf7e-aed6-4bb1-96e3-e7c042e7c48b",
+      "outcome_category": "KUVVET VE HAREKET",
+      "outcome_subcategory": "NEWTON'IN HAREKET YASALARI",
+      "topic_id": "03a31090-cc2f-402b-a6a7-a9f04ecfb29e",
+      "topic_unit": "Çembersel Hareket",
+      "topic_name": "Merkezcil kuvvet",
+      "confidence": 75,
+      "reasoning": "Merkezcil kuvvet Newton'un hareket yasalarının çembersel hareketteki uygulamasıdır",
+      "alternatives": [
+        {
+          "topic_index": 9,
+          "confidence": 65
+        },
+        {
+          "topic_index": 5,
+          "confidence": 60
+        }
+      ]
+    },
+    {
+      "outcome_id": "295c0e70-43be-4115-9bd0-d2f66e01902a",
+      "outcome_category": "KUVVET VE HAREKET",
+      "outcome_subcategory": "VEKTÖRLER",
+      "topic_id": "fe754cc3-c70e-4add-9639-1e6022061bc0",
+      "topic_unit": "Çembersel Hareket",
+      "topic_name": "Açısal hız ve açısal ivme",
+      "confidence": 70,
+      "reasoning": "Açısal hız ve ivme vektörel büyüklüklerdir, vektör işlemleri gerektirir",
+      "alternatives": [
+        {
+          "topic_index": 4,
+          "confidence": 65
+        },
+        {
+          "topic_index": 3,
+          "confidence": 60
+        }
+      ]
+    },
+    {
+      "outcome_id": "21019fcd-10d1-4e0f-9912-312cccc14c70",
+      "outcome_category": "KİMYANIN TEMEL KANUNLARI VE KİMYASAL HESAPLAMALAR",
+      "outcome_subcategory": "Kimyanın Temel Kanunları",
+      "topic_id": "dee70ec2-1ad8-44cf-bfb1-ebd69bba681f",
+      "topic_unit": "Kimyasal Tepkimeler",
+      "topic_name": "Kimyasal denklemler",
+      "confidence": 45,
+      "reasoning": "Kimyasal denklemler temel kanunlarla ilişkili ancak doğrudan eşleşme zayıf",
+      "alternatives": [
+        {
+          "topic_index": 14,
+          "confidence": 35
+        },
+        {
+          "topic_index": 20,
+          "confidence": 30
+        }
+      ]
+    },
+    {
+      "outcome_id": "39186c5d-8b81-4c9b-98e1-374c8b7c1696",
+      "outcome_category": "MODERN ATOM TEORİSİ",
+      "outcome_subcategory": "Periyodik Sistem ve Elektron Dizilimleri",
+      "topic_id": "21a31551-a812-43ac-b7bd-c701e0c56e79",
+      "topic_unit": "Modern Atom Teorisi",
+      "topic_name": "Periyodik sistem ve özellikler",
+      "confidence": 95,
+      "reasoning": "Periyodik sistem ve elektron dizilimleri doğrudan bu konuyu kapsar",
+      "alternatives": [
+        {
+          "topic_index": 4,
+          "confidence": 85
+        },
+        {
+          "topic_index": 5,
+          "confidence": 75
+        }
+      ]
+    },
+    {
+      "outcome_id": "955de20a-ab1e-4c6a-af97-466cadbf895a",
+      "outcome_category": "KİMYA VE ELEKTRİK",
+      "outcome_subcategory": "İndirgenme-Yükseltgenme Tepkimelerinde Elektrik Akımı",
+      "topic_id": "23cf4082-bd0f-4535-bbdd-e91a6bf7d843",
+      "topic_unit": "Kimya ve Elektrik (Elektrokimya)",
+      "topic_name": "İndirgenme-yükseltgenme",
+      "confidence": 95,
+      "reasoning": "Kazanım doğrudan indirgenme-yükseltgenme tepkimeleri ve elektrik akımı ilişkisini içeriyor",
+      "alternatives": [
+        {
+          "topic_index": 1,
+          "confidence": 85
+        },
+        {
+          "topic_index": 4,
+          "confidence": 75
+        }
+      ]
+    },
+    {
+      "outcome_id": "6436f812-2743-4d3d-bd73-de0a737d89dc",
+      "outcome_category": "SAYILAR VE CEBİR / Fonksiyonlar",
+      "outcome_subcategory": "İki Fonksiyonun Bileşkesi ve Bir Fonksiyonun Tersi",
+      "topic_id": "c79a517e-52c0-43f0-bf33-e707ede53fec",
+      "topic_unit": "Fonksiyonlar",
+      "topic_name": "Bileşke fonksiyon",
+      "confidence": 95,
+      "reasoning": "Bileşke fonksiyon ve ters fonksiyon kazanımı ile doğrudan eşleşme",
+      "alternatives": [
+        {
+          "topic_index": 16,
+          "confidence": 95
+        }
+      ]
+    },
+    {
+      "outcome_id": "19ada65f-c171-4f3a-9fb3-c5af5caa8767",
+      "outcome_category": "SAYILAR VE CEBİR / Polinomlar",
+      "outcome_subcategory": "Polinomların Çarpanlara Ayrılması",
+      "topic_id": "8a9a04d5-dd6b-4981-92f3-624f33b740ca",
+      "topic_unit": "Polinomlar",
+      "topic_name": "Polinomların çarpanlara ayrılması",
+      "confidence": 100,
+      "reasoning": "Polinomların çarpanlara ayrılması kazanımı ile tam eşleşme",
+      "alternatives": [
+        {
+          "topic_index": 19,
+          "confidence": 60
+        }
+      ]
+    }
+  ]
+}

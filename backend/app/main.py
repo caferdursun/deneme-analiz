@@ -94,5 +94,5 @@ app.include_router(analytics.router, prefix=f"{settings.API_V1_PREFIX}/analytics
 app.include_router(recommendations.router, prefix=f"{settings.API_V1_PREFIX}/recommendations", tags=["recommendations"])
 app.include_router(learning_outcomes.router, prefix=settings.API_V1_PREFIX, tags=["learning-outcomes"])
 app.include_router(study_plans.router, prefix=f"{settings.API_V1_PREFIX}/study-plans", tags=["study-plans"])
-app.include_router(curriculum.router, prefix=f"{settings.API_V1_PREFIX}/curriculum", tags=["curriculum"])
+app.include_router(curriculum.router, prefix=settings.API_V1_PREFIX, tags=["curriculum"])
 # app.include_router(student.router, prefix=f"{settings.API_V1_PREFIX}/student", tags=["student"])
